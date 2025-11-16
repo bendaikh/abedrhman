@@ -1,0 +1,27 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Redirect all requests to the public folder (except if already in public)
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ public/$1 [L]
+    
+    # If accessing root, redirect to public
+    RewriteCond %{REQUEST_URI} ^/$
+    RewriteRule ^(.*)$ public/ [L]
+</IfModule>
+
+# Prevent access to sensitive directories
+<IfModule mod_rewrite.c>
+    RewriteRule ^(app|bootstrap|config|database|resources|routes|storage|tests|vendor|node_modules)/ - [F,L]
+</IfModule>
+
+# Disable directory browsing
+Options -Indexes
+
+# Protect sensitive files
+<FilesMatch "^(\.env|\.git|composer\.(json|lock)|package(-lock)?\.json|artisan|phpunit\.xml|README\.md|vite\.config\.js)$">
+    Require all denied
+</FilesMatch>
+
