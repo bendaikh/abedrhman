@@ -3,7 +3,9 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "build": "vite build",
+        "build": "NODE_OPTIONS='--max-old-space-size=4096' GOMAXPROCS=1 vite build",
+        "build:safe": "NODE_OPTIONS='--max-old-space-size=4096' GOMAXPROCS=1 vite build --minify terser",
+        "build:esbuild": "NODE_OPTIONS='--max-old-space-size=4096' GOMAXPROCS=1 USE_ESBUILD_MINIFY=true vite build",
         "dev": "vite"
     },
     "devDependencies": {
