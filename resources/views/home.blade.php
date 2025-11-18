@@ -3,14 +3,14 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bouyahya - Laravel with Vue & Blade</title>
+    <title>Abedrhman - Laravel with Vue & Blade</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 min-h-screen py-8">
     <div class="container mx-auto px-4">
         <header class="text-center mb-8">
             <h1 class="text-4xl font-bold text-gray-800 dark:text-white mb-2">
-                Bouyahya Application
+                Abedrhman Application
             </h1>
             <p class="text-gray-600 dark:text-gray-400">
                 Laravel with Blade Templates and Vue.js Components
@@ -81,4 +81,5 @@
     <div id="app"></div>
 </body>
 </html>
+
 

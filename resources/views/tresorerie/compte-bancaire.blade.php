@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Compte bancaire - Bouyahya')
+@section('title', 'Compte bancaire - Abedrhman')
 
 @section('content')
 <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
@@ -54,4 +54,5 @@
     </div>
 </div>
 @endsection
+
 

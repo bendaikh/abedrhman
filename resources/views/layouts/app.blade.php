@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Bouyahya - Administration')</title>
+    <title>@yield('title', 'Abedrhman - Administration')</title>
     <script>
         // Initialize theme before page load to prevent flash
         (function() {
@@ -45,4 +45,5 @@
     </div>
 </body>
 </html>
+
 

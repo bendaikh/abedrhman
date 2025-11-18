@@ -14,7 +14,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
                     </svg>
                 </div>
-                <span class="text-xl font-bold text-gray-800 dark:text-white">Bouyahya</span>
+                <span class="text-xl font-bold text-gray-800 dark:text-white">Abedrhman</span>
             </div>
             <button 
                 @click="toggleCollapse"
@@ -43,40 +43,17 @@
                 <MenuItem 
                     :item="menuItems.dashboard" 
                     :is-collapsed="isCollapsed"
-                    :is-active="currentRoute === menuItems.dashboard.route"
+                    :is-active="currentRoute.startsWith(menuItems.dashboard.route)"
                 />
 
-                <!-- Gestion des Achats -->
-                <CollapsibleMenuItem 
-                    :item="menuItems.achats" 
-                    :is-collapsed="isCollapsed"
-                    :is-open="openMenus.achats"
-                    @toggle="toggleMenu('achats')"
-                />
-
-                <!-- Gestion des Ventes -->
-                <CollapsibleMenuItem 
-                    :item="menuItems.ventes" 
-                    :is-collapsed="isCollapsed"
-                    :is-open="openMenus.ventes"
-                    @toggle="toggleMenu('ventes')"
-                />
-
-                <!-- Gestion du Stock -->
-                <CollapsibleMenuItem 
-                    :item="menuItems.stock" 
-                    :is-collapsed="isCollapsed"
-                    :is-open="openMenus.stock"
-                    @toggle="toggleMenu('stock')"
-                />
-
-                <!-- Gestion Trésorerie -->
-                <CollapsibleMenuItem 
-                    :item="menuItems.tresorerie" 
-                    :is-collapsed="isCollapsed"
-                    :is-open="openMenus.tresorerie"
-                    @toggle="toggleMenu('tresorerie')"
-                />
+                <!-- Sections -->
+                <template v-for="section in serviceSections" :key="section.route">
+                    <MenuItem 
+                        :item="section" 
+                        :is-collapsed="isCollapsed"
+                        :is-active="currentRoute === section.route"
+                    />
+                </template>
             </div>
         </nav>
     </aside>
@@ -102,92 +79,68 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
 import MenuItem from './MenuItem.vue'
-import CollapsibleMenuItem from './CollapsibleMenuItem.vue'
 
 const isCollapsed = ref(false)
 const isMobileOpen = ref(false)
 const isMobile = ref(false)
 
-const openMenus = ref({
-    achats: false,
-    ventes: false,
-    stock: false,
-    tresorerie: false
-})
+const getCurrentRoute = () => {
+    if (typeof window === 'undefined') {
+        return '/'
+    }
+    return window.location.pathname || '/'
+}
 
-const currentRoute = ref(window.location.pathname || '/')
+const currentRoute = ref(getCurrentRoute())
 
 // Update route on navigation
 const updateRoute = () => {
-    if (typeof window !== 'undefined') {
-        currentRoute.value = window.location.pathname || '/'
-    }
+    currentRoute.value = getCurrentRoute()
 }
-
 
 const menuItems = {
     dashboard: {
         title: 'Tableau de bord',
         icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6',
         route: '/dashboard'
-    },
-    achats: {
-        title: 'La gestion des achats',
-        icon: 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4',
-        children: [
-            { title: 'Bon de commande', route: '/achats/bon-commande', icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' },
-            { title: 'Bon de réception', route: '/achats/bon-reception', icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z' },
-            { title: 'Règlements fournisseurs', route: '/achats/reglements-fournisseurs', icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
-            { title: 'Historique achats', route: '/achats/historique', icon: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z' },
-            { title: 'Relevé compte fournisseurs', route: '/achats/releve-compte-fournisseurs', icon: 'M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' },
-            { title: 'Échéancier fournisseurs', route: '/achats/echeancier-fournisseurs', icon: 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z' }
-        ]
-    },
-    ventes: {
-        title: 'La gestion des ventes',
-        icon: 'M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z',
-        children: [
-            { title: 'Bon de commande', route: '/ventes/bon-commande', icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' },
-            { title: 'Bon de livraison', route: '/ventes/bon-livraison', icon: 'M5 13l4 4L19 7' },
-            { title: 'Règlements clients', route: '/ventes/reglements-clients', icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
-            { title: 'Règlements recouvrement', route: '/ventes/reglements-recouvrement', icon: 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z' },
-            { title: 'Historique ventes', route: '/ventes/historique', icon: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z' },
-            { title: 'Relevé compte clients', route: '/ventes/releve-compte-clients', icon: 'M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' }
-        ]
-    },
-    stock: {
-        title: 'La gestion du stock',
-        icon: 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4',
-        children: [
-            { title: 'Articles', route: '/stock/articles', icon: 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4' },
-            { title: 'Familles', route: '/stock/familles', icon: 'M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z' },
-            { title: 'Sous-familles', route: '/stock/sous-familles', icon: 'M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z' },
-            { title: 'Unités de mesure', route: '/stock/unites-mesure', icon: 'M7 20l4-16m2 16l4-16M6 9h14M4 15h14' },
-            { title: 'Mouvement stock', route: '/stock/mouvement', icon: 'M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4' },
-            { title: 'Les stocks', route: '/stock/stocks', icon: 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4' }
-        ]
-    },
-    tresorerie: {
-        title: 'La gestion trésorerie',
-        icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z',
-        children: [
-            { title: 'État journalier', route: '/tresorerie/etat-journalier', icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4' },
-            { title: 'Relevé règlements', route: '/tresorerie/releve-reglements', icon: 'M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' },
-            { title: 'Balance caisse', route: '/tresorerie/balance-caisse', icon: 'M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z' },
-            { title: 'Liste rég impôts', route: '/tresorerie/liste-impots', icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' },
-            { title: 'Compte bancaire', route: '/tresorerie/compte-bancaire', icon: 'M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z' },
-            { title: 'Encaissement / Décaissement', route: '/tresorerie/encaissement-decaissement', icon: 'M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z' },
-            { title: 'Types de charges', route: '/tresorerie/types-charges', icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z' }
-        ]
     }
 }
 
+const serviceSections = [
+    {
+        title: 'Base clientèle',
+        route: '/clients',
+        icon: 'M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87M15 11a3 3 0 10-6 0 3 3 0 006 0z'
+    },
+    {
+        title: 'Base tiers',
+        route: '/tiers',
+        icon: 'M4 6a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm3 4h10M7 14h6'
+    },
+    {
+        title: 'Services',
+        route: '/services',
+        icon: 'M5 13l4 4L19 7'
+    },
+    {
+        title: 'Tarification',
+        route: '/tarification',
+        icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8'
+    },
+    {
+        title: 'Étapes création',
+        route: '/etapes-creation',
+        icon: 'M7 8h10M7 12h6m-6 4h4'
+    },
+    {
+        title: 'Étapes domiciliation',
+        route: '/etapes-domiciliation',
+        icon: 'M9 5l7 7-7 7'
+    }
+]
+
 const toggleCollapse = () => {
     isCollapsed.value = !isCollapsed.value
-}
-
-const toggleMenu = (menu) => {
-    openMenus.value[menu] = !openMenus.value[menu]
 }
 
 const checkMobile = () => {
@@ -205,30 +158,35 @@ const closeMobile = () => {
     isMobileOpen.value = false
 }
 
+let routeCheckInterval = null
+
 onMounted(() => {
     checkMobile()
     window.addEventListener('resize', checkMobile)
     
-    // Update route
+    // Update route on initial load
     updateRoute()
+    
+    // Listen for browser back/forward navigation
     window.addEventListener('popstate', updateRoute)
     
-    // Auto-open menu if current route matches
-    const currentPath = currentRoute.value
-    if (currentPath.startsWith('/achats')) {
-        openMenus.value.achats = true
-    } else if (currentPath.startsWith('/ventes')) {
-        openMenus.value.ventes = true
-    } else if (currentPath.startsWith('/stock')) {
-        openMenus.value.stock = true
-    } else if (currentPath.startsWith('/tresorerie')) {
-        openMenus.value.tresorerie = true
-    }
+    // Since we're using regular links (not Vue Router), the page reloads on navigation
+    // But we check periodically in case of any programmatic navigation
+    routeCheckInterval = setInterval(() => {
+        const newRoute = getCurrentRoute()
+        if (newRoute !== currentRoute.value) {
+            updateRoute()
+        }
+    }, 100)
 })
 
 onUnmounted(() => {
     window.removeEventListener('resize', checkMobile)
     window.removeEventListener('popstate', updateRoute)
+    if (routeCheckInterval) {
+        clearInterval(routeCheckInterval)
+    }
 })
 </script>
+
 

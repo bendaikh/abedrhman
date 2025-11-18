@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Vue Example - Bouyahya</title>
+    <title>Vue Example - Abedrhman</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 min-h-screen py-8">
@@ -79,4 +79,5 @@
     <div id="app"></div>
 </body>
 </html>
+
 

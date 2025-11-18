@@ -1,4 +1,4 @@
-# Bouyahya - Laravel with Vue.js and Blade
+# Abedrhman - Laravel with Vue.js and Blade
 
 A Laravel application demonstrating the integration of Blade templates and Vue.js components.
 
@@ -113,3 +113,4 @@ npm run build
 ## License
 
 This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+

@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Connexion - Bouyahya</title>
+    <title>Connexion - Abedrhman</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -17,7 +17,7 @@
                 </svg>
             </div>
             <h2 class="mt-6 text-3xl font-extrabold text-gray-900 dark:text-white">
-                Bouyahya
+                Abedrhman
             </h2>
             <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
                 Connectez-vous à votre compte
@@ -114,9 +114,10 @@
 
         <!-- Footer -->
         <p class="text-center text-sm text-gray-600 dark:text-gray-400">
-            © {{ date('Y') }} Bouyahya. Tous droits réservés.
+            © {{ date('Y') }} Abedrhman. Tous droits réservés.
         </p>
     </div>
 </body>
 </html>
+
 

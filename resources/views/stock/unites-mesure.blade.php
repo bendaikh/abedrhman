@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Unités de mesure - Bouyahya')
+@section('title', 'Unités de mesure - Abedrhman')
 
 @section('content')
 <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
@@ -42,4 +42,5 @@
     </div>
 </div>
 @endsection
+
 

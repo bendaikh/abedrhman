@@ -115,14 +115,26 @@ const props = defineProps({
     isOpen: {
         type: Boolean,
         default: false
+    },
+    currentRoute: {
+        type: String,
+        default: '/'
     }
 })
 
 defineEmits(['toggle'])
 
-const isChildActive = (childRoute) => {
-    const currentPath = window.location.pathname
-    return currentPath === childRoute || currentPath.startsWith(childRoute + '/')
+const normalize = (value = '') => value.replace(/\/+$/, '')
+
+const isChildActive = (childRoute = '/') => {
+    const current = props.currentRoute || '/'
+    if (childRoute.includes('#')) {
+        return current === childRoute
+    }
+
+    const normalizedCurrent = normalize(current.split('#')[0])
+    const normalizedChild = normalize(childRoute)
+    return normalizedCurrent === normalizedChild || normalizedCurrent.startsWith(`${normalizedChild}/`)
 }
 
 const isActive = computed(() => {

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Relevé compte fournisseurs - Bouyahya')
+@section('title', 'Relevé compte fournisseurs - Abedrhman')
 
 @section('content')
 <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
@@ -50,4 +50,5 @@
     </div>
 </div>
 @endsection
+
 

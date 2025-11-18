@@ -20,8 +20,31 @@ Route::get('/', function () {
 Route::middleware('auth')->group(function () {
     // Dashboard
     Route::get('/dashboard', function () {
-        return view('dashboard');
+        return view('dashboard', ['page_title' => 'Tableau de bord']);
     })->name('dashboard');
+
+    // Service sections routes
+    Route::resource('clients', \App\Http\Controllers\ClientController::class);
+
+    Route::get('/tiers', function () {
+        return view('sections.tiers', ['page_title' => 'Base tiers']);
+    })->name('tiers');
+
+    Route::get('/services', function () {
+        return view('sections.services', ['page_title' => 'Services']);
+    })->name('services');
+
+    Route::get('/tarification', function () {
+        return view('sections.tarification', ['page_title' => 'Tarification']);
+    })->name('tarification');
+
+    Route::get('/etapes-creation', function () {
+        return view('sections.etapes-creation', ['page_title' => 'Étapes création']);
+    })->name('etapes-creation');
+
+    Route::get('/etapes-domiciliation', function () {
+        return view('sections.etapes-domiciliation', ['page_title' => 'Étapes domiciliation']);
+    })->name('etapes-domiciliation');
 
     // La gestion des achats
     Route::prefix('achats')->group(function () {
