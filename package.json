@@ -3,10 +3,12 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "build": "cross-env NODE_OPTIONS=--max-old-space-size=4096 cross-env GOMAXPROCS=1 vite build",
-        "build:safe": "cross-env NODE_OPTIONS=--max-old-space-size=4096 cross-env GOMAXPROCS=1 vite build --minify terser",
-        "build:esbuild": "cross-env NODE_OPTIONS=--max-old-space-size=4096 cross-env GOMAXPROCS=1 cross-env USE_ESBUILD_MINIFY=true vite build",
-        "dev": "vite"
+        "dev": "vite",
+        "build": "cross-env NODE_OPTIONS=--max-old-space-size=2048 cross-env GOMAXPROCS=1 cross-env RAYON_NUM_THREADS=1 vite build",
+        "build:safe": "cross-env NODE_OPTIONS=--max-old-space-size=2048 cross-env GOMAXPROCS=1 cross-env RAYON_NUM_THREADS=1 vite build --minify terser",
+        "build:esbuild": "cross-env NODE_OPTIONS=--max-old-space-size=2048 cross-env GOMAXPROCS=1 cross-env RAYON_NUM_THREADS=1 cross-env USE_ESBUILD_MINIFY=true vite build",
+        "build:prod": "cross-env NODE_OPTIONS=--max-old-space-size=1024 cross-env GOMAXPROCS=1 cross-env RAYON_NUM_THREADS=1 vite build --mode production",
+        "deploy": "npm run build && git add public/build -f && echo 'Built assets ready to commit!'"
     },
     "devDependencies": {
         "@tailwindcss/vite": "^4.0.0",
