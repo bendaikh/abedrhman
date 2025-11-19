@@ -9,6 +9,13 @@ class Client extends Model
     protected $fillable = [
         'num_client',
         'type',
+        'nom',
+        'prenom',
+        'fonction',
+        'type_piece_id',
+        'date_naissance',
+        'lieu_naissance',
+        'nationalite',
         'nom_raison_sociale',
         'sigle',
         'intitule',
@@ -33,6 +40,7 @@ class Client extends Model
 
     protected $casts = [
         'date_creation' => 'date',
+        'date_naissance' => 'date',
     ];
 
     /**

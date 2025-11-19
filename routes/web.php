@@ -23,6 +23,11 @@ Route::middleware('auth')->group(function () {
         return view('dashboard', ['page_title' => 'Tableau de bord']);
     })->name('dashboard');
 
+    // Client import/export routes (must be before resource routes)
+    Route::post('clients/import', [\App\Http\Controllers\ClientController::class, 'import'])->name('clients.import');
+    Route::get('clients/export', [\App\Http\Controllers\ClientController::class, 'export'])->name('clients.export');
+    Route::get('clients/template', [\App\Http\Controllers\ClientController::class, 'downloadTemplate'])->name('clients.template');
+    
     // Service sections routes
     Route::resource('clients', \App\Http\Controllers\ClientController::class);
 
