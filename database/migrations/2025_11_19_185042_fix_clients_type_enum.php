@@ -12,12 +12,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // First, update any existing 'Entreprise' values to 'societe'
+        // First, temporarily expand the enum to accept both old and new values
+        DB::statement("ALTER TABLE `clients` MODIFY `type` ENUM('particulier', 'Entreprise', 'societe') NOT NULL DEFAULT 'particulier'");
+        
+        // Then update any existing 'Entreprise' values to 'societe'
         DB::table('clients')
             ->where('type', 'Entreprise')
             ->update(['type' => 'societe']);
         
-        // Then modify the enum to accept 'societe' instead of 'Entreprise'
+        // Finally, set the enum to only accept the new values
         DB::statement("ALTER TABLE `clients` MODIFY `type` ENUM('particulier', 'societe') NOT NULL DEFAULT 'particulier'");
     }
 
