@@ -52,7 +52,7 @@
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Type *</label>
                 <select name="type" id="client_type" onchange="toggleClientTypeFields()" required class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                     <option value="particulier" {{ old('type', $client->type ?? 'societe') === 'particulier' ? 'selected' : '' }}>Particulier</option>
-                    <option value="societe" {{ old('type', $client->type ?? 'societe') === 'societe' ? 'selected' : '' }}>Société</option>
+                    <option value="societe" {{ old('type', $client->type ?? 'societe') === 'societe' ? 'selected' : '' }}>Entreprise</option>
                 </select>
             </div>
 
@@ -83,7 +83,19 @@
                     <!-- Type pièce ID -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Type pièce ID</label>
-                        <input type="text" name="type_piece_id" value="{{ old('type_piece_id', $client->type_piece_id ?? '') }}" 
+                        <select name="type_piece_id" id="type_piece_id_select" onchange="toggleNPieceIdField()" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="">Sélectionner</option>
+                            <option value="CIN" {{ old('type_piece_id', $client->type_piece_id ?? '') === 'CIN' ? 'selected' : '' }}>CIN</option>
+                            <option value="PASSPORT" {{ old('type_piece_id', $client->type_piece_id ?? '') === 'PASSPORT' ? 'selected' : '' }}>PASSPORT</option>
+                            <option value="CARTE SEJOUR" {{ old('type_piece_id', $client->type_piece_id ?? '') === 'CARTE SEJOUR' ? 'selected' : '' }}>CARTE SEJOUR</option>
+                            <option value="CARTE ETRANGERE" {{ old('type_piece_id', $client->type_piece_id ?? '') === 'CARTE ETRANGERE' ? 'selected' : '' }}>CARTE ETRANGERE</option>
+                        </select>
+                    </div>
+
+                    <!-- N° pièce ID -->
+                    <div id="n_piece_id_field" style="display: {{ old('type_piece_id', $client->type_piece_id ?? '') ? 'block' : 'none' }};">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">N° pièce ID</label>
+                        <input type="text" name="n_piece_id" value="{{ old('n_piece_id', $client->n_piece_id ?? '') }}" 
                             class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                     </div>
 
@@ -313,9 +325,19 @@
             <!-- Intitulé source -->
             <div>
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Intitulé source</label>
-                <select name="intitule_source" id="intitule_source_select" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                <select name="intitule_source" id="intitule_source_select" onchange="toggleIntituleSourceDataField()" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                     <option value="">Sélectionner une source d'abord</option>
                 </select>
+            </div>
+
+            <!-- Intitulé source data -->
+            <div id="intitule_source_data_field" class="md:col-span-2" style="display: {{ old('intitule_source', $client->intitule_source ?? '') ? 'block' : 'none' }};">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <span id="intitule_source_data_label">Information supplémentaire</span>
+                </label>
+                <input type="text" name="intitule_source_data" id="intitule_source_data_input" value="{{ old('intitule_source_data', $client->intitule_source_data ?? '') }}" 
+                    class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Entrez les informations">
             </div>
         </div>
 
@@ -386,7 +408,7 @@ function updateIntituleSourceOptions() {
             options = ['Liste comptables'];
             break;
         case 'Média':
-            options = ['Facebook', 'Instagram', 'Youtube', 'Tiktok', 'Liaison', 'Site web centre', 'Autre'];
+            options = ['Facebook', 'Instagram', 'Youtube', 'Tiktok', 'Linkedin', 'Site web centre', 'Autre'];
             break;
         case 'Spontané':
         case 'Administration':
@@ -408,6 +430,46 @@ function updateIntituleSourceOptions() {
         }
         intituleSourceSelect.appendChild(option);
     });
+    
+    // Update the data field visibility after updating options
+    toggleIntituleSourceDataField();
+}
+
+function toggleIntituleSourceDataField() {
+    const intituleSourceSelect = document.getElementById('intitule_source_select');
+    const dataField = document.getElementById('intitule_source_data_field');
+    const dataLabel = document.getElementById('intitule_source_data_label');
+    
+    if (!intituleSourceSelect || !dataField) {
+        return;
+    }
+    
+    const selectedValue = intituleSourceSelect.value;
+    
+    if (selectedValue && selectedValue !== '') {
+        dataField.style.display = 'block';
+        // Update label based on selected option
+        dataLabel.textContent = 'Détails pour ' + selectedValue;
+    } else {
+        dataField.style.display = 'none';
+    }
+}
+
+function toggleNPieceIdField() {
+    const typePieceSelect = document.getElementById('type_piece_id_select');
+    const nPieceIdField = document.getElementById('n_piece_id_field');
+    
+    if (!typePieceSelect || !nPieceIdField) {
+        return;
+    }
+    
+    const selectedValue = typePieceSelect.value;
+    
+    if (selectedValue && selectedValue !== '') {
+        nPieceIdField.style.display = 'block';
+    } else {
+        nPieceIdField.style.display = 'none';
+    }
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -420,6 +482,12 @@ document.addEventListener('DOMContentLoaded', function() {
         intituleSourceSelect.setAttribute('data-current-value', currentValue);
         updateIntituleSourceOptions();
     }
+    
+    // Toggle N piece Id field on page load
+    toggleNPieceIdField();
+    
+    // Toggle intitule source data field on page load
+    toggleIntituleSourceDataField();
 });
 </script>
 @endsection

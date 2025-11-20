@@ -13,6 +13,7 @@ class Client extends Model
         'prenom',
         'fonction',
         'type_piece_id',
+        'n_piece_id',
         'date_naissance',
         'lieu_naissance',
         'nationalite',
@@ -38,6 +39,7 @@ class Client extends Model
         'observations',
         'source',
         'intitule_source',
+        'intitule_source_data',
     ];
 
     protected $casts = [
