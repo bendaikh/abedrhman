@@ -42,7 +42,7 @@
                     </h3>
                     <div class="flex items-center space-x-3">
                         <span class="px-3 py-1 text-sm font-medium rounded-full {{ $client->type === 'societe' ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200' : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200' }}">
-                            {{ ucfirst($client->type) }}
+                            {{ $client->type === 'societe' ? 'Entreprise' : 'Particulier' }}
                         </span>
                         <span class="text-sm text-orange-600 dark:text-orange-400 font-semibold">
                             {{ $client->num_client }}
@@ -70,6 +70,10 @@
                 <div>
                     <label class="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Type pièce ID</label>
                     <p class="text-base text-gray-900 dark:text-white">{{ $client->type_piece_id ?? 'N/A' }}</p>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">N° pièce ID</label>
+                    <p class="text-base text-gray-900 dark:text-white">{{ $client->n_piece_id ?? 'N/A' }}</p>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Date de naissance</label>
@@ -178,6 +182,33 @@
         <div class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
             <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Observations</h4>
             <p class="text-base text-gray-900 dark:text-white whitespace-pre-wrap">{{ $client->observations }}</p>
+        </div>
+        @endif
+
+        <!-- Source Information -->
+        @if($client->source || $client->intitule_source || $client->intitule_source_data)
+        <div class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+            <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Informations sur la source</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                @if($client->source)
+                <div>
+                    <label class="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Source</label>
+                    <p class="text-base text-gray-900 dark:text-white">{{ $client->source }}</p>
+                </div>
+                @endif
+                @if($client->intitule_source)
+                <div>
+                    <label class="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Intitulé source</label>
+                    <p class="text-base text-gray-900 dark:text-white">{{ $client->intitule_source }}</p>
+                </div>
+                @endif
+                @if($client->intitule_source_data)
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Détails pour {{ $client->intitule_source ?? 'la source' }}</label>
+                    <p class="text-base text-gray-900 dark:text-white">{{ $client->intitule_source_data }}</p>
+                </div>
+                @endif
+            </div>
         </div>
         @endif
 

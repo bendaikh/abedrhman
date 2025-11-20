@@ -44,6 +44,7 @@ class ClientController extends Controller
             'prenom' => 'nullable|string|max:255',
             'fonction' => 'nullable|string|max:255',
             'type_piece_id' => 'nullable|string|max:255',
+            'n_piece_id' => 'nullable|string|max:255',
             'date_naissance' => 'nullable|date',
             'lieu_naissance' => 'nullable|string|max:255',
             'nationalite' => 'nullable|string|max:255',
@@ -67,6 +68,9 @@ class ClientController extends Controller
             'fixe' => 'nullable|string|max:255',
             'email' => 'nullable|email|max:255',
             'observations' => 'nullable|string',
+            'source' => 'nullable|string|max:255',
+            'intitule_source' => 'nullable|string|max:255',
+            'intitule_source_data' => 'nullable|string|max:255',
         ]);
 
         // Generate client number if not provided
@@ -116,6 +120,7 @@ class ClientController extends Controller
             'prenom' => 'nullable|string|max:255',
             'fonction' => 'nullable|string|max:255',
             'type_piece_id' => 'nullable|string|max:255',
+            'n_piece_id' => 'nullable|string|max:255',
             'date_naissance' => 'nullable|date',
             'lieu_naissance' => 'nullable|string|max:255',
             'nationalite' => 'nullable|string|max:255',
@@ -139,6 +144,9 @@ class ClientController extends Controller
             'fixe' => 'nullable|string|max:255',
             'email' => 'nullable|email|max:255',
             'observations' => 'nullable|string',
+            'source' => 'nullable|string|max:255',
+            'intitule_source' => 'nullable|string|max:255',
+            'intitule_source_data' => 'nullable|string|max:255',
         ]);
 
         $client->update($validated);
