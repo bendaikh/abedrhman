@@ -51,13 +51,13 @@
             <div>
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Type *</label>
                 <select name="type" id="client_type" onchange="toggleClientTypeFields()" required class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                    <option value="particulier" {{ old('type', $client->type ?? 'particulier') === 'particulier' ? 'selected' : '' }}>Particulier</option>
-                    <option value="societe" {{ old('type', $client->type ?? '') === 'societe' ? 'selected' : '' }}>Société</option>
+                    <option value="particulier" {{ old('type', $client->type ?? 'societe') === 'particulier' ? 'selected' : '' }}>Particulier</option>
+                    <option value="societe" {{ old('type', $client->type ?? 'societe') === 'societe' ? 'selected' : '' }}>Société</option>
                 </select>
             </div>
 
             <!-- Particulier Fields -->
-            <div id="particulier_fields" class="md:col-span-2" style="display: {{ (old('type', $client->type ?? 'particulier') === 'particulier') ? 'block' : 'none' }};">
+            <div id="particulier_fields" class="md:col-span-2" style="display: {{ (old('type', $client->type ?? 'societe') === 'particulier') ? 'block' : 'none' }};">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- Nom -->
                     <div>
@@ -116,7 +116,7 @@
             </div>
 
             <!-- Société Fields -->
-            <div id="societe_fields" class="md:col-span-2" style="display: {{ (old('type', $client->type ?? 'particulier') === 'societe') ? 'block' : 'none' }};">
+            <div id="societe_fields" class="md:col-span-2" style="display: {{ (old('type', $client->type ?? 'societe') === 'societe') ? 'block' : 'none' }};">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- Nom / raison sociale -->
                     <div>
@@ -135,22 +135,42 @@
                         <!-- Intitulé -->
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Intitulé</label>
-                            <input type="text" name="intitule" value="{{ old('intitule', $client->intitule ?? '') }}" 
-                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <select name="intitule" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="">Sélectionner</option>
+                                <option value="Société" {{ old('intitule', $client->intitule ?? '') === 'Société' ? 'selected' : '' }}>Société</option>
+                                <option value="Entreprise individuelle" {{ old('intitule', $client->intitule ?? '') === 'Entreprise individuelle' ? 'selected' : '' }}>Entreprise individuelle</option>
+                                <option value="Coopérative" {{ old('intitule', $client->intitule ?? '') === 'Coopérative' ? 'selected' : '' }}>Coopérative</option>
+                                <option value="Association" {{ old('intitule', $client->intitule ?? '') === 'Association' ? 'selected' : '' }}>Association</option>
+                            </select>
                         </div>
 
                         <!-- Forme juridique -->
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Forme juridique</label>
-                            <input type="text" name="forme_juridique" value="{{ old('forme_juridique', $client->forme_juridique ?? '') }}" 
-                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <select name="forme_juridique" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="">Sélectionner</option>
+                                <option value="Sarl" {{ old('forme_juridique', $client->forme_juridique ?? '') === 'Sarl' ? 'selected' : '' }}>Sarl</option>
+                                <option value="Sarl Au" {{ old('forme_juridique', $client->forme_juridique ?? '') === 'Sarl Au' ? 'selected' : '' }}>Sarl Au</option>
+                                <option value="Personne physique" {{ old('forme_juridique', $client->forme_juridique ?? '') === 'Personne physique' ? 'selected' : '' }}>Personne physique</option>
+                                <option value="Coopérative" {{ old('forme_juridique', $client->forme_juridique ?? '') === 'Coopérative' ? 'selected' : '' }}>Coopérative</option>
+                                <option value="Association" {{ old('forme_juridique', $client->forme_juridique ?? '') === 'Association' ? 'selected' : '' }}>Association</option>
+                                <option value="Auto-Entrepreneur" {{ old('forme_juridique', $client->forme_juridique ?? '') === 'Auto-Entrepreneur' ? 'selected' : '' }}>Auto-Entrepreneur</option>
+                                <option value="SA" {{ old('forme_juridique', $client->forme_juridique ?? '') === 'SA' ? 'selected' : '' }}>SA</option>
+                                <option value="Autre" {{ old('forme_juridique', $client->forme_juridique ?? '') === 'Autre' ? 'selected' : '' }}>Autre</option>
+                            </select>
                         </div>
 
                         <!-- Pièce justificative -->
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Pièce justificative</label>
-                            <input type="text" name="piece_justificative" value="{{ old('piece_justificative', $client->piece_justificative ?? '') }}" 
-                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <select name="piece_justificative" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="">Sélectionner</option>
+                                <option value="RC PM" {{ old('piece_justificative', $client->piece_justificative ?? '') === 'RC PM' ? 'selected' : '' }}>RC PM</option>
+                                <option value="RC PP" {{ old('piece_justificative', $client->piece_justificative ?? '') === 'RC PP' ? 'selected' : '' }}>RC PP</option>
+                                <option value="Attestation Odeco" {{ old('piece_justificative', $client->piece_justificative ?? '') === 'Attestation Odeco' ? 'selected' : '' }}>Attestation Odeco</option>
+                                <option value="Recus de dépôt ass" {{ old('piece_justificative', $client->piece_justificative ?? '') === 'Recus de dépôt ass' ? 'selected' : '' }}>Recus de dépôt ass</option>
+                                <option value="Carte ou Attest AE" {{ old('piece_justificative', $client->piece_justificative ?? '') === 'Carte ou Attest AE' ? 'selected' : '' }}>Carte ou Attest AE</option>
+                            </select>
                         </div>
 
                         <!-- N° pièce -->
@@ -170,8 +190,11 @@
                         <!-- Forme juridique créée -->
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Forme juridique créée</label>
-                            <input type="text" name="forme_juridique_creee" value="{{ old('forme_juridique_creee', $client->forme_juridique_creee ?? '') }}" 
-                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <select name="forme_juridique_creee" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="">Sélectionner</option>
+                                <option value="Oui" {{ old('forme_juridique_creee', $client->forme_juridique_creee ?? '') === 'Oui' ? 'selected' : '' }}>Oui</option>
+                                <option value="Encours" {{ old('forme_juridique_creee', $client->forme_juridique_creee ?? '') === 'Encours' ? 'selected' : '' }}>Encours</option>
+                            </select>
                         </div>
 
                         <!-- Siège social -->
@@ -198,8 +221,21 @@
                         <!-- Secteur d'activité -->
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Secteur d'activité</label>
-                            <input type="text" name="secteur_activite" value="{{ old('secteur_activite', $client->secteur_activite ?? '') }}" 
-                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <select name="secteur_activite" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="">Sélectionner</option>
+                                <option value="COMMERCE" {{ old('secteur_activite', $client->secteur_activite ?? '') === 'COMMERCE' ? 'selected' : '' }}>COMMERCE</option>
+                                <option value="INDUSTRIE" {{ old('secteur_activite', $client->secteur_activite ?? '') === 'INDUSTRIE' ? 'selected' : '' }}>INDUSTRIE</option>
+                                <option value="SERVICES" {{ old('secteur_activite', $client->secteur_activite ?? '') === 'SERVICES' ? 'selected' : '' }}>SERVICES</option>
+                                <option value="INFORMATIQUE" {{ old('secteur_activite', $client->secteur_activite ?? '') === 'INFORMATIQUE' ? 'selected' : '' }}>INFORMATIQUE</option>
+                                <option value="AGRICULTURE" {{ old('secteur_activite', $client->secteur_activite ?? '') === 'AGRICULTURE' ? 'selected' : '' }}>AGRICULTURE</option>
+                                <option value="ARTISANAT" {{ old('secteur_activite', $client->secteur_activite ?? '') === 'ARTISANAT' ? 'selected' : '' }}>ARTISANAT</option>
+                                <option value="TOURISME" {{ old('secteur_activite', $client->secteur_activite ?? '') === 'TOURISME' ? 'selected' : '' }}>TOURISME</option>
+                                <option value="TRAVAUX ET INSTALATION" {{ old('secteur_activite', $client->secteur_activite ?? '') === 'TRAVAUX ET INSTALATION' ? 'selected' : '' }}>TRAVAUX ET INSTALATION</option>
+                                <option value="SANTE" {{ old('secteur_activite', $client->secteur_activite ?? '') === 'SANTE' ? 'selected' : '' }}>SANTE</option>
+                                <option value="IMPORT ET EXPORT" {{ old('secteur_activite', $client->secteur_activite ?? '') === 'IMPORT ET EXPORT' ? 'selected' : '' }}>IMPORT ET EXPORT</option>
+                                <option value="SPORT ET DIVERTISSEMENT" {{ old('secteur_activite', $client->secteur_activite ?? '') === 'SPORT ET DIVERTISSEMENT' ? 'selected' : '' }}>SPORT ET DIVERTISSEMENT</option>
+                                <option value="EDUCATION" {{ old('secteur_activite', $client->secteur_activite ?? '') === 'EDUCATION' ? 'selected' : '' }}>EDUCATION</option>
+                            </select>
                         </div>
 
                         <!-- Activité -->
@@ -259,6 +295,28 @@
                 <textarea name="observations" rows="4" 
                     class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">{{ old('observations', $client->observations ?? '') }}</textarea>
             </div>
+
+            <!-- Source -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Source</label>
+                <select name="source" id="source_select" onchange="updateIntituleSourceOptions()" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <option value="">Sélectionner</option>
+                    <option value="Spontané" {{ old('source', $client->source ?? '') === 'Spontané' ? 'selected' : '' }}>Spontané</option>
+                    <option value="Client" {{ old('source', $client->source ?? '') === 'Client' ? 'selected' : '' }}>Client</option>
+                    <option value="Comptable" {{ old('source', $client->source ?? '') === 'Comptable' ? 'selected' : '' }}>Comptable</option>
+                    <option value="Média" {{ old('source', $client->source ?? '') === 'Média' ? 'selected' : '' }}>Média</option>
+                    <option value="Administration" {{ old('source', $client->source ?? '') === 'Administration' ? 'selected' : '' }}>Administration</option>
+                    <option value="Autre" {{ old('source', $client->source ?? '') === 'Autre' ? 'selected' : '' }}>Autre</option>
+                </select>
+            </div>
+
+            <!-- Intitulé source -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Intitulé source</label>
+                <select name="intitule_source" id="intitule_source_select" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <option value="">Sélectionner une source d'abord</option>
+                </select>
+            </div>
         </div>
 
         <!-- Form Actions -->
@@ -298,7 +356,71 @@ function toggleClientTypeFields() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', toggleClientTypeFields);
+function updateIntituleSourceOptions() {
+    const sourceSelect = document.getElementById('source_select');
+    const intituleSourceSelect = document.getElementById('intitule_source_select');
+    
+    if (!sourceSelect || !intituleSourceSelect) {
+        return;
+    }
+
+    const selectedSource = sourceSelect.value;
+    const currentValue = intituleSourceSelect.getAttribute('data-current-value') || '';
+    
+    // Clear existing options
+    intituleSourceSelect.innerHTML = '';
+    
+    // Add default option
+    const defaultOption = document.createElement('option');
+    defaultOption.value = '';
+    defaultOption.textContent = 'Sélectionner';
+    intituleSourceSelect.appendChild(defaultOption);
+    
+    let options = [];
+    
+    switch(selectedSource) {
+        case 'Client':
+            options = ['Liste client'];
+            break;
+        case 'Comptable':
+            options = ['Liste comptables'];
+            break;
+        case 'Média':
+            options = ['Facebook', 'Instagram', 'Youtube', 'Tiktok', 'Liaison', 'Site web centre', 'Autre'];
+            break;
+        case 'Spontané':
+        case 'Administration':
+        case 'Autre':
+            options = [];
+            break;
+        default:
+            intituleSourceSelect.innerHTML = '<option value="">Sélectionner une source d\'abord</option>';
+            return;
+    }
+    
+    // Add options based on selected source
+    options.forEach(optionText => {
+        const option = document.createElement('option');
+        option.value = optionText;
+        option.textContent = optionText;
+        if (optionText === currentValue) {
+            option.selected = true;
+        }
+        intituleSourceSelect.appendChild(option);
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    toggleClientTypeFields();
+    
+    // Store current value for intitule_source
+    const intituleSourceSelect = document.getElementById('intitule_source_select');
+    if (intituleSourceSelect) {
+        const currentValue = '{{ old("intitule_source", $client->intitule_source ?? "") }}';
+        intituleSourceSelect.setAttribute('data-current-value', currentValue);
+        updateIntituleSourceOptions();
+    }
+});
 </script>
 @endsection
 

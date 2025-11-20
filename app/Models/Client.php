@@ -36,6 +36,8 @@ class Client extends Model
         'fixe',
         'email',
         'observations',
+        'source',
+        'intitule_source',
     ];
 
     protected $casts = [
