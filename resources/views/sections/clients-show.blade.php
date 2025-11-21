@@ -116,6 +116,18 @@
                     <p class="text-base text-gray-900 dark:text-white">{{ $client->numero_piece ?? 'N/A' }}</p>
                 </div>
                 <div>
+                    <label class="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">ICE</label>
+                    <p class="text-base text-gray-900 dark:text-white">{{ $client->ice ?? 'N/A' }}</p>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">ID fiscale</label>
+                    <p class="text-base text-gray-900 dark:text-white">{{ $client->id_fiscale ?? 'N/A' }}</p>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Patente</label>
+                    <p class="text-base text-gray-900 dark:text-white">{{ $client->patente ?? 'N/A' }}</p>
+                </div>
+                <div>
                     <label class="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Date création</label>
                     <p class="text-base text-gray-900 dark:text-white">{{ $client->date_creation ? $client->date_creation->format('d/m/Y') : 'N/A' }}</p>
                 </div>

@@ -147,41 +147,28 @@
                         <!-- Intitulé -->
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Intitulé</label>
-                            <select name="intitule" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <select name="intitule" id="intitule_select" onchange="updateFormeJuridiqueAndPieceJustificative()" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                                 <option value="">Sélectionner</option>
                                 <option value="Société" {{ old('intitule', $client->intitule ?? '') === 'Société' ? 'selected' : '' }}>Société</option>
-                                <option value="Entreprise individuelle" {{ old('intitule', $client->intitule ?? '') === 'Entreprise individuelle' ? 'selected' : '' }}>Entreprise individuelle</option>
                                 <option value="Coopérative" {{ old('intitule', $client->intitule ?? '') === 'Coopérative' ? 'selected' : '' }}>Coopérative</option>
                                 <option value="Association" {{ old('intitule', $client->intitule ?? '') === 'Association' ? 'selected' : '' }}>Association</option>
+                                <option value="Auto-entrepreneur" {{ old('intitule', $client->intitule ?? '') === 'Auto-entrepreneur' ? 'selected' : '' }}>Auto-entrepreneur</option>
                             </select>
                         </div>
 
                         <!-- Forme juridique -->
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Forme juridique</label>
-                            <select name="forme_juridique" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                <option value="">Sélectionner</option>
-                                <option value="Sarl" {{ old('forme_juridique', $client->forme_juridique ?? '') === 'Sarl' ? 'selected' : '' }}>Sarl</option>
-                                <option value="Sarl Au" {{ old('forme_juridique', $client->forme_juridique ?? '') === 'Sarl Au' ? 'selected' : '' }}>Sarl Au</option>
-                                <option value="Personne physique" {{ old('forme_juridique', $client->forme_juridique ?? '') === 'Personne physique' ? 'selected' : '' }}>Personne physique</option>
-                                <option value="Coopérative" {{ old('forme_juridique', $client->forme_juridique ?? '') === 'Coopérative' ? 'selected' : '' }}>Coopérative</option>
-                                <option value="Association" {{ old('forme_juridique', $client->forme_juridique ?? '') === 'Association' ? 'selected' : '' }}>Association</option>
-                                <option value="Auto-Entrepreneur" {{ old('forme_juridique', $client->forme_juridique ?? '') === 'Auto-Entrepreneur' ? 'selected' : '' }}>Auto-Entrepreneur</option>
-                                <option value="SA" {{ old('forme_juridique', $client->forme_juridique ?? '') === 'SA' ? 'selected' : '' }}>SA</option>
-                                <option value="Autre" {{ old('forme_juridique', $client->forme_juridique ?? '') === 'Autre' ? 'selected' : '' }}>Autre</option>
+                            <select name="forme_juridique" id="forme_juridique_select" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="">Sélectionner un intitulé d'abord</option>
                             </select>
                         </div>
 
                         <!-- Pièce justificative -->
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Pièce justificative</label>
-                            <select name="piece_justificative" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                <option value="">Sélectionner</option>
-                                <option value="RC PM" {{ old('piece_justificative', $client->piece_justificative ?? '') === 'RC PM' ? 'selected' : '' }}>RC PM</option>
-                                <option value="RC PP" {{ old('piece_justificative', $client->piece_justificative ?? '') === 'RC PP' ? 'selected' : '' }}>RC PP</option>
-                                <option value="Attestation Odeco" {{ old('piece_justificative', $client->piece_justificative ?? '') === 'Attestation Odeco' ? 'selected' : '' }}>Attestation Odeco</option>
-                                <option value="Recus de dépôt ass" {{ old('piece_justificative', $client->piece_justificative ?? '') === 'Recus de dépôt ass' ? 'selected' : '' }}>Recus de dépôt ass</option>
-                                <option value="Carte ou Attest AE" {{ old('piece_justificative', $client->piece_justificative ?? '') === 'Carte ou Attest AE' ? 'selected' : '' }}>Carte ou Attest AE</option>
+                            <select name="piece_justificative" id="piece_justificative_select" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="">Sélectionner un intitulé d'abord</option>
                             </select>
                         </div>
 
@@ -189,6 +176,27 @@
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">N° pièce</label>
                             <input type="text" name="numero_piece" value="{{ old('numero_piece', $client->numero_piece ?? '') }}" 
+                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+
+                        <!-- ICE -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">ICE</label>
+                            <input type="text" name="ice" value="{{ old('ice', $client->ice ?? '') }}" 
+                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+
+                        <!-- ID fiscale -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">ID fiscale</label>
+                            <input type="text" name="id_fiscale" value="{{ old('id_fiscale', $client->id_fiscale ?? '') }}" 
+                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+
+                        <!-- Patente -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Patente</label>
+                            <input type="text" name="patente" value="{{ old('patente', $client->patente ?? '') }}" 
                                 class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                         </div>
 
@@ -472,6 +480,83 @@ function toggleNPieceIdField() {
     }
 }
 
+function updateFormeJuridiqueAndPieceJustificative() {
+    const intituleSelect = document.getElementById('intitule_select');
+    const formeJuridiqueSelect = document.getElementById('forme_juridique_select');
+    const pieceJustificativeSelect = document.getElementById('piece_justificative_select');
+    
+    if (!intituleSelect || !formeJuridiqueSelect || !pieceJustificativeSelect) {
+        return;
+    }
+    
+    const selectedIntitule = intituleSelect.value;
+    const currentFormeJuridique = formeJuridiqueSelect.getAttribute('data-current-value') || '';
+    const currentPieceJustificative = pieceJustificativeSelect.getAttribute('data-current-value') || '';
+    
+    // Clear existing options
+    formeJuridiqueSelect.innerHTML = '';
+    pieceJustificativeSelect.innerHTML = '';
+    
+    // Add default options
+    const defaultFormeOption = document.createElement('option');
+    defaultFormeOption.value = '';
+    defaultFormeOption.textContent = 'Sélectionner';
+    formeJuridiqueSelect.appendChild(defaultFormeOption);
+    
+    const defaultPieceOption = document.createElement('option');
+    defaultPieceOption.value = '';
+    defaultPieceOption.textContent = 'Sélectionner';
+    pieceJustificativeSelect.appendChild(defaultPieceOption);
+    
+    let formeJuridiqueOptions = [];
+    let pieceJustificativeOptions = [];
+    
+    switch(selectedIntitule) {
+        case 'Société':
+            formeJuridiqueOptions = ['SARL', 'SARL AU', 'SA', 'SNC', 'SCS', 'SAS', 'Autre'];
+            pieceJustificativeOptions = ['RC PM'];
+            break;
+        case 'Coopérative':
+            formeJuridiqueOptions = ['Coopérative'];
+            pieceJustificativeOptions = ['Attestation ODECO'];
+            break;
+        case 'Association':
+            formeJuridiqueOptions = ['Association'];
+            pieceJustificativeOptions = ['Reçus de dépôt ass'];
+            break;
+        case 'Auto-entrepreneur':
+            formeJuridiqueOptions = ['Auto-entrepreneur'];
+            pieceJustificativeOptions = ['Carte ou Attest AE'];
+            break;
+        default:
+            formeJuridiqueSelect.innerHTML = '<option value="">Sélectionner un intitulé d\'abord</option>';
+            pieceJustificativeSelect.innerHTML = '<option value="">Sélectionner un intitulé d\'abord</option>';
+            return;
+    }
+    
+    // Add forme juridique options
+    formeJuridiqueOptions.forEach(optionText => {
+        const option = document.createElement('option');
+        option.value = optionText;
+        option.textContent = optionText;
+        if (optionText === currentFormeJuridique) {
+            option.selected = true;
+        }
+        formeJuridiqueSelect.appendChild(option);
+    });
+    
+    // Add piece justificative options
+    pieceJustificativeOptions.forEach(optionText => {
+        const option = document.createElement('option');
+        option.value = optionText;
+        option.textContent = optionText;
+        if (optionText === currentPieceJustificative) {
+            option.selected = true;
+        }
+        pieceJustificativeSelect.appendChild(option);
+    });
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     toggleClientTypeFields();
     
@@ -481,6 +566,17 @@ document.addEventListener('DOMContentLoaded', function() {
         const currentValue = '{{ old("intitule_source", $client->intitule_source ?? "") }}';
         intituleSourceSelect.setAttribute('data-current-value', currentValue);
         updateIntituleSourceOptions();
+    }
+    
+    // Store current values for forme_juridique and piece_justificative
+    const formeJuridiqueSelect = document.getElementById('forme_juridique_select');
+    const pieceJustificativeSelect = document.getElementById('piece_justificative_select');
+    if (formeJuridiqueSelect && pieceJustificativeSelect) {
+        const currentFormeJuridique = '{{ old("forme_juridique", $client->forme_juridique ?? "") }}';
+        const currentPieceJustificative = '{{ old("piece_justificative", $client->piece_justificative ?? "") }}';
+        formeJuridiqueSelect.setAttribute('data-current-value', currentFormeJuridique);
+        pieceJustificativeSelect.setAttribute('data-current-value', currentPieceJustificative);
+        updateFormeJuridiqueAndPieceJustificative();
     }
     
     // Toggle N piece Id field on page load
