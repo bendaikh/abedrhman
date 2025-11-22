@@ -156,6 +156,7 @@
                                 <option value="Coopérative" {{ old('intitule', $client->intitule ?? '') === 'Coopérative' ? 'selected' : '' }}>Coopérative</option>
                                 <option value="Association" {{ old('intitule', $client->intitule ?? '') === 'Association' ? 'selected' : '' }}>Association</option>
                                 <option value="Auto-entrepreneur" {{ old('intitule', $client->intitule ?? '') === 'Auto-entrepreneur' ? 'selected' : '' }}>Auto-entrepreneur</option>
+                                <option value="Entreprise individuelle" {{ old('intitule', $client->intitule ?? '') === 'Entreprise individuelle' ? 'selected' : '' }}>Entreprise individuelle</option>
                             </select>
                         </div>
 

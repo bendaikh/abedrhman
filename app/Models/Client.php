@@ -59,4 +59,20 @@ class Client extends Model
         $nextNumber = $lastClient ? $lastClient->id + 1 : 1;
         return 'CLI-' . str_pad($nextNumber, 6, '0', STR_PAD_LEFT);
     }
+
+    /**
+     * Get the actionnaires for the client
+     */
+    public function actionnaires()
+    {
+        return $this->hasMany(Actionnaire::class);
+    }
+
+    /**
+     * Get the dirigeants for the client
+     */
+    public function dirigeants()
+    {
+        return $this->hasMany(Dirigeant::class);
+    }
 }

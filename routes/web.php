@@ -31,6 +31,28 @@ Route::middleware('auth')->group(function () {
     // Service sections routes
     Route::resource('clients', \App\Http\Controllers\ClientController::class);
 
+    // Actionnaires routes (nested under clients)
+    Route::prefix('clients/{client}/actionnaires')->group(function () {
+        Route::get('/', [\App\Http\Controllers\ActionnaireController::class, 'index'])->name('actionnaires.index');
+        Route::get('/create', [\App\Http\Controllers\ActionnaireController::class, 'create'])->name('actionnaires.create');
+        Route::post('/', [\App\Http\Controllers\ActionnaireController::class, 'store'])->name('actionnaires.store');
+        Route::get('/{actionnaire}', [\App\Http\Controllers\ActionnaireController::class, 'show'])->name('actionnaires.show');
+        Route::get('/{actionnaire}/edit', [\App\Http\Controllers\ActionnaireController::class, 'edit'])->name('actionnaires.edit');
+        Route::put('/{actionnaire}', [\App\Http\Controllers\ActionnaireController::class, 'update'])->name('actionnaires.update');
+        Route::delete('/{actionnaire}', [\App\Http\Controllers\ActionnaireController::class, 'destroy'])->name('actionnaires.destroy');
+    });
+
+    // Dirigeants routes (nested under clients)
+    Route::prefix('clients/{client}/dirigeants')->group(function () {
+        Route::get('/', [\App\Http\Controllers\DirigeantController::class, 'index'])->name('dirigeants.index');
+        Route::get('/create', [\App\Http\Controllers\DirigeantController::class, 'create'])->name('dirigeants.create');
+        Route::post('/', [\App\Http\Controllers\DirigeantController::class, 'store'])->name('dirigeants.store');
+        Route::get('/{dirigeant}', [\App\Http\Controllers\DirigeantController::class, 'show'])->name('dirigeants.show');
+        Route::get('/{dirigeant}/edit', [\App\Http\Controllers\DirigeantController::class, 'edit'])->name('dirigeants.edit');
+        Route::put('/{dirigeant}', [\App\Http\Controllers\DirigeantController::class, 'update'])->name('dirigeants.update');
+        Route::delete('/{dirigeant}', [\App\Http\Controllers\DirigeantController::class, 'destroy'])->name('dirigeants.destroy');
+    });
+
     Route::get('/tiers', function () {
         return view('sections.tiers', ['page_title' => 'Base tiers']);
     })->name('tiers');
