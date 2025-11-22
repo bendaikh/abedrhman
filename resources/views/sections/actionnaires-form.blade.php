@@ -97,8 +97,13 @@
             <!-- Nationalité -->
             <div>
                 <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Nationalité</label>
-                <input type="text" name="nationalite" value="{{ old('nationalite', $actionnaire->nationalite ?? '') }}" 
-                    class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                <select name="nationalite" class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                    <option value="">Sélectionner</option>
+                    <option value="Marocain résidant" {{ old('nationalite', $actionnaire->nationalite ?? '') === 'Marocain résidant' ? 'selected' : '' }}>Marocain résidant</option>
+                    <option value="Marocain non résidant" {{ old('nationalite', $actionnaire->nationalite ?? '') === 'Marocain non résidant' ? 'selected' : '' }}>Marocain non résidant</option>
+                    <option value="Étranger résidant" {{ old('nationalite', $actionnaire->nationalite ?? '') === 'Étranger résidant' ? 'selected' : '' }}>Étranger résidant</option>
+                    <option value="Étranger non résidant" {{ old('nationalite', $actionnaire->nationalite ?? '') === 'Étranger non résidant' ? 'selected' : '' }}>Étranger non résidant</option>
+                </select>
             </div>
 
             <!-- Adresse -->

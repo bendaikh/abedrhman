@@ -153,10 +153,10 @@
                             <select name="intitule" id="intitule_select" onchange="updateFormeJuridiqueAndPieceJustificative()" class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                                 <option value="">Sélectionner</option>
                                 <option value="Société" {{ old('intitule', $client->intitule ?? '') === 'Société' ? 'selected' : '' }}>Société</option>
+                                <option value="Entreprise individuelle" {{ old('intitule', $client->intitule ?? '') === 'Entreprise individuelle' ? 'selected' : '' }}>Entreprise individuelle</option>
                                 <option value="Coopérative" {{ old('intitule', $client->intitule ?? '') === 'Coopérative' ? 'selected' : '' }}>Coopérative</option>
                                 <option value="Association" {{ old('intitule', $client->intitule ?? '') === 'Association' ? 'selected' : '' }}>Association</option>
                                 <option value="Auto-entrepreneur" {{ old('intitule', $client->intitule ?? '') === 'Auto-entrepreneur' ? 'selected' : '' }}>Auto-entrepreneur</option>
-                                <option value="Entreprise individuelle" {{ old('intitule', $client->intitule ?? '') === 'Entreprise individuelle' ? 'selected' : '' }}>Entreprise individuelle</option>
                             </select>
                         </div>
 
@@ -519,6 +519,10 @@ function updateFormeJuridiqueAndPieceJustificative() {
         case 'Société':
             formeJuridiqueOptions = ['SARL', 'SARL AU', 'SA', 'SNC', 'SCS', 'SAS', 'Autre'];
             pieceJustificativeOptions = ['RC PM'];
+            break;
+        case 'Entreprise individuelle':
+            formeJuridiqueOptions = ['Personne physique'];
+            pieceJustificativeOptions = ['RC PP'];
             break;
         case 'Coopérative':
             formeJuridiqueOptions = ['Coopérative'];

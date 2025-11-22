@@ -68,9 +68,16 @@
             <!-- Fonction -->
             <div>
                 <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Fonction</label>
-                <input type="text" name="fonction" value="{{ old('fonction', $dirigeant->fonction ?? '') }}" 
-                    class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                    placeholder="Gérant">
+                <select name="fonction" class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                    <option value="">Sélectionner</option>
+                    <option value="Gérant" {{ old('fonction', $dirigeant->fonction ?? '') === 'Gérant' ? 'selected' : '' }}>Gérant</option>
+                    <option value="Co-gérant" {{ old('fonction', $dirigeant->fonction ?? '') === 'Co-gérant' ? 'selected' : '' }}>Co-gérant</option>
+                    <option value="Président" {{ old('fonction', $dirigeant->fonction ?? '') === 'Président' ? 'selected' : '' }}>Président</option>
+                    <option value="Trésorier" {{ old('fonction', $dirigeant->fonction ?? '') === 'Trésorier' ? 'selected' : '' }}>Trésorier</option>
+                    <option value="Secrétaire" {{ old('fonction', $dirigeant->fonction ?? '') === 'Secrétaire' ? 'selected' : '' }}>Secrétaire</option>
+                    <option value="Actionnaire" {{ old('fonction', $dirigeant->fonction ?? '') === 'Actionnaire' ? 'selected' : '' }}>Actionnaire</option>
+                    <option value="Autre" {{ old('fonction', $dirigeant->fonction ?? '') === 'Autre' ? 'selected' : '' }}>Autre</option>
+                </select>
             </div>
 
             <!-- Pièce ID -->
@@ -97,8 +104,13 @@
             <!-- Nationalité -->
             <div>
                 <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Nationalité</label>
-                <input type="text" name="nationalite" value="{{ old('nationalite', $dirigeant->nationalite ?? '') }}" 
-                    class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                <select name="nationalite" class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                    <option value="">Sélectionner</option>
+                    <option value="Marocain résidant" {{ old('nationalite', $dirigeant->nationalite ?? '') === 'Marocain résidant' ? 'selected' : '' }}>Marocain résidant</option>
+                    <option value="Marocain non résidant" {{ old('nationalite', $dirigeant->nationalite ?? '') === 'Marocain non résidant' ? 'selected' : '' }}>Marocain non résidant</option>
+                    <option value="Étranger résidant" {{ old('nationalite', $dirigeant->nationalite ?? '') === 'Étranger résidant' ? 'selected' : '' }}>Étranger résidant</option>
+                    <option value="Étranger non résidant" {{ old('nationalite', $dirigeant->nationalite ?? '') === 'Étranger non résidant' ? 'selected' : '' }}>Étranger non résidant</option>
+                </select>
             </div>
 
             <!-- Adresse -->

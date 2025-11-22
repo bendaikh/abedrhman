@@ -61,34 +61,38 @@
                 <div class="p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50">
                     <div class="flex items-start justify-between mb-3">
                         <div class="flex-1">
-                            <div class="flex items-center gap-2 mb-1">
-                                <span class="text-sm font-medium text-orange-600 dark:text-orange-400">{{ $client->num_client ?? 'N/A' }}</span>
-                                <span class="px-2 py-0.5 text-xs font-medium rounded-full {{ $client->type === 'societe' ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200' : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200' }}">
-                                    {{ $client->type === 'societe' ? 'Entreprise' : 'Particulier' }}
-                                </span>
-                            </div>
-                            @if($client->type === 'particulier')
-                                <div class="text-base font-medium text-gray-900 dark:text-white">
+                            <div class="text-base font-medium text-gray-900 dark:text-white mb-1">
+                                @if($client->type === 'particulier')
                                     {{ trim(($client->nom ?? '') . ' ' . ($client->prenom ?? '')) ?: 'N/A' }}
-                                </div>
-                                @if($client->fonction)
-                                    <div class="text-xs text-gray-500 dark:text-gray-400">{{ $client->fonction }}</div>
+                                @else
+                                    {{ $client->nom_raison_sociale ?? 'N/A' }}
                                 @endif
-                            @else
-                                <div class="text-base font-medium text-gray-900 dark:text-white">{{ $client->nom_raison_sociale ?? 'N/A' }}</div>
-                                @if($client->sigle)
-                                    <div class="text-xs text-gray-500 dark:text-gray-400">{{ $client->sigle }}</div>
-                                @endif
-                            @endif
+                            </div>
+                            <div class="text-xs text-gray-500 dark:text-gray-400">{{ $client->num_client ?? 'N/A' }}</div>
                         </div>
                     </div>
                     <div class="space-y-1 mb-3 text-sm">
-                        @if($client->email)
-                            <div class="flex items-center text-gray-600 dark:text-gray-400">
-                                <svg class="w-4 h-4 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        @if($client->activite)
+                            <div class="flex items-start text-gray-600 dark:text-gray-400">
+                                <svg class="w-4 h-4 mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                 </svg>
-                                {{ $client->email }}
+                                <span>{{ $client->activite }}</span>
+                            </div>
+                        @endif
+                        @if($client->type === 'societe' && $client->dirigeants->count() > 0)
+                            <div class="flex items-start text-gray-600 dark:text-gray-400">
+                                <svg class="w-4 h-4 mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                </svg>
+                                <div>
+                                    @foreach($client->dirigeants->take(2) as $dirigeant)
+                                        <div>{{ $dirigeant->nom }} {{ $dirigeant->prenom }}</div>
+                                    @endforeach
+                                    @if($client->dirigeants->count() > 2)
+                                        <div class="text-xs text-gray-500">+{{ $client->dirigeants->count() - 2 }} autre(s)</div>
+                                    @endif
+                                </div>
                             </div>
                         @endif
                         @if($client->tel_1 ?? $client->fixe)
@@ -173,10 +177,9 @@
             <table class="w-full">
                 <thead class="bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
                     <tr>
-                        <th class="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Num client</th>
-                        <th class="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Type</th>
-                        <th class="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Nom / Raison sociale</th>
-                        <th class="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Email</th>
+                        <th class="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Raison sociale</th>
+                        <th class="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Activité</th>
+                        <th class="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Dirigeants</th>
                         <th class="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Téléphone</th>
                         <th class="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Ville</th>
                         <th class="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
@@ -185,31 +188,32 @@
                 <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                     @forelse($clients as $client)
                         <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                            <td class="px-4 lg:px-6 py-4 whitespace-nowrap">
-                                <span class="text-sm font-medium text-orange-600 dark:text-orange-400">{{ $client->num_client ?? 'N/A' }}</span>
-                            </td>
-                            <td class="px-4 lg:px-6 py-4 whitespace-nowrap">
-                                <span class="px-2 py-1 text-xs font-medium rounded-full {{ $client->type === 'societe' ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200' : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200' }}">
-                                    {{ $client->type === 'societe' ? 'Entreprise' : 'Particulier' }}
-                                </span>
-                            </td>
-                            <td class="px-4 lg:px-6 py-4 whitespace-nowrap">
-                                @if($client->type === 'particulier')
-                                    <div class="text-sm font-medium text-gray-900 dark:text-white">
+                            <td class="px-4 lg:px-6 py-4">
+                                <div class="text-sm font-medium text-gray-900 dark:text-white">
+                                    @if($client->type === 'particulier')
                                         {{ trim(($client->nom ?? '') . ' ' . ($client->prenom ?? '')) ?: 'N/A' }}
-                                    </div>
-                                    @if($client->fonction)
-                                        <div class="text-xs text-gray-500 dark:text-gray-400">{{ $client->fonction }}</div>
+                                    @else
+                                        {{ $client->nom_raison_sociale ?? 'N/A' }}
                                     @endif
-                                @else
-                                    <div class="text-sm font-medium text-gray-900 dark:text-white">{{ $client->nom_raison_sociale ?? 'N/A' }}</div>
-                                    @if($client->sigle)
-                                        <div class="text-xs text-gray-500 dark:text-gray-400">{{ $client->sigle }}</div>
-                                    @endif
-                                @endif
+                                </div>
+                                <div class="text-xs text-gray-500 dark:text-gray-400">{{ $client->num_client ?? 'N/A' }}</div>
                             </td>
-                            <td class="px-4 lg:px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                                {{ $client->email ?? 'N/A' }}
+                            <td class="px-4 lg:px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
+                                {{ $client->activite ?? 'N/A' }}
+                            </td>
+                            <td class="px-4 lg:px-6 py-4">
+                                @if($client->type === 'societe' && $client->dirigeants->count() > 0)
+                                    <div class="text-sm text-gray-900 dark:text-white">
+                                        @foreach($client->dirigeants->take(2) as $dirigeant)
+                                            <div class="mb-1">{{ $dirigeant->nom }} {{ $dirigeant->prenom }}</div>
+                                        @endforeach
+                                        @if($client->dirigeants->count() > 2)
+                                            <div class="text-xs text-gray-500 dark:text-gray-400">+{{ $client->dirigeants->count() - 2 }} autre(s)</div>
+                                        @endif
+                                    </div>
+                                @else
+                                    <span class="text-sm text-gray-400 dark:text-gray-500">-</span>
+                                @endif
                             </td>
                             <td class="px-4 lg:px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                                 {{ $client->tel_1 ?? ($client->fixe ?? 'N/A') }}
@@ -256,7 +260,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="px-4 lg:px-6 py-12 text-center">
+                            <td colspan="6" class="px-4 lg:px-6 py-12 text-center">
                                 <div class="text-gray-500 dark:text-gray-400">
                                     <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87M15 11a3 3 0 10-6 0 3 3 0 006 0z" />
