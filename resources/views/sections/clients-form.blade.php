@@ -5,22 +5,25 @@
 @section('content')
 <div class="space-y-6">
     <!-- Header -->
-    <div class="flex items-center justify-between">
-        <div>
-            <h2 class="text-2xl font-semibold text-gray-900 dark:text-white">
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
+        <div class="w-full sm:w-auto">
+            <h2 class="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-white">
                 {{ $client ? 'Modifier le client' : 'Créer un client' }}
             </h2>
-            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+            <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1">
                 {{ $client ? 'Modifiez les informations du client' : 'Remplissez les informations pour créer un nouveau client' }}
             </p>
         </div>
-        <a href="{{ route('clients.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 font-medium rounded-lg transition-colors">
+        <a href="{{ route('clients.index') }}" class="inline-flex items-center justify-center w-full sm:w-auto px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 text-sm font-medium rounded-lg transition-colors">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
             Retour à la liste
         </a>
     </div>
 
     <!-- Form -->
-    <form action="{{ $client ? route('clients.update', $client->id) : route('clients.store') }}" method="POST" class="bg-white dark:bg-gray-800 rounded-2xl shadow border border-gray-100 dark:border-gray-700 p-6">
+    <form action="{{ $client ? route('clients.update', $client->id) : route('clients.store') }}" method="POST" class="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow border border-gray-100 dark:border-gray-700 p-4 sm:p-6">
         @csrf
         @if($client)
             @method('PUT')
@@ -36,21 +39,21 @@
             </div>
         @endif
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
             <!-- Num client -->
             <div class="md:col-span-2">
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     <span class="text-orange-600 dark:text-orange-400 font-semibold">Num client</span>
                 </label>
                 <input type="text" name="num_client" value="{{ old('num_client', $client->num_client ?? '') }}" 
-                    class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder="Généré automatiquement si vide">
             </div>
 
             <!-- Type -->
             <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Type *</label>
-                <select name="type" id="client_type" onchange="toggleClientTypeFields()" required class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Type *</label>
+                <select name="type" id="client_type" onchange="toggleClientTypeFields()" required class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                     <option value="particulier" {{ old('type', $client->type ?? 'societe') === 'particulier' ? 'selected' : '' }}>Particulier</option>
                     <option value="societe" {{ old('type', $client->type ?? 'societe') === 'societe' ? 'selected' : '' }}>Entreprise</option>
                 </select>
@@ -58,32 +61,32 @@
 
             <!-- Particulier Fields -->
             <div id="particulier_fields" class="md:col-span-2" style="display: {{ (old('type', $client->type ?? 'societe') === 'particulier') ? 'block' : 'none' }};">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                     <!-- Nom -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Nom</label>
+                        <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Nom</label>
                         <input type="text" name="nom" value="{{ old('nom', $client->nom ?? '') }}" 
-                            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                     </div>
 
                     <!-- Prénom -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Prénom</label>
+                        <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Prénom</label>
                         <input type="text" name="prenom" value="{{ old('prenom', $client->prenom ?? '') }}" 
-                            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                     </div>
 
                     <!-- Fonction -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Fonction</label>
+                        <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Fonction</label>
                         <input type="text" name="fonction" value="{{ old('fonction', $client->fonction ?? '') }}" 
-                            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                     </div>
 
                     <!-- Type pièce ID -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Type pièce ID</label>
-                        <select name="type_piece_id" id="type_piece_id_select" onchange="toggleNPieceIdField()" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Type pièce ID</label>
+                        <select name="type_piece_id" id="type_piece_id_select" onchange="toggleNPieceIdField()" class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                             <option value="">Sélectionner</option>
                             <option value="CIN" {{ old('type_piece_id', $client->type_piece_id ?? '') === 'CIN' ? 'selected' : '' }}>CIN</option>
                             <option value="PASSPORT" {{ old('type_piece_id', $client->type_piece_id ?? '') === 'PASSPORT' ? 'selected' : '' }}>PASSPORT</option>
@@ -94,29 +97,29 @@
 
                     <!-- N° pièce ID -->
                     <div id="n_piece_id_field" style="display: {{ old('type_piece_id', $client->type_piece_id ?? '') ? 'block' : 'none' }};">
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">N° pièce ID</label>
+                        <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">N° pièce ID</label>
                         <input type="text" name="n_piece_id" value="{{ old('n_piece_id', $client->n_piece_id ?? '') }}" 
-                            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                     </div>
 
                     <!-- Date naissance -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Date naissance</label>
+                        <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Date naissance</label>
                         <input type="date" name="date_naissance" value="{{ old('date_naissance', ($client && $client->date_naissance) ? $client->date_naissance->format('Y-m-d') : '') }}" 
-                            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                     </div>
 
                     <!-- Lieu naissance -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Lieu naissance</label>
+                        <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Lieu naissance</label>
                         <input type="text" name="lieu_naissance" value="{{ old('lieu_naissance', $client->lieu_naissance ?? '') }}" 
-                            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                     </div>
 
                     <!-- Nationalité -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Nationalité</label>
-                        <select name="nationalite" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Nationalité</label>
+                        <select name="nationalite" class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                             <option value="">Sélectionner</option>
                             <option value="Marocain résident" {{ old('nationalite', $client->nationalite ?? '') === 'Marocain résident' ? 'selected' : '' }}>Marocain résident</option>
                             <option value="Marocain non résident" {{ old('nationalite', $client->nationalite ?? '') === 'Marocain non résident' ? 'selected' : '' }}>Marocain non résident</option>
@@ -129,25 +132,25 @@
 
             <!-- Société Fields -->
             <div id="societe_fields" class="md:col-span-2" style="display: {{ (old('type', $client->type ?? 'societe') === 'societe') ? 'block' : 'none' }};">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                     <!-- Nom / raison sociale -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Nom / raison sociale</label>
+                        <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Nom / raison sociale</label>
                         <input type="text" name="nom_raison_sociale" value="{{ old('nom_raison_sociale', $client->nom_raison_sociale ?? '') }}" 
-                            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                     </div>
 
                         <!-- Sigle -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Sigle</label>
+                            <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Sigle</label>
                             <input type="text" name="sigle" value="{{ old('sigle', $client->sigle ?? '') }}" 
-                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                         </div>
 
                         <!-- Intitulé -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Intitulé</label>
-                            <select name="intitule" id="intitule_select" onchange="updateFormeJuridiqueAndPieceJustificative()" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Intitulé</label>
+                            <select name="intitule" id="intitule_select" onchange="updateFormeJuridiqueAndPieceJustificative()" class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                                 <option value="">Sélectionner</option>
                                 <option value="Société" {{ old('intitule', $client->intitule ?? '') === 'Société' ? 'selected' : '' }}>Société</option>
                                 <option value="Coopérative" {{ old('intitule', $client->intitule ?? '') === 'Coopérative' ? 'selected' : '' }}>Coopérative</option>
@@ -158,59 +161,59 @@
 
                         <!-- Forme juridique -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Forme juridique</label>
-                            <select name="forme_juridique" id="forme_juridique_select" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Forme juridique</label>
+                            <select name="forme_juridique" id="forme_juridique_select" class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                                 <option value="">Sélectionner un intitulé d'abord</option>
                             </select>
                         </div>
 
                         <!-- Pièce justificative -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Pièce justificative</label>
-                            <select name="piece_justificative" id="piece_justificative_select" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Pièce justificative</label>
+                            <select name="piece_justificative" id="piece_justificative_select" class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                                 <option value="">Sélectionner un intitulé d'abord</option>
                             </select>
                         </div>
 
                         <!-- N° pièce -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">N° pièce</label>
+                            <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">N° pièce</label>
                             <input type="text" name="numero_piece" value="{{ old('numero_piece', $client->numero_piece ?? '') }}" 
-                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                         </div>
 
                         <!-- ICE -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">ICE</label>
+                            <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">ICE</label>
                             <input type="text" name="ice" value="{{ old('ice', $client->ice ?? '') }}" 
-                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                         </div>
 
                         <!-- ID fiscale -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">ID fiscale</label>
+                            <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">ID fiscale</label>
                             <input type="text" name="id_fiscale" value="{{ old('id_fiscale', $client->id_fiscale ?? '') }}" 
-                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                         </div>
 
                         <!-- Patente -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Patente</label>
+                            <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Patente</label>
                             <input type="text" name="patente" value="{{ old('patente', $client->patente ?? '') }}" 
-                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                         </div>
 
                         <!-- Date création -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Date création</label>
+                            <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Date création</label>
                             <input type="date" name="date_creation" value="{{ old('date_creation', ($client && $client->date_creation) ? $client->date_creation->format('Y-m-d') : '') }}" 
-                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                         </div>
 
                         <!-- Forme juridique créée -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Forme juridique créée</label>
-                            <select name="forme_juridique_creee" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Forme juridique créée</label>
+                            <select name="forme_juridique_creee" class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                                 <option value="">Sélectionner</option>
                                 <option value="Oui" {{ old('forme_juridique_creee', $client->forme_juridique_creee ?? '') === 'Oui' ? 'selected' : '' }}>Oui</option>
                                 <option value="Encours" {{ old('forme_juridique_creee', $client->forme_juridique_creee ?? '') === 'Encours' ? 'selected' : '' }}>Encours</option>
@@ -219,29 +222,29 @@
 
                         <!-- Siège social -->
                         <div class="md:col-span-2">
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Siège social</label>
+                            <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Siège social</label>
                             <textarea name="siege_social" rows="3" 
-                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">{{ old('siege_social', $client->siege_social ?? '') }}</textarea>
+                                class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">{{ old('siege_social', $client->siege_social ?? '') }}</textarea>
                         </div>
 
                         <!-- Ville -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Ville</label>
+                            <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Ville</label>
                             <input type="text" name="ville" value="{{ old('ville', $client->ville ?? '') }}" 
-                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                         </div>
 
                         <!-- Pays -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Pays</label>
+                            <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Pays</label>
                             <input type="text" name="pays" value="{{ old('pays', $client->pays ?? '') }}" 
-                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                         </div>
 
                         <!-- Secteur d'activité -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Secteur d'activité</label>
-                            <select name="secteur_activite" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Secteur d'activité</label>
+                            <select name="secteur_activite" class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                                 <option value="">Sélectionner</option>
                                 <option value="COMMERCE" {{ old('secteur_activite', $client->secteur_activite ?? '') === 'COMMERCE' ? 'selected' : '' }}>COMMERCE</option>
                                 <option value="INDUSTRIE" {{ old('secteur_activite', $client->secteur_activite ?? '') === 'INDUSTRIE' ? 'selected' : '' }}>INDUSTRIE</option>
@@ -260,66 +263,66 @@
 
                         <!-- Activité -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Activité</label>
+                            <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Activité</label>
                             <input type="text" name="activite" value="{{ old('activite', $client->activite ?? '') }}" 
-                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                         </div>
 
                         <!-- Autre adresse d'activité -->
                         <div class="md:col-span-2">
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Autre adresse d'activité</label>
+                            <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Autre adresse d'activité</label>
                             <textarea name="autre_adresse_activite" rows="3" 
-                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">{{ old('autre_adresse_activite', $client->autre_adresse_activite ?? '') }}</textarea>
+                                class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">{{ old('autre_adresse_activite', $client->autre_adresse_activite ?? '') }}</textarea>
                         </div>
 
                         <!-- Adresse (dépôt ou magasin) -->
                         <div class="md:col-span-2">
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Adresse (dépôt ou magasin)</label>
+                            <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Adresse (dépôt ou magasin)</label>
                             <textarea name="adresse_depot_magasin" rows="3" 
-                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">{{ old('adresse_depot_magasin', $client->adresse_depot_magasin ?? '') }}</textarea>
+                                class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">{{ old('adresse_depot_magasin', $client->adresse_depot_magasin ?? '') }}</textarea>
                         </div>
 
                         <!-- Tél 1 -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tél 1</label>
+                            <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tél 1</label>
                             <input type="text" name="tel_1" value="{{ old('tel_1', $client->tel_1 ?? '') }}" 
-                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                         </div>
 
                         <!-- Tél 2 -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tél 2</label>
+                            <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tél 2</label>
                             <input type="text" name="tel_2" value="{{ old('tel_2', $client->tel_2 ?? '') }}" 
-                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                         </div>
 
                         <!-- Fixe -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Fixe</label>
+                            <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Fixe</label>
                             <input type="text" name="fixe" value="{{ old('fixe', $client->fixe ?? '') }}" 
-                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                         </div>
 
                         <!-- Email -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email</label>
+                            <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email</label>
                             <input type="email" name="email" value="{{ old('email', $client->email ?? '') }}" 
-                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                         </div>
                     </div>
                 </div>
 
             <!-- Common Fields (Visible for both types) -->
             <div class="md:col-span-2">
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Observations</label>
+                <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Observations</label>
                 <textarea name="observations" rows="4" 
-                    class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">{{ old('observations', $client->observations ?? '') }}</textarea>
+                    class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">{{ old('observations', $client->observations ?? '') }}</textarea>
             </div>
 
             <!-- Source -->
             <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Source</label>
-                <select name="source" id="source_select" onchange="updateIntituleSourceOptions()" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Source</label>
+                <select name="source" id="source_select" onchange="updateIntituleSourceOptions()" class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                     <option value="">Sélectionner</option>
                     <option value="Spontané" {{ old('source', $client->source ?? '') === 'Spontané' ? 'selected' : '' }}>Spontané</option>
                     <option value="Client" {{ old('source', $client->source ?? '') === 'Client' ? 'selected' : '' }}>Client</option>
@@ -332,29 +335,29 @@
 
             <!-- Intitulé source -->
             <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Intitulé source</label>
-                <select name="intitule_source" id="intitule_source_select" onchange="toggleIntituleSourceDataField()" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Intitulé source</label>
+                <select name="intitule_source" id="intitule_source_select" onchange="toggleIntituleSourceDataField()" class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                     <option value="">Sélectionner une source d'abord</option>
                 </select>
             </div>
 
             <!-- Intitulé source data -->
             <div id="intitule_source_data_field" class="md:col-span-2" style="display: {{ old('intitule_source', $client->intitule_source ?? '') ? 'block' : 'none' }};">
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     <span id="intitule_source_data_label">Information supplémentaire</span>
                 </label>
                 <input type="text" name="intitule_source_data" id="intitule_source_data_input" value="{{ old('intitule_source_data', $client->intitule_source_data ?? '') }}" 
-                    class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder="Entrez les informations">
             </div>
         </div>
 
         <!-- Form Actions -->
-        <div class="mt-8 flex items-center justify-end space-x-4">
-            <a href="{{ route('clients.index') }}" class="px-6 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+        <div class="mt-6 sm:mt-8 flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-3 sm:gap-4">
+            <a href="{{ route('clients.index') }}" class="px-4 sm:px-6 py-2 text-sm sm:text-base text-center border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors order-2 sm:order-1">
                 Annuler
             </a>
-            <button type="submit" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors">
+            <button type="submit" class="px-4 sm:px-6 py-2 text-sm sm:text-base bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors order-1 sm:order-2">
                 {{ $client ? 'Modifier' : 'Créer' }} le client
             </button>
         </div>
