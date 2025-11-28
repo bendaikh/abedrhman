@@ -62,6 +62,18 @@ class ActionnaireController extends Controller
             'email_resp' => 'nullable|email|max:255',
         ]);
 
+        // Validate total part sociale percentage
+        if (isset($validated['part_sociale_pct'])) {
+            $currentTotal = $client->actionnaires()->sum('part_sociale_pct');
+            $newTotal = $currentTotal + $validated['part_sociale_pct'];
+            
+            if ($newTotal > 100) {
+                return back()->withErrors([
+                    'part_sociale_pct' => 'Le total des parts sociales ne doit pas dépasser 100%. Total actuel: ' . $currentTotal . '%, vous essayez d\'ajouter: ' . $validated['part_sociale_pct'] . '%.'
+                ])->withInput();
+            }
+        }
+
         $validated['client_id'] = $clientId;
         Actionnaire::create($validated);
 
@@ -96,6 +108,7 @@ class ActionnaireController extends Controller
     public function update(Request $request, $clientId, $id)
     {
         $actionnaire = Actionnaire::where('client_id', $clientId)->findOrFail($id);
+        $client = Client::findOrFail($clientId);
         
         $validated = $request->validate([
             'intitule' => 'nullable|string|max:255',
@@ -113,6 +126,20 @@ class ActionnaireController extends Controller
             'tel2_resp' => 'nullable|string|max:255',
             'email_resp' => 'nullable|email|max:255',
         ]);
+
+        // Validate total part sociale percentage
+        if (isset($validated['part_sociale_pct'])) {
+            $currentTotal = $client->actionnaires()
+                ->where('id', '!=', $id)
+                ->sum('part_sociale_pct');
+            $newTotal = $currentTotal + $validated['part_sociale_pct'];
+            
+            if ($newTotal > 100) {
+                return back()->withErrors([
+                    'part_sociale_pct' => 'Le total des parts sociales ne doit pas dépasser 100%. Total actuel (sans cet actionnaire): ' . $currentTotal . '%, vous essayez d\'ajouter: ' . $validated['part_sociale_pct'] . '%.'
+                ])->withInput();
+            }
+        }
 
         $actionnaire->update($validated);
 

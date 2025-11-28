@@ -423,9 +423,13 @@ function updateIntituleSourceOptions() {
             options = ['Facebook', 'Instagram', 'Youtube', 'Tiktok', 'Linkedin', 'Site web centre', 'Autre'];
             break;
         case 'Spontané':
+            options = ['Spontané'];
+            break;
         case 'Administration':
+            options = ['Liste administration'];
+            break;
         case 'Autre':
-            options = [];
+            options = ['Autre'];
             break;
         default:
             intituleSourceSelect.innerHTML = '<option value="">Sélectionner une source d\'abord</option>';

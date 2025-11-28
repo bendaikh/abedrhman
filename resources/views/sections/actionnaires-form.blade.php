@@ -47,7 +47,6 @@
                     <option value="">Sélectionner</option>
                     <option value="Mr" {{ old('intitule', $actionnaire->intitule ?? '') === 'Mr' ? 'selected' : '' }}>Mr</option>
                     <option value="Mme" {{ old('intitule', $actionnaire->intitule ?? '') === 'Mme' ? 'selected' : '' }}>Mme</option>
-                    <option value="Mlle" {{ old('intitule', $actionnaire->intitule ?? '') === 'Mlle' ? 'selected' : '' }}>Mlle</option>
                 </select>
             </div>
 
@@ -70,7 +69,7 @@
                 <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Part sociale %</label>
                 <input type="number" step="0.01" min="0" max="100" name="part_sociale_pct" value="{{ old('part_sociale_pct', $actionnaire->part_sociale_pct ?? '') }}" 
                     class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                    placeholder="20">
+                    placeholder="%">
             </div>
 
             <!-- Pièce ID -->
