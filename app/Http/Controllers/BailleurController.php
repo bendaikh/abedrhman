@@ -28,7 +28,9 @@ class BailleurController extends Controller
     {
         $validated = $request->validate([
             'raison_sociale' => 'nullable|string|max:255',
-            'responsable' => 'nullable|string|max:255',
+            'responsable_nom' => 'nullable|string|max:255',
+            'responsable_prenom' => 'nullable|string|max:255',
+            'fonction' => 'nullable|string|max:255',
             'activite' => 'nullable|string|max:255',
             'tel' => 'nullable|string|max:255',
             'email' => 'nullable|email|max:255',
@@ -66,7 +68,9 @@ class BailleurController extends Controller
 
         $validated = $request->validate([
             'raison_sociale' => 'nullable|string|max:255',
-            'responsable' => 'nullable|string|max:255',
+            'responsable_nom' => 'nullable|string|max:255',
+            'responsable_prenom' => 'nullable|string|max:255',
+            'fonction' => 'nullable|string|max:255',
             'activite' => 'nullable|string|max:255',
             'tel' => 'nullable|string|max:255',
             'email' => 'nullable|email|max:255',
@@ -88,4 +92,3 @@ class BailleurController extends Controller
         return redirect()->route('tiers.index', ['tab' => 'bailleurs'])->with('success', 'Bailleur supprimé avec succès.');
     }
 }
-

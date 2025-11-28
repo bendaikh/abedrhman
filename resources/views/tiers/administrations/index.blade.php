@@ -45,7 +45,7 @@
                     @forelse($administrations as $administration)
                         <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
                             <td class="px-6 py-4 text-sm font-medium text-gray-900 dark:text-white">{{ $administration->raison_sociale ?? 'N/A' }}</td>
-                            <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">{{ $administration->responsable ?? 'N/A' }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">{{ trim(($administration->responsable_nom ?? '') . ' ' . ($administration->responsable_prenom ?? '')) ?: 'N/A' }}</td>
                             <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">{{ $administration->tel ?? 'N/A' }}</td>
                             <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">{{ $administration->email ?? 'N/A' }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
@@ -87,4 +87,6 @@
     </div>
 </div>
 @endsection
+
+
 

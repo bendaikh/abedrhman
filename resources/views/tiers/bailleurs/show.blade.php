@@ -35,13 +35,31 @@
                     <dd class="text-base text-gray-900 dark:text-white">{{ $bailleur->raison_sociale ?? 'N/A' }}</dd>
                 </div>
                 <div>
-                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Responsable</dt>
-                    <dd class="text-base text-gray-900 dark:text-white">{{ $bailleur->responsable ?? 'N/A' }}</dd>
-                </div>
-                <div>
                     <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Activité</dt>
                     <dd class="text-base text-gray-900 dark:text-white">{{ $bailleur->activite ?? 'N/A' }}</dd>
                 </div>
+            </dl>
+
+            <!-- Responsable Section -->
+            <div class="mt-6 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl border border-gray-200 dark:border-gray-600">
+                <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Responsable</h3>
+                <dl class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Nom</dt>
+                        <dd class="text-base text-gray-900 dark:text-white">{{ $bailleur->responsable_nom ?? 'N/A' }}</dd>
+                    </div>
+                    <div>
+                        <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Prénom</dt>
+                        <dd class="text-base text-gray-900 dark:text-white">{{ $bailleur->responsable_prenom ?? 'N/A' }}</dd>
+                    </div>
+                    <div>
+                        <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Fonction</dt>
+                        <dd class="text-base text-gray-900 dark:text-white">{{ $bailleur->fonction ?? 'N/A' }}</dd>
+                    </div>
+                </dl>
+            </div>
+
+            <dl class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
                 <div>
                     <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Téléphone</dt>
                     <dd class="text-base text-gray-900 dark:text-white">{{ $bailleur->tel ?? 'N/A' }}</dd>
@@ -67,4 +85,3 @@
     </div>
 </div>
 @endsection
-

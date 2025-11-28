@@ -55,7 +55,7 @@
                                 {{ $fournisseur->raison_sociale ?? 'N/A' }}
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
-                                {{ $fournisseur->responsable ?? 'N/A' }}
+                                {{ trim(($fournisseur->responsable_nom ?? '') . ' ' . ($fournisseur->responsable_prenom ?? '')) ?: 'N/A' }}
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
                                 {{ $fournisseur->activite ?? 'N/A' }}

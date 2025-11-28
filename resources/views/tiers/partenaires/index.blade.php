@@ -46,7 +46,7 @@
                     @forelse($partenaires as $partenaire)
                         <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
                             <td class="px-6 py-4 text-sm font-medium text-gray-900 dark:text-white">{{ $partenaire->raison_sociale ?? 'N/A' }}</td>
-                            <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">{{ $partenaire->responsable ?? 'N/A' }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">{{ trim(($partenaire->responsable_nom ?? '') . ' ' . ($partenaire->responsable_prenom ?? '')) ?: 'N/A' }}</td>
                             <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">{{ $partenaire->activite ?? 'N/A' }}</td>
                             <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">{{ $partenaire->tel ?? 'N/A' }}</td>
                             <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">{{ $partenaire->email ?? 'N/A' }}</td>
@@ -89,4 +89,6 @@
     </div>
 </div>
 @endsection
+
+
 

@@ -30,17 +30,37 @@
                 </div>
 
                 <div>
-                    <label for="responsable" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Responsable</label>
-                    <input type="text" id="responsable" name="responsable" value="{{ old('responsable', $comptable->responsable ?? '') }}"
-                        class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500">
-                </div>
-
-                <div>
                     <label for="activite" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Activité</label>
                     <input type="text" id="activite" name="activite" value="{{ old('activite', $comptable->activite ?? '') }}"
                         class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500">
                 </div>
+            </div>
 
+            <!-- Responsable Section Card -->
+            <div class="mt-6 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl border border-gray-200 dark:border-gray-600">
+                <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Responsable</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label for="responsable_nom" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Nom</label>
+                        <input type="text" id="responsable_nom" name="responsable_nom" value="{{ old('responsable_nom', $comptable->responsable_nom ?? '') }}"
+                            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <div>
+                        <label for="responsable_prenom" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Prénom</label>
+                        <input type="text" id="responsable_prenom" name="responsable_prenom" value="{{ old('responsable_prenom', $comptable->responsable_prenom ?? '') }}"
+                            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <div>
+                        <label for="fonction" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Fonction</label>
+                        <input type="text" id="fonction" name="fonction" value="{{ old('fonction', $comptable->fonction ?? '') }}"
+                            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500">
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
                 <div>
                     <label for="tel" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Téléphone</label>
                     <input type="text" id="tel" name="tel" value="{{ old('tel', $comptable->tel ?? '') }}"
@@ -84,4 +104,3 @@
     </div>
 </div>
 @endsection
-

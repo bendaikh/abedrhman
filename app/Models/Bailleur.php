@@ -10,7 +10,9 @@ class Bailleur extends Model
 
     protected $fillable = [
         'raison_sociale',
-        'responsable',
+        'responsable_nom',
+        'responsable_prenom',
+        'fonction',
         'activite',
         'tel',
         'email',
@@ -29,4 +31,3 @@ class Bailleur extends Model
         return 'BAI-' . str_pad($nextNumber, 6, '0', STR_PAD_LEFT);
     }
 }
-

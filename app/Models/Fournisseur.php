@@ -10,7 +10,8 @@ class Fournisseur extends Model
 
     protected $fillable = [
         'raison_sociale',
-        'responsable',
+        'responsable_nom',
+        'responsable_prenom',
         'fonction',
         'activite',
         'tel',

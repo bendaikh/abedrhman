@@ -10,7 +10,8 @@ class Partenaire extends Model
 
     protected $fillable = [
         'raison_sociale',
-        'responsable',
+        'responsable_nom',
+        'responsable_prenom',
         'fonction',
         'activite',
         'tel',
@@ -30,4 +31,3 @@ class Partenaire extends Model
         return 'PAR-' . str_pad($nextNumber, 6, '0', STR_PAD_LEFT);
     }
 }
-

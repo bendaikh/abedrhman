@@ -10,7 +10,9 @@ class Administration extends Model
 
     protected $fillable = [
         'raison_sociale',
-        'responsable',
+        'responsable_nom',
+        'responsable_prenom',
+        'fonction',
         'tel',
         'email',
         'adresse',
@@ -26,4 +28,3 @@ class Administration extends Model
         return 'ADM-' . str_pad($nextNumber, 6, '0', STR_PAD_LEFT);
     }
 }
-

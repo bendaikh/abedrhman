@@ -46,7 +46,7 @@
                     @forelse($bailleurs as $bailleur)
                         <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
                             <td class="px-6 py-4 text-sm font-medium text-gray-900 dark:text-white">{{ $bailleur->raison_sociale ?? 'N/A' }}</td>
-                            <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">{{ $bailleur->responsable ?? 'N/A' }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">{{ trim(($bailleur->responsable_nom ?? '') . ' ' . ($bailleur->responsable_prenom ?? '')) ?: 'N/A' }}</td>
                             <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">{{ $bailleur->activite ?? 'N/A' }}</td>
                             <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">{{ $bailleur->tel ?? 'N/A' }}</td>
                             <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">{{ $bailleur->email ?? 'N/A' }}</td>
@@ -89,4 +89,6 @@
     </div>
 </div>
 @endsection
+
+
 
