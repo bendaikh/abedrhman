@@ -35,7 +35,8 @@
             <table class="w-full">
                 <thead class="bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Nom & Prénom</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Nom</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Prénom</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Téléphone</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Email</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">RIB</th>
@@ -45,7 +46,8 @@
                 <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                     <?php $__empty_1 = true; $__currentLoopData = $comptesAssocies; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $compteAssocie): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                         <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                            <td class="px-6 py-4 text-sm font-medium text-gray-900 dark:text-white"><?php echo e($compteAssocie->nom_prenom ?? 'N/A'); ?></td>
+                            <td class="px-6 py-4 text-sm font-medium text-gray-900 dark:text-white"><?php echo e($compteAssocie->nom ?? 'N/A'); ?></td>
+                            <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400"><?php echo e($compteAssocie->prenom ?? 'N/A'); ?></td>
                             <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400"><?php echo e($compteAssocie->tel ?? 'N/A'); ?></td>
                             <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400"><?php echo e($compteAssocie->email ?? 'N/A'); ?></td>
                             <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400"><?php echo e($compteAssocie->rib ?? 'N/A'); ?></td>
@@ -76,7 +78,7 @@
                         </tr>
                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                         <tr>
-                            <td colspan="5" class="px-6 py-12 text-center text-gray-500 dark:text-gray-400">Aucun compte associé trouvé</td>
+                            <td colspan="6" class="px-6 py-12 text-center text-gray-500 dark:text-gray-400">Aucun compte associé trouvé</td>
                         </tr>
                     <?php endif; ?>
                 </tbody>
@@ -88,6 +90,7 @@
     </div>
 </div>
 <?php $__env->stopSection(); ?>
+
 
 
 

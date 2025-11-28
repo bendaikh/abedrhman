@@ -9,7 +9,8 @@ class CompteAssocie extends Model
     protected $table = 'comptes_associes';
 
     protected $fillable = [
-        'nom_prenom',
+        'nom',
+        'prenom',
         'tel',
         'email',
         'rib',
@@ -25,6 +26,7 @@ class CompteAssocie extends Model
         return 'CAS-' . str_pad($nextNumber, 6, '0', STR_PAD_LEFT);
     }
 }
+
 
 
 

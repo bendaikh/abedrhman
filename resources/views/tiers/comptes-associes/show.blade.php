@@ -31,8 +31,12 @@
         <div class="p-6">
             <dl class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Nom & Prénom</dt>
-                    <dd class="text-base text-gray-900 dark:text-white">{{ $compteAssocie->nom_prenom ?? 'N/A' }}</dd>
+                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Nom</dt>
+                    <dd class="text-base text-gray-900 dark:text-white">{{ $compteAssocie->nom ?? 'N/A' }}</dd>
+                </div>
+                <div>
+                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Prénom</dt>
+                    <dd class="text-base text-gray-900 dark:text-white">{{ $compteAssocie->prenom ?? 'N/A' }}</dd>
                 </div>
                 <div>
                     <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Téléphone</dt>
@@ -59,6 +63,7 @@
     </div>
 </div>
 @endsection
+
 
 
 

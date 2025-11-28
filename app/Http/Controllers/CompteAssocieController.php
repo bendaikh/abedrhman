@@ -27,7 +27,8 @@ class CompteAssocieController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'nom_prenom' => 'nullable|string|max:255',
+            'nom' => 'nullable|string|max:255',
+            'prenom' => 'nullable|string|max:255',
             'tel' => 'nullable|string|max:255',
             'email' => 'nullable|email|max:255',
             'rib' => 'nullable|string|max:255',
@@ -61,7 +62,8 @@ class CompteAssocieController extends Controller
         $compteAssocie = CompteAssocie::findOrFail($id);
 
         $validated = $request->validate([
-            'nom_prenom' => 'nullable|string|max:255',
+            'nom' => 'nullable|string|max:255',
+            'prenom' => 'nullable|string|max:255',
             'tel' => 'nullable|string|max:255',
             'email' => 'nullable|email|max:255',
             'rib' => 'nullable|string|max:255',
@@ -80,6 +82,7 @@ class CompteAssocieController extends Controller
         return redirect()->route('tiers.index', ['tab' => 'comptes-associes'])->with('success', 'Compte associé supprimé avec succès.');
     }
 }
+
 
 
 
