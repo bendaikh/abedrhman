@@ -53,9 +53,88 @@ Route::middleware('auth')->group(function () {
         Route::delete('/{dirigeant}', [\App\Http\Controllers\DirigeantController::class, 'destroy'])->name('dirigeants.destroy');
     });
 
+    // Base tiers routes
     Route::get('/tiers', function () {
-        return view('sections.tiers', ['page_title' => 'Base tiers']);
-    })->name('tiers');
+        $tab = request()->get('tab', 'fournisseurs');
+        return view('sections.tiers', ['page_title' => 'Base tiers', 'activeTab' => $tab]);
+    })->name('tiers.index');
+
+    // Fournisseurs
+    Route::resource('fournisseurs', \App\Http\Controllers\FournisseurController::class)->names([
+        'index' => 'fournisseurs.index',
+        'create' => 'fournisseurs.create',
+        'store' => 'fournisseurs.store',
+        'show' => 'fournisseurs.show',
+        'edit' => 'fournisseurs.edit',
+        'update' => 'fournisseurs.update',
+        'destroy' => 'fournisseurs.destroy',
+    ]);
+
+    // Personnel
+    Route::resource('personnel', \App\Http\Controllers\PersonnelController::class)->names([
+        'index' => 'personnel.index',
+        'create' => 'personnel.create',
+        'store' => 'personnel.store',
+        'show' => 'personnel.show',
+        'edit' => 'personnel.edit',
+        'update' => 'personnel.update',
+        'destroy' => 'personnel.destroy',
+    ]);
+
+    // Administrations
+    Route::resource('administrations', \App\Http\Controllers\AdministrationController::class)->names([
+        'index' => 'administrations.index',
+        'create' => 'administrations.create',
+        'store' => 'administrations.store',
+        'show' => 'administrations.show',
+        'edit' => 'administrations.edit',
+        'update' => 'administrations.update',
+        'destroy' => 'administrations.destroy',
+    ]);
+
+    // Partenaires
+    Route::resource('partenaires', \App\Http\Controllers\PartenaireController::class)->names([
+        'index' => 'partenaires.index',
+        'create' => 'partenaires.create',
+        'store' => 'partenaires.store',
+        'show' => 'partenaires.show',
+        'edit' => 'partenaires.edit',
+        'update' => 'partenaires.update',
+        'destroy' => 'partenaires.destroy',
+    ]);
+
+    // Comptables
+    Route::resource('comptables', \App\Http\Controllers\ComptableController::class)->names([
+        'index' => 'comptables.index',
+        'create' => 'comptables.create',
+        'store' => 'comptables.store',
+        'show' => 'comptables.show',
+        'edit' => 'comptables.edit',
+        'update' => 'comptables.update',
+        'destroy' => 'comptables.destroy',
+    ]);
+
+    // Bailleurs
+    Route::resource('bailleurs', \App\Http\Controllers\BailleurController::class)->names([
+        'index' => 'bailleurs.index',
+        'create' => 'bailleurs.create',
+        'store' => 'bailleurs.store',
+        'show' => 'bailleurs.show',
+        'edit' => 'bailleurs.edit',
+        'update' => 'bailleurs.update',
+        'destroy' => 'bailleurs.destroy',
+    ]);
+
+    // Comptes Associés
+    Route::resource('comptes-associes', \App\Http\Controllers\CompteAssocieController::class)->names([
+        'index' => 'comptes-associes.index',
+        'create' => 'comptes-associes.create',
+        'store' => 'comptes-associes.store',
+        'show' => 'comptes-associes.show',
+        'edit' => 'comptes-associes.edit',
+        'update' => 'comptes-associes.update',
+        'destroy' => 'comptes-associes.destroy',
+    ]);
 
     Route::get('/services', function () {
         return view('sections.services', ['page_title' => 'Services']);
