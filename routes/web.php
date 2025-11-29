@@ -64,7 +64,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/tiers', function () {
         return view('sections.tiers', ['page_title' => 'Base tiers']);
-    })->name('tiers');
+    })->name('tiers.index');
 
     Route::get('/services', function () {
         return view('sections.services', ['page_title' => 'Services']);
