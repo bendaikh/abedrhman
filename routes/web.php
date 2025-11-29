@@ -30,6 +30,15 @@ Route::middleware('auth')->group(function () {
     
     // Service sections routes
     Route::resource('clients', \App\Http\Controllers\ClientController::class);
+    
+    // Tiers routes (Base tiers section)
+    Route::resource('fournisseurs', \App\Http\Controllers\FournisseurController::class);
+    Route::resource('personnel', \App\Http\Controllers\PersonnelController::class);
+    Route::resource('administrations', \App\Http\Controllers\AdministrationController::class);
+    Route::resource('partenaires', \App\Http\Controllers\PartenaireController::class);
+    Route::resource('comptables', \App\Http\Controllers\ComptableController::class);
+    Route::resource('bailleurs', \App\Http\Controllers\BailleurController::class);
+    Route::resource('comptes-associes', \App\Http\Controllers\CompteAssocieController::class);
 
     // Actionnaires routes (nested under clients)
     Route::prefix('clients/{client}/actionnaires')->group(function () {
