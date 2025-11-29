@@ -82,7 +82,7 @@ Route::middleware('auth')->group(function () {
         return view('sections.etapes-domiciliation', ['page_title' => 'Étapes domiciliation']);
     })->name('etapes-domiciliation');
 
-    // Paramètres - Gestion DOM & Tarification
+    // Paramètres - Gestion DOM, CREA & Tarification
     Route::prefix('parametres')->group(function () {
         Route::get('/', [\App\Http\Controllers\ParametresController::class, 'index'])->name('parametres.index');
         
@@ -91,6 +91,12 @@ Route::middleware('auth')->group(function () {
         Route::post('/offres-dom', [\App\Http\Controllers\ParametresController::class, 'storeOffreDom'])->name('parametres.offres-dom.store');
         Route::put('/offres-dom/{offreDom}', [\App\Http\Controllers\ParametresController::class, 'updateOffreDom'])->name('parametres.offres-dom.update');
         Route::delete('/offres-dom/{offreDom}', [\App\Http\Controllers\ParametresController::class, 'destroyOffreDom'])->name('parametres.offres-dom.destroy');
+        
+        // Offres CREA
+        Route::get('/offres-crea', [\App\Http\Controllers\ParametresController::class, 'offresCrea'])->name('parametres.offres-crea');
+        Route::post('/offres-crea', [\App\Http\Controllers\ParametresController::class, 'storeOffreCrea'])->name('parametres.offres-crea.store');
+        Route::put('/offres-crea/{offreCrea}', [\App\Http\Controllers\ParametresController::class, 'updateOffreCrea'])->name('parametres.offres-crea.update');
+        Route::delete('/offres-crea/{offreCrea}', [\App\Http\Controllers\ParametresController::class, 'destroyOffreCrea'])->name('parametres.offres-crea.destroy');
         
         // Types de tarification
         Route::get('/types-tarification', [\App\Http\Controllers\ParametresController::class, 'typesTarification'])->name('parametres.types-tarification');
@@ -101,6 +107,10 @@ Route::middleware('auth')->group(function () {
         // Grille tarifaire DOM
         Route::get('/tarifications-dom', [\App\Http\Controllers\ParametresController::class, 'tarificationsDom'])->name('parametres.tarifications-dom');
         Route::put('/tarifications-dom', [\App\Http\Controllers\ParametresController::class, 'updateTarificationsDom'])->name('parametres.tarifications-dom.update');
+        
+        // Grille tarifaire CREA
+        Route::get('/tarifications-crea', [\App\Http\Controllers\ParametresController::class, 'tarificationsCrea'])->name('parametres.tarifications-crea');
+        Route::put('/tarifications-crea', [\App\Http\Controllers\ParametresController::class, 'updateTarificationsCrea'])->name('parametres.tarifications-crea.update');
     });
 
     // La gestion des achats

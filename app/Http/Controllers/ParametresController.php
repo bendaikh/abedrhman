@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\OffreDom;
+use App\Models\OffreCrea;
 use App\Models\TypeTarification;
 use App\Models\TarificationDom;
+use App\Models\TarificationCrea;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -16,14 +18,18 @@ class ParametresController extends Controller
     public function index()
     {
         $offresDom = OffreDom::ordered()->get();
+        $offresCrea = OffreCrea::ordered()->get();
         $typesTarification = TypeTarification::ordered()->get();
         $tarificationsDom = TarificationDom::with(['offreDom', 'typeTarification'])->get();
+        $tarificationsCrea = TarificationCrea::with(['offreCrea', 'typeTarification'])->get();
 
         return view('parametres.index', [
             'page_title' => 'Paramètres',
             'offresDom' => $offresDom,
+            'offresCrea' => $offresCrea,
             'typesTarification' => $typesTarification,
             'tarificationsDom' => $tarificationsDom,
+            'tarificationsCrea' => $tarificationsCrea,
         ]);
     }
 
@@ -209,6 +215,131 @@ class ParametresController extends Controller
 
         return redirect()->route('parametres.tarifications-dom')
             ->with('success', 'Tarifications mises à jour avec succès.');
+    }
+
+    // ==================== CREA Methods ====================
+
+    /**
+     * Display CREA offers management page
+     */
+    public function offresCrea()
+    {
+        $offresCrea = OffreCrea::ordered()->get();
+        
+        return view('parametres.offres-crea', [
+            'page_title' => 'Gestion des offres CREA',
+            'offresCrea' => $offresCrea,
+        ]);
+    }
+
+    /**
+     * Store a new CREA offer
+     */
+    public function storeOffreCrea(Request $request)
+    {
+        $validated = $request->validate([
+            'nom' => 'required|string|max:255',
+            'description' => 'nullable|string|max:1000',
+        ]);
+
+        $validated['is_active'] = $request->has('is_active');
+        $validated['ordre'] = OffreCrea::max('ordre') + 1;
+
+        OffreCrea::create($validated);
+
+        return redirect()->route('parametres.offres-crea')
+            ->with('success', 'Offre CREA créée avec succès.');
+    }
+
+    /**
+     * Update a CREA offer
+     */
+    public function updateOffreCrea(Request $request, OffreCrea $offreCrea)
+    {
+        $validated = $request->validate([
+            'nom' => 'required|string|max:255',
+            'description' => 'nullable|string|max:1000',
+        ]);
+
+        $validated['is_active'] = $request->has('is_active');
+
+        $offreCrea->update($validated);
+
+        return redirect()->route('parametres.offres-crea')
+            ->with('success', 'Offre CREA mise à jour avec succès.');
+    }
+
+    /**
+     * Delete a CREA offer
+     */
+    public function destroyOffreCrea(OffreCrea $offreCrea)
+    {
+        $offreCrea->delete();
+
+        return redirect()->route('parametres.offres-crea')
+            ->with('success', 'Offre CREA supprimée avec succès.');
+    }
+
+    /**
+     * Display CREA tarification grid management page
+     */
+    public function tarificationsCrea()
+    {
+        $offresCrea = OffreCrea::active()->ordered()->get();
+        $typesTarification = TypeTarification::active()->ordered()->get();
+        
+        // Build a matrix of tarifications
+        $tarificationsMatrix = [];
+        foreach ($offresCrea as $offre) {
+            $tarificationsMatrix[$offre->id] = [];
+            foreach ($typesTarification as $type) {
+                $tarification = TarificationCrea::where('offre_crea_id', $offre->id)
+                    ->where('type_tarification_id', $type->id)
+                    ->first();
+                $tarificationsMatrix[$offre->id][$type->id] = $tarification ? $tarification->prix : null;
+            }
+        }
+        
+        return view('parametres.tarifications-crea', [
+            'page_title' => 'Tarification CREA',
+            'offresCrea' => $offresCrea,
+            'typesTarification' => $typesTarification,
+            'tarificationsMatrix' => $tarificationsMatrix,
+        ]);
+    }
+
+    /**
+     * Update all CREA tarifications in grid
+     */
+    public function updateTarificationsCrea(Request $request)
+    {
+        $tarifications = $request->input('tarifications', []);
+
+        DB::transaction(function () use ($tarifications) {
+            foreach ($tarifications as $offreId => $types) {
+                foreach ($types as $typeId => $prix) {
+                    if ($prix !== null && $prix !== '') {
+                        TarificationCrea::updateOrCreate(
+                            [
+                                'offre_crea_id' => $offreId,
+                                'type_tarification_id' => $typeId,
+                            ],
+                            [
+                                'prix' => floatval($prix),
+                            ]
+                        );
+                    } else {
+                        // Remove the tarification if price is empty
+                        TarificationCrea::where('offre_crea_id', $offreId)
+                            ->where('type_tarification_id', $typeId)
+                            ->delete();
+                    }
+                }
+            }
+        });
+
+        return redirect()->route('parametres.tarifications-crea')
+            ->with('success', 'Tarifications CREA mises à jour avec succès.');
     }
 }
 
