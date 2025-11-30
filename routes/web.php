@@ -66,9 +66,11 @@ Route::middleware('auth')->group(function () {
         return view('sections.tiers', ['page_title' => 'Base tiers']);
     })->name('tiers.index');
 
-    Route::get('/services', function () {
-        return view('sections.services', ['page_title' => 'Services']);
-    })->name('services');
+    // Services CRUD
+    Route::resource('services', \App\Http\Controllers\ServiceController::class);
+    
+    // Activités CRUD
+    Route::resource('activites', \App\Http\Controllers\ActiviteController::class);
 
     Route::get('/tarification', function () {
         return view('sections.tarification', ['page_title' => 'Tarification']);
@@ -111,6 +113,18 @@ Route::middleware('auth')->group(function () {
         // Grille tarifaire CREA
         Route::get('/tarifications-crea', [\App\Http\Controllers\ParametresController::class, 'tarificationsCrea'])->name('parametres.tarifications-crea');
         Route::put('/tarifications-crea', [\App\Http\Controllers\ParametresController::class, 'updateTarificationsCrea'])->name('parametres.tarifications-crea.update');
+        
+        // Types de services
+        Route::get('/types-services', [\App\Http\Controllers\ParametresController::class, 'typesServices'])->name('parametres.types-services');
+        Route::post('/types-services', [\App\Http\Controllers\ParametresController::class, 'storeTypeService'])->name('parametres.types-services.store');
+        Route::put('/types-services/{typeService}', [\App\Http\Controllers\ParametresController::class, 'updateTypeService'])->name('parametres.types-services.update');
+        Route::delete('/types-services/{typeService}', [\App\Http\Controllers\ParametresController::class, 'destroyTypeService'])->name('parametres.types-services.destroy');
+        
+        // Types d'activités
+        Route::get('/types-activites', [\App\Http\Controllers\ParametresController::class, 'typesActivites'])->name('parametres.types-activites');
+        Route::post('/types-activites', [\App\Http\Controllers\ParametresController::class, 'storeTypeActivite'])->name('parametres.types-activites.store');
+        Route::put('/types-activites/{typeActivite}', [\App\Http\Controllers\ParametresController::class, 'updateTypeActivite'])->name('parametres.types-activites.update');
+        Route::delete('/types-activites/{typeActivite}', [\App\Http\Controllers\ParametresController::class, 'destroyTypeActivite'])->name('parametres.types-activites.destroy');
     });
 
     // La gestion des achats

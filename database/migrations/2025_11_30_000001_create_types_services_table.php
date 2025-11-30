@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('administrations', function (Blueprint $table) {
+        Schema::create('types_services', function (Blueprint $table) {
             $table->id();
-            $table->string('raison_sociale')->nullable();
-            $table->string('responsable')->nullable();
-            $table->string('tel')->nullable();
-            $table->string('email')->nullable();
-            $table->text('adresse')->nullable();
+            $table->string('nom');
+            $table->string('code', 50)->unique();
+            $table->text('description')->nullable();
+            $table->boolean('is_active')->default(true);
+            $table->integer('ordre')->default(0);
             $table->timestamps();
         });
     }
@@ -27,11 +27,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('administrations');
+        Schema::dropIfExists('types_services');
     }
 };
-
-
-
-
 

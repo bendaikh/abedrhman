@@ -1,5 +1,3 @@
-
-
 <?php $__env->startSection('title', 'Paramètres - Abedrhman'); ?>
 
 <?php $__env->startSection('content'); ?>

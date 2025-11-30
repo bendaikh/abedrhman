@@ -3,14 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class OffreCrea extends Model
+class TypeActivite extends Model
 {
-    protected $table = 'offres_crea';
+    protected $table = 'types_activites';
     
     protected $fillable = [
         'nom',
+        'code',
         'description',
         'is_active',
         'ordre',
@@ -22,15 +22,7 @@ class OffreCrea extends Model
     ];
 
     /**
-     * Get the tarifications for this offer
-     */
-    public function tarifications(): HasMany
-    {
-        return $this->hasMany(TarificationCrea::class, 'offre_crea_id');
-    }
-
-    /**
-     * Scope to get only active offers
+     * Scope to get only active types
      */
     public function scopeActive($query)
     {
@@ -45,5 +37,4 @@ class OffreCrea extends Model
         return $query->orderBy('ordre');
     }
 }
-
 

@@ -7,6 +7,8 @@ use App\Models\OffreCrea;
 use App\Models\TypeTarification;
 use App\Models\TarificationDom;
 use App\Models\TarificationCrea;
+use App\Models\TypeService;
+use App\Models\TypeActivite;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -340,6 +342,136 @@ class ParametresController extends Controller
 
         return redirect()->route('parametres.tarifications-crea')
             ->with('success', 'Tarifications CREA mises à jour avec succès.');
+    }
+
+    // ==================== Types Services Methods ====================
+
+    /**
+     * Display types services management page
+     */
+    public function typesServices()
+    {
+        $typesServices = TypeService::ordered()->get();
+        
+        return view('parametres.types-services', [
+            'page_title' => 'Types de services',
+            'typesServices' => $typesServices,
+        ]);
+    }
+
+    /**
+     * Store a new type service
+     */
+    public function storeTypeService(Request $request)
+    {
+        $validated = $request->validate([
+            'nom' => 'required|string|max:255',
+            'code' => 'required|string|max:50|unique:types_services,code',
+            'description' => 'nullable|string|max:1000',
+        ]);
+
+        $validated['is_active'] = $request->has('is_active');
+        $validated['ordre'] = TypeService::max('ordre') + 1;
+
+        TypeService::create($validated);
+
+        return redirect()->route('parametres.types-services')
+            ->with('success', 'Type de service créé avec succès.');
+    }
+
+    /**
+     * Update a type service
+     */
+    public function updateTypeService(Request $request, TypeService $typeService)
+    {
+        $validated = $request->validate([
+            'nom' => 'required|string|max:255',
+            'code' => 'required|string|max:50|unique:types_services,code,' . $typeService->id,
+            'description' => 'nullable|string|max:1000',
+        ]);
+
+        $validated['is_active'] = $request->has('is_active');
+
+        $typeService->update($validated);
+
+        return redirect()->route('parametres.types-services')
+            ->with('success', 'Type de service mis à jour avec succès.');
+    }
+
+    /**
+     * Delete a type service
+     */
+    public function destroyTypeService(TypeService $typeService)
+    {
+        $typeService->delete();
+
+        return redirect()->route('parametres.types-services')
+            ->with('success', 'Type de service supprimé avec succès.');
+    }
+
+    // ==================== Types Activites Methods ====================
+
+    /**
+     * Display types activites management page
+     */
+    public function typesActivites()
+    {
+        $typesActivites = TypeActivite::ordered()->get();
+        
+        return view('parametres.types-activites', [
+            'page_title' => 'Types d\'activités',
+            'typesActivites' => $typesActivites,
+        ]);
+    }
+
+    /**
+     * Store a new type activite
+     */
+    public function storeTypeActivite(Request $request)
+    {
+        $validated = $request->validate([
+            'nom' => 'required|string|max:255',
+            'code' => 'required|string|max:50|unique:types_activites,code',
+            'description' => 'nullable|string|max:1000',
+        ]);
+
+        $validated['is_active'] = $request->has('is_active');
+        $validated['ordre'] = TypeActivite::max('ordre') + 1;
+
+        TypeActivite::create($validated);
+
+        return redirect()->route('parametres.types-activites')
+            ->with('success', 'Type d\'activité créé avec succès.');
+    }
+
+    /**
+     * Update a type activite
+     */
+    public function updateTypeActivite(Request $request, TypeActivite $typeActivite)
+    {
+        $validated = $request->validate([
+            'nom' => 'required|string|max:255',
+            'code' => 'required|string|max:50|unique:types_activites,code,' . $typeActivite->id,
+            'description' => 'nullable|string|max:1000',
+        ]);
+
+        $validated['is_active'] = $request->has('is_active');
+
+        $typeActivite->update($validated);
+
+        return redirect()->route('parametres.types-activites')
+            ->with('success', 'Type d\'activité mis à jour avec succès.');
+    }
+
+    /**
+     * Delete a type activite
+     */
+    public function destroyTypeActivite(TypeActivite $typeActivite)
+    {
+        $typeActivite->delete();
+
+        return redirect()->route('parametres.types-activites')
+            ->with('success', 'Type d\'activité supprimé avec succès.');
     }
 }
 
