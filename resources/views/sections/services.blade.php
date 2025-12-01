@@ -9,7 +9,7 @@
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
                 <h2 class="text-xl sm:text-2xl font-bold mb-2">Gestion des Services</h2>
-                <p class="text-teal-100 text-sm sm:text-base">Gérez vos services et leurs tarifications</p>
+                <p class="text-teal-100 text-sm sm:text-base">Gérez vos services et leurs paiements</p>
             </div>
             <a href="{{ route('services.create') }}" 
                 class="inline-flex items-center justify-center px-4 py-2 bg-white text-teal-700 font-semibold rounded-lg hover:bg-teal-50 transition-colors shadow-lg">
@@ -72,10 +72,10 @@
             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                 <thead class="bg-gray-50 dark:bg-gray-900/50">
                     <tr>
-                        <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Nom</th>
+                        <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Client</th>
                         <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Type</th>
                         <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Prix</th>
-                        <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Durée</th>
+                        <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Paiements</th>
                         <th class="px-4 py-3 text-center text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Statut</th>
                         <th class="px-4 py-3 text-right text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Actions</th>
                     </tr>
@@ -84,9 +84,22 @@
                     @foreach($services as $service)
                     <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
                         <td class="px-4 py-4 whitespace-nowrap">
-                            <div class="text-sm font-medium text-gray-900 dark:text-white">{{ $service->nom }}</div>
-                            @if($service->description)
-                            <div class="text-xs text-gray-500 dark:text-gray-400 truncate max-w-xs">{{ $service->description }}</div>
+                            @if($service->client)
+                            <div class="flex items-center gap-3">
+                                <div class="h-8 w-8 rounded-full bg-teal-100 dark:bg-teal-900/30 flex items-center justify-center flex-shrink-0">
+                                    <span class="text-sm font-medium text-teal-600 dark:text-teal-400">
+                                        {{ strtoupper(substr($service->client->type === 'morale' ? $service->client->nom_raison_sociale : $service->client->nom, 0, 1)) }}
+                                    </span>
+                                </div>
+                                <div>
+                                    <div class="text-sm font-medium text-gray-900 dark:text-white">
+                                        {{ $service->client->type === 'morale' ? $service->client->nom_raison_sociale : ($service->client->nom . ' ' . $service->client->prenom) }}
+                                    </div>
+                                    <div class="text-xs text-gray-500 dark:text-gray-400">{{ $service->client->ville ?? 'N/A' }}</div>
+                                </div>
+                            </div>
+                            @else
+                            <span class="text-sm text-gray-400">N/A</span>
                             @endif
                         </td>
                         <td class="px-4 py-4 whitespace-nowrap">
@@ -98,21 +111,38 @@
                             <span class="text-sm font-semibold text-gray-900 dark:text-white">{{ $service->formatted_prix }}</span>
                         </td>
                         <td class="px-4 py-4 whitespace-nowrap">
-                            <span class="text-sm text-gray-600 dark:text-gray-300">{{ $service->formatted_duree }}</span>
+                            <div class="space-y-1">
+                                <div class="flex items-center justify-between text-xs">
+                                    <span class="text-gray-500 dark:text-gray-400">{{ $service->formatted_total_payments }} / {{ $service->formatted_prix }}</span>
+                                </div>
+                                <div class="w-24 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                                    <div class="h-2 rounded-full transition-all duration-300 {{ $service->is_fully_paid ? 'bg-emerald-500' : 'bg-amber-500' }}" 
+                                         style="width: {{ $service->payment_progress }}%"></div>
+                                </div>
+                                @if($service->remaining_amount > 0)
+                                <span class="text-xs text-amber-600 dark:text-amber-400">Reste: {{ $service->formatted_remaining_amount }}</span>
+                                @else
+                                <span class="text-xs text-emerald-600 dark:text-emerald-400">Soldé</span>
+                                @endif
+                            </div>
                         </td>
                         <td class="px-4 py-4 whitespace-nowrap text-center">
-                            @if($service->is_active)
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300">
-                                Actif
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $service->status_color }}">
+                                {{ $service->status_label }}
                             </span>
-                            @else
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400">
-                                Inactif
-                            </span>
-                            @endif
                         </td>
                         <td class="px-4 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <div class="flex items-center justify-end gap-2">
+                            <div class="flex items-center justify-end gap-1">
+                                <a href="{{ route('services.invoice', $service) }}" class="p-2 text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300 hover:bg-purple-50 dark:hover:bg-purple-900/20 rounded-lg transition-colors" title="Facture" target="_blank">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                    </svg>
+                                </a>
+                                <a href="{{ route('services.payments', $service) }}" class="p-2 text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded-lg transition-colors" title="Gérer les paiements">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                                    </svg>
+                                </a>
                                 <a href="{{ route('services.edit', $service) }}" class="p-2 text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors" title="Modifier">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />

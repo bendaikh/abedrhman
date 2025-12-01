@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Client;
+use App\Models\Payment;
 use App\Models\Service;
 use App\Models\TypeService;
 use Illuminate\Http\Request;
@@ -13,7 +15,7 @@ class ServiceController extends Controller
      */
     public function index()
     {
-        $services = Service::with('typeService')->latest()->get();
+        $services = Service::with(['typeService', 'client', 'payments'])->latest()->get();
         $typesServices = TypeService::active()->ordered()->get();
 
         return view('sections.services', [
@@ -29,10 +31,12 @@ class ServiceController extends Controller
     public function create()
     {
         $typesServices = TypeService::active()->ordered()->get();
+        $clients = Client::orderBy('nom_raison_sociale')->orderBy('nom')->get();
 
         return view('sections.services-create', [
             'page_title' => 'Nouveau service',
             'typesServices' => $typesServices,
+            'clients' => $clients,
         ]);
     }
 
@@ -42,15 +46,14 @@ class ServiceController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'nom' => 'required|string|max:255',
+            'client_id' => 'required|exists:clients,id',
             'type_service_id' => 'required|exists:types_services,id',
             'description' => 'nullable|string|max:1000',
             'prix' => 'required|numeric|min:0',
-            'duree' => 'nullable|integer|min:1',
-            'unite_duree' => 'required|in:heure,jour,semaine,mois,annee',
         ]);
 
         $validated['is_active'] = $request->has('is_active');
+        $validated['status'] = 'initialiser'; // Set initial status
 
         Service::create($validated);
 
@@ -64,8 +67,8 @@ class ServiceController extends Controller
     public function show(Service $service)
     {
         return view('sections.services-show', [
-            'page_title' => $service->nom,
-            'service' => $service->load('typeService'),
+            'page_title' => 'Détails du service',
+            'service' => $service->load(['typeService', 'client', 'payments']),
         ]);
     }
 
@@ -75,11 +78,13 @@ class ServiceController extends Controller
     public function edit(Service $service)
     {
         $typesServices = TypeService::active()->ordered()->get();
+        $clients = Client::orderBy('nom_raison_sociale')->orderBy('nom')->get();
 
         return view('sections.services-edit', [
             'page_title' => 'Modifier le service',
-            'service' => $service,
+            'service' => $service->load(['client', 'payments']),
             'typesServices' => $typesServices,
+            'clients' => $clients,
         ]);
     }
 
@@ -89,12 +94,11 @@ class ServiceController extends Controller
     public function update(Request $request, Service $service)
     {
         $validated = $request->validate([
-            'nom' => 'required|string|max:255',
+            'client_id' => 'required|exists:clients,id',
             'type_service_id' => 'required|exists:types_services,id',
             'description' => 'nullable|string|max:1000',
             'prix' => 'required|numeric|min:0',
-            'duree' => 'nullable|integer|min:1',
-            'unite_duree' => 'required|in:heure,jour,semaine,mois,annee',
+            'status' => 'required|in:initialiser,en_cours,termine,annule',
         ]);
 
         $validated['is_active'] = $request->has('is_active');
@@ -115,5 +119,80 @@ class ServiceController extends Controller
         return redirect()->route('services.index')
             ->with('success', 'Service supprimé avec succès.');
     }
+
+    /**
+     * Show payment management for a service
+     */
+    public function payments(Service $service)
+    {
+        return view('sections.services-payments', [
+            'page_title' => 'Gestion des paiements',
+            'service' => $service->load(['typeService', 'client', 'payments']),
+        ]);
+    }
+
+    /**
+     * Store a new payment for a service
+     */
+    public function storePayment(Request $request, Service $service)
+    {
+        $validated = $request->validate([
+            'montant' => 'required|numeric|min:0.01',
+            'type' => 'required|in:avance,paiement,solde',
+            'mode_paiement' => 'required|in:especes,cheque,virement,carte',
+            'reference' => 'nullable|string|max:255',
+            'date_paiement' => 'required|date',
+            'notes' => 'nullable|string|max:1000',
+        ]);
+
+        $service->payments()->create($validated);
+
+        return redirect()->route('services.payments', $service)
+            ->with('success', 'Paiement enregistré avec succès.');
+    }
+
+    /**
+     * Delete a payment
+     */
+    public function destroyPayment(Service $service, Payment $payment)
+    {
+        if ($payment->service_id !== $service->id) {
+            abort(404);
+        }
+
+        $payment->delete();
+
+        return redirect()->route('services.payments', $service)
+            ->with('success', 'Paiement supprimé avec succès.');
+    }
+
+    /**
+     * Get client details for AJAX request
+     */
+    public function getClientDetails(Client $client)
+    {
+        return response()->json([
+            'id' => $client->id,
+            'nom' => $client->type === 'morale' 
+                ? $client->nom_raison_sociale 
+                : ($client->nom . ' ' . $client->prenom),
+            'gerant' => $client->type === 'morale' 
+                ? ($client->dirigeants->first()->nom ?? 'N/A') 
+                : 'N/A',
+            'ville' => $client->ville ?? 'N/A',
+            'type' => $client->type,
+        ]);
+    }
+
+    /**
+     * Display invoice for a service
+     */
+    public function invoice(Service $service)
+    {
+        return view('sections.services-invoice', [
+            'service' => $service->load(['typeService', 'client.dirigeants', 'payments']),
+        ]);
+    }
 }
+
 

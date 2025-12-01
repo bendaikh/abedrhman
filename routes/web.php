@@ -69,6 +69,14 @@ Route::middleware('auth')->group(function () {
     // Services CRUD
     Route::resource('services', \App\Http\Controllers\ServiceController::class);
     
+    // Service Payments
+    Route::get('services/{service}/payments', [\App\Http\Controllers\ServiceController::class, 'payments'])->name('services.payments');
+    Route::post('services/{service}/payments', [\App\Http\Controllers\ServiceController::class, 'storePayment'])->name('services.payments.store');
+    Route::delete('services/{service}/payments/{payment}', [\App\Http\Controllers\ServiceController::class, 'destroyPayment'])->name('services.payments.destroy');
+    
+    // Service Invoice
+    Route::get('services/{service}/invoice', [\App\Http\Controllers\ServiceController::class, 'invoice'])->name('services.invoice');
+    
     // Activités CRUD
     Route::resource('activites', \App\Http\Controllers\ActiviteController::class);
 
