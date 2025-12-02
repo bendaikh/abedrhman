@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Facture #<?php echo e(str_pad($service->id, 6, '0', STR_PAD_LEFT)); ?> - Abedrhman</title>
+    <title>Reçu de paiement #<?php echo e(str_pad($service->id, 6, '0', STR_PAD_LEFT)); ?> - Abedrhman</title>
     <style>
         * {
             margin: 0;
@@ -393,7 +393,7 @@
                 <p>Services professionnels</p>
             </div>
             <div class="invoice-title">
-                <h2>FACTURE</h2>
+                <h2>REÇU DE PAIEMENT</h2>
                 <div class="invoice-number">#<?php echo e(str_pad($service->id, 6, '0', STR_PAD_LEFT)); ?></div>
             </div>
         </div>
@@ -401,7 +401,7 @@
         <div class="invoice-body">
             <div class="invoice-meta">
                 <div class="meta-section">
-                    <h3>Facturé à</h3>
+                    <h3>Client</h3>
                     <?php if($service->client): ?>
                     <p class="name">
                         <?php echo e($service->client->type === 'morale' ? $service->client->nom_raison_sociale : ($service->client->nom . ' ' . $service->client->prenom)); ?>
@@ -429,7 +429,7 @@
                 </div>
                 
                 <div class="meta-section">
-                    <h3>Détails de la facture</h3>
+                    <h3>Détails du reçu</h3>
                     <p><strong>Date d'émission:</strong> <?php echo e(now()->format('d/m/Y')); ?></p>
                     <p><strong>Date de création:</strong> <?php echo e($service->created_at->format('d/m/Y')); ?></p>
                     <p>
@@ -521,7 +521,7 @@
         
         <div class="invoice-footer">
             <p class="thank-you">Merci pour votre confiance !</p>
-            <p>Cette facture a été générée automatiquement par le système Abedrhman.</p>
+            <p>Ce reçu a été généré automatiquement par le système Abedrhman.</p>
             <p>Date d'impression: <?php echo e(now()->format('d/m/Y à H:i')); ?></p>
         </div>
     </div>
