@@ -72,7 +72,8 @@
                     <tr>
                         <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Client</th>
                         <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Type</th>
-                        <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Prix</th>
+                        <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Prix de base</th>
+                        <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Montant Total</th>
                         <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Paiements</th>
                         <th class="px-4 py-3 text-center text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Statut</th>
                         <th class="px-4 py-3 text-right text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Actions</th>
@@ -109,12 +110,22 @@
                             </span>
                         </td>
                         <td class="px-4 py-4 whitespace-nowrap">
-                            <span class="text-sm font-semibold text-gray-900 dark:text-white"><?php echo e($service->formatted_prix); ?></span>
+                            <span class="text-sm text-gray-600 dark:text-gray-400"><?php echo e($service->formatted_prix); ?></span>
+                        </td>
+                        <td class="px-4 py-4 whitespace-nowrap">
+                            <div class="flex flex-col">
+                                <span class="text-sm font-semibold text-gray-900 dark:text-white"><?php echo e($service->formatted_montant_total); ?></span>
+                                <?php if($service->sousServices->count() > 0): ?>
+                                <span class="text-xs text-indigo-600 dark:text-indigo-400">
+                                    <?php echo e($service->sousServices->count()); ?> sous-service(s)
+                                </span>
+                                <?php endif; ?>
+                            </div>
                         </td>
                         <td class="px-4 py-4 whitespace-nowrap">
                             <div class="space-y-1">
                                 <div class="flex items-center justify-between text-xs">
-                                    <span class="text-gray-500 dark:text-gray-400"><?php echo e($service->formatted_total_payments); ?> / <?php echo e($service->formatted_prix); ?></span>
+                                    <span class="text-gray-500 dark:text-gray-400"><?php echo e($service->formatted_total_payments); ?> / <?php echo e($service->formatted_montant_total); ?></span>
                                 </div>
                                 <div class="w-24 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                                     <div class="h-2 rounded-full transition-all duration-300 <?php echo e($service->is_fully_paid ? 'bg-emerald-500' : 'bg-amber-500'); ?>" 
@@ -135,6 +146,17 @@
                         </td>
                         <td class="px-4 py-4 whitespace-nowrap text-right text-sm font-medium">
                             <div class="flex items-center justify-end gap-1">
+                                <a href="<?php echo e(route('services.sous-services', $service)); ?>" class="p-2 text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded-lg transition-colors relative" title="Gérer les sous-services">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                                    </svg>
+                                    <?php if($service->sousServices->count() > 0): ?>
+                                    <span class="absolute -top-1 -right-1 h-4 w-4 bg-indigo-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+                                        <?php echo e($service->sousServices->count()); ?>
+
+                                    </span>
+                                    <?php endif; ?>
+                                </a>
                                 <a href="<?php echo e(route('services.invoice', $service)); ?>" class="p-2 text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300 hover:bg-purple-50 dark:hover:bg-purple-900/20 rounded-lg transition-colors" title="Reçu de paiement" target="_blank">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />

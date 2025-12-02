@@ -9,6 +9,7 @@ use App\Models\TarificationDom;
 use App\Models\TarificationCrea;
 use App\Models\TypeService;
 use App\Models\TypeActivite;
+use App\Models\SousService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -24,6 +25,7 @@ class ParametresController extends Controller
         $typesTarification = TypeTarification::ordered()->get();
         $tarificationsDom = TarificationDom::with(['offreDom', 'typeTarification'])->get();
         $tarificationsCrea = TarificationCrea::with(['offreCrea', 'typeTarification'])->get();
+        $sousServices = SousService::ordered()->get();
 
         return view('parametres.index', [
             'page_title' => 'Paramètres',
@@ -32,6 +34,7 @@ class ParametresController extends Controller
             'typesTarification' => $typesTarification,
             'tarificationsDom' => $tarificationsDom,
             'tarificationsCrea' => $tarificationsCrea,
+            'sousServices' => $sousServices,
         ]);
     }
 
@@ -472,6 +475,71 @@ class ParametresController extends Controller
 
         return redirect()->route('parametres.types-activites')
             ->with('success', 'Type d\'activité supprimé avec succès.');
+    }
+
+    // ==================== Sous-Services Methods ====================
+
+    /**
+     * Display sous-services management page
+     */
+    public function sousServices()
+    {
+        $sousServices = SousService::ordered()->get();
+        
+        return view('parametres.sous-services', [
+            'page_title' => 'Sous-services',
+            'sousServices' => $sousServices,
+        ]);
+    }
+
+    /**
+     * Store a new sous-service
+     */
+    public function storeSousService(Request $request)
+    {
+        $validated = $request->validate([
+            'nom' => 'required|string|max:255',
+            'prix' => 'required|numeric|min:0',
+            'description' => 'nullable|string|max:1000',
+        ]);
+
+        $validated['is_active'] = $request->has('is_active');
+        $validated['ordre'] = SousService::max('ordre') + 1;
+
+        SousService::create($validated);
+
+        return redirect()->route('parametres.sous-services')
+            ->with('success', 'Sous-service créé avec succès.');
+    }
+
+    /**
+     * Update a sous-service
+     */
+    public function updateSousService(Request $request, SousService $sousService)
+    {
+        $validated = $request->validate([
+            'nom' => 'required|string|max:255',
+            'prix' => 'required|numeric|min:0',
+            'description' => 'nullable|string|max:1000',
+        ]);
+
+        $validated['is_active'] = $request->has('is_active');
+
+        $sousService->update($validated);
+
+        return redirect()->route('parametres.sous-services')
+            ->with('success', 'Sous-service mis à jour avec succès.');
+    }
+
+    /**
+     * Delete a sous-service
+     */
+    public function destroySousService(SousService $sousService)
+    {
+        $sousService->delete();
+
+        return redirect()->route('parametres.sous-services')
+            ->with('success', 'Sous-service supprimé avec succès.');
     }
 }
 

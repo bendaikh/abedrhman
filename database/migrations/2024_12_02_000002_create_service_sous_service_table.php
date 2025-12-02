@@ -11,14 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('administrations', function (Blueprint $table) {
+        Schema::create('service_sous_service', function (Blueprint $table) {
             $table->id();
-            $table->string('raison_sociale')->nullable();
-            $table->string('responsable')->nullable();
-            $table->string('tel')->nullable();
-            $table->string('email')->nullable();
-            $table->text('adresse')->nullable();
+            $table->foreignId('service_id')->constrained()->onDelete('cascade');
+            $table->foreignId('sous_service_id')->constrained('sous_services')->onDelete('cascade');
             $table->timestamps();
+            
+            $table->unique(['service_id', 'sous_service_id']);
         });
     }
 
@@ -27,14 +26,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('administrations');
+        Schema::dropIfExists('service_sous_service');
     }
 };
-
-
-
-
-
-
-
 

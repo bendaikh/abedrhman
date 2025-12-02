@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Service extends Model
@@ -47,6 +48,39 @@ class Service extends Model
     }
 
     /**
+     * Get the sous-services attached to this service
+     */
+    public function sousServices(): BelongsToMany
+    {
+        return $this->belongsToMany(SousService::class, 'service_sous_service')
+            ->withTimestamps();
+    }
+
+    /**
+     * Get the total of sous-services prices
+     */
+    public function getTotalSousServicesAttribute(): float
+    {
+        return $this->sousServices->sum('prix');
+    }
+
+    /**
+     * Get the montant total (base price + sous-services)
+     */
+    public function getMontantTotalAttribute(): float
+    {
+        return $this->prix + $this->total_sous_services;
+    }
+
+    /**
+     * Get formatted montant total
+     */
+    public function getFormattedMontantTotalAttribute(): string
+    {
+        return number_format($this->montant_total, 2, ',', ' ') . ' DH';
+    }
+
+    /**
      * Scope to get only active services
      */
     public function scopeActive($query)
@@ -79,11 +113,11 @@ class Service extends Model
     }
 
     /**
-     * Get remaining amount to pay
+     * Get remaining amount to pay (based on montant_total)
      */
     public function getRemainingAmountAttribute(): float
     {
-        return max(0, $this->prix - $this->total_payments);
+        return max(0, $this->montant_total - $this->total_payments);
     }
 
     /**
@@ -103,12 +137,12 @@ class Service extends Model
     }
 
     /**
-     * Get payment progress percentage
+     * Get payment progress percentage (based on montant_total)
      */
     public function getPaymentProgressAttribute(): int
     {
-        if ($this->prix <= 0) return 100;
-        return min(100, (int)(($this->total_payments / $this->prix) * 100));
+        if ($this->montant_total <= 0) return 100;
+        return min(100, (int)(($this->total_payments / $this->montant_total) * 100));
     }
 
     /**

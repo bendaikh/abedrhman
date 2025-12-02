@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reçu de paiement #{{ str_pad($service->id, 6, '0', STR_PAD_LEFT) }} - Abedrhman</title>
+    <title>Reçu de paiement #<?php echo e(str_pad($service->id, 6, '0', STR_PAD_LEFT)); ?> - Abedrhman</title>
     <style>
         * {
             margin: 0;
@@ -396,8 +396,8 @@
             </svg>
             Imprimer
         </button>
-        <form action="{{ route('factures.from-service', $service) }}" method="POST" style="display: inline;">
-            @csrf
+        <form action="<?php echo e(route('factures.from-service', $service)); ?>" method="POST" style="display: inline;">
+            <?php echo csrf_field(); ?>
             <button type="submit" class="btn-facture" onclick="return confirm('Voulez-vous convertir ce reçu en facture ?');">
                 <svg style="width:16px;height:16px;vertical-align:middle;margin-right:8px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -421,7 +421,7 @@
             </div>
             <div class="invoice-title">
                 <h2>REÇU DE PAIEMENT</h2>
-                <div class="invoice-number">#{{ str_pad($service->id, 6, '0', STR_PAD_LEFT) }}</div>
+                <div class="invoice-number">#<?php echo e(str_pad($service->id, 6, '0', STR_PAD_LEFT)); ?></div>
             </div>
         </div>
         
@@ -429,38 +429,39 @@
             <div class="invoice-meta">
                 <div class="meta-section">
                     <h3>Client</h3>
-                    @if($service->client)
+                    <?php if($service->client): ?>
                     <p class="name">
-                        {{ $service->client->type === 'morale' ? $service->client->nom_raison_sociale : ($service->client->nom . ' ' . $service->client->prenom) }}
+                        <?php echo e($service->client->type === 'morale' ? $service->client->nom_raison_sociale : ($service->client->nom . ' ' . $service->client->prenom)); ?>
+
                     </p>
-                    @if($service->client->type === 'morale' && $service->client->dirigeants->count() > 0)
-                    <p>Gérant: {{ $service->client->dirigeants->first()->nom ?? 'N/A' }}</p>
-                    @endif
-                    @if($service->client->siege_social)
-                    <p>{{ $service->client->siege_social }}</p>
-                    @endif
-                    <p>{{ $service->client->ville ?? '' }}{{ $service->client->pays ? ', ' . $service->client->pays : '' }}</p>
-                    @if($service->client->tel_1)
-                    <p>Tél: {{ $service->client->tel_1 }}</p>
-                    @endif
-                    @if($service->client->email)
-                    <p>Email: {{ $service->client->email }}</p>
-                    @endif
-                    @if($service->client->ice)
-                    <p>ICE: {{ $service->client->ice }}</p>
-                    @endif
-                    @else
+                    <?php if($service->client->type === 'morale' && $service->client->dirigeants->count() > 0): ?>
+                    <p>Gérant: <?php echo e($service->client->dirigeants->first()->nom ?? 'N/A'); ?></p>
+                    <?php endif; ?>
+                    <?php if($service->client->siege_social): ?>
+                    <p><?php echo e($service->client->siege_social); ?></p>
+                    <?php endif; ?>
+                    <p><?php echo e($service->client->ville ?? ''); ?><?php echo e($service->client->pays ? ', ' . $service->client->pays : ''); ?></p>
+                    <?php if($service->client->tel_1): ?>
+                    <p>Tél: <?php echo e($service->client->tel_1); ?></p>
+                    <?php endif; ?>
+                    <?php if($service->client->email): ?>
+                    <p>Email: <?php echo e($service->client->email); ?></p>
+                    <?php endif; ?>
+                    <?php if($service->client->ice): ?>
+                    <p>ICE: <?php echo e($service->client->ice); ?></p>
+                    <?php endif; ?>
+                    <?php else: ?>
                     <p class="name">Client non spécifié</p>
-                    @endif
+                    <?php endif; ?>
                 </div>
                 
                 <div class="meta-section">
                     <h3>Détails du reçu</h3>
-                    <p><strong>Date d'émission:</strong> {{ now()->format('d/m/Y') }}</p>
-                    <p><strong>Date de création:</strong> {{ $service->created_at->format('d/m/Y') }}</p>
+                    <p><strong>Date d'émission:</strong> <?php echo e(now()->format('d/m/Y')); ?></p>
+                    <p><strong>Date de création:</strong> <?php echo e($service->created_at->format('d/m/Y')); ?></p>
                     <p>
                         <strong>Statut:</strong>
-                        <span class="status-badge status-{{ $service->status }}">{{ $service->status_label }}</span>
+                        <span class="status-badge status-<?php echo e($service->status); ?>"><?php echo e($service->status_label); ?></span>
                     </p>
                 </div>
             </div>
@@ -478,19 +479,19 @@
                     <tbody>
                         <tr>
                             <td>
-                                <strong>{{ $service->typeService->nom ?? 'Service' }}</strong>
-                                @if($service->description)
-                                <div class="description">{{ $service->description }}</div>
-                                @endif
+                                <strong><?php echo e($service->typeService->nom ?? 'Service'); ?></strong>
+                                <?php if($service->description): ?>
+                                <div class="description"><?php echo e($service->description); ?></div>
+                                <?php endif; ?>
                             </td>
-                            <td>{{ $service->typeService->nom ?? 'N/A' }}</td>
-                            <td class="amount">{{ $service->formatted_montant_total }}</td>
+                            <td><?php echo e($service->typeService->nom ?? 'N/A'); ?></td>
+                            <td class="amount"><?php echo e($service->formatted_montant_total); ?></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
             
-            @if($service->payments->count() > 0)
+            <?php if($service->payments->count() > 0): ?>
             <div class="payments-section">
                 <h3>Historique des paiements</h3>
                 <table class="payments-table">
@@ -504,43 +505,43 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($service->payments->sortBy('date_paiement') as $payment)
+                        <?php $__currentLoopData = $service->payments->sortBy('date_paiement'); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $payment): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <tr>
-                            <td>{{ $payment->date_paiement->format('d/m/Y') }}</td>
+                            <td><?php echo e($payment->date_paiement->format('d/m/Y')); ?></td>
                             <td>
-                                <span class="badge badge-{{ $payment->type }}">{{ $payment->type_label }}</span>
+                                <span class="badge badge-<?php echo e($payment->type); ?>"><?php echo e($payment->type_label); ?></span>
                             </td>
-                            <td>{{ $payment->mode_paiement_label }}</td>
-                            <td>{{ $payment->reference ?? '-' }}</td>
-                            <td class="amount">{{ $payment->formatted_montant }}</td>
+                            <td><?php echo e($payment->mode_paiement_label); ?></td>
+                            <td><?php echo e($payment->reference ?? '-'); ?></td>
+                            <td class="amount"><?php echo e($payment->formatted_montant); ?></td>
                         </tr>
-                        @endforeach
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </tbody>
                 </table>
             </div>
-            @endif
+            <?php endif; ?>
             
             <div class="totals-section">
                 <div class="totals-box">
                     <div class="total-row grand-total">
                         <span class="label">Total</span>
-                        <span class="value">{{ $service->formatted_montant_total }}</span>
+                        <span class="value"><?php echo e($service->formatted_montant_total); ?></span>
                     </div>
                     <div class="total-row paid">
                         <span class="label">Total payé</span>
-                        <span class="value">{{ $service->formatted_total_payments }}</span>
+                        <span class="value"><?php echo e($service->formatted_total_payments); ?></span>
                     </div>
-                    @if($service->remaining_amount > 0)
+                    <?php if($service->remaining_amount > 0): ?>
                     <div class="total-row remaining">
                         <span class="label">Reste à payer</span>
-                        <span class="value">{{ $service->formatted_remaining_amount }}</span>
+                        <span class="value"><?php echo e($service->formatted_remaining_amount); ?></span>
                     </div>
-                    @else
+                    <?php else: ?>
                     <div class="total-row" style="background: #d1fae5;">
                         <span class="label" style="color: #065f46;">✓ Soldé</span>
                         <span class="value" style="color: #065f46;">0,00 DH</span>
                     </div>
-                    @endif
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -548,9 +549,10 @@
         <div class="invoice-footer">
             <p class="thank-you">Merci pour votre confiance !</p>
             <p>Ce reçu a été généré automatiquement par le système Abedrhman.</p>
-            <p>Date d'impression: {{ now()->format('d/m/Y à H:i') }}</p>
+            <p>Date d'impression: <?php echo e(now()->format('d/m/Y à H:i')); ?></p>
         </div>
     </div>
 </body>
 </html>
 
+<?php /**PATH C:\Users\Espacegamers\Documents\abedrhman\resources\views/sections/services-invoice.blade.php ENDPATH**/ ?>

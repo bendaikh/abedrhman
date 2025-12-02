@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Client;
 use App\Models\Payment;
 use App\Models\Service;
+use App\Models\SousService;
 use App\Models\TypeService;
 use Illuminate\Http\Request;
 
@@ -15,7 +16,7 @@ class ServiceController extends Controller
      */
     public function index()
     {
-        $services = Service::with(['typeService', 'client', 'payments'])->latest()->get();
+        $services = Service::with(['typeService', 'client', 'payments', 'sousServices'])->latest()->get();
         $typesServices = TypeService::active()->ordered()->get();
 
         return view('sections.services', [
@@ -127,7 +128,7 @@ class ServiceController extends Controller
     {
         return view('sections.services-payments', [
             'page_title' => 'Gestion des paiements',
-            'service' => $service->load(['typeService', 'client', 'payments']),
+            'service' => $service->load(['typeService', 'client', 'payments', 'sousServices']),
         ]);
     }
 
@@ -199,7 +200,7 @@ class ServiceController extends Controller
     public function invoice(Service $service)
     {
         return view('sections.services-invoice', [
-            'service' => $service->load(['typeService', 'client.dirigeants', 'payments']),
+            'service' => $service->load(['typeService', 'client.dirigeants', 'payments', 'sousServices']),
         ]);
     }
 
@@ -252,6 +253,37 @@ class ServiceController extends Controller
             'todayAmount' => $todayAmount,
             'monthAmount' => $monthAmount,
         ]);
+    }
+
+    /**
+     * Show sous-services management for a service
+     */
+    public function sousServices(Service $service)
+    {
+        $allSousServices = SousService::active()->ordered()->get();
+        
+        return view('sections.services-sous-services', [
+            'page_title' => 'Gestion des sous-services',
+            'service' => $service->load(['typeService', 'client', 'sousServices']),
+            'allSousServices' => $allSousServices,
+        ]);
+    }
+
+    /**
+     * Sync sous-services for a service
+     */
+    public function syncSousServices(Request $request, Service $service)
+    {
+        $validated = $request->validate([
+            'sous_services' => 'nullable|array',
+            'sous_services.*' => 'exists:sous_services,id',
+        ]);
+
+        $sousServiceIds = $validated['sous_services'] ?? [];
+        $service->sousServices()->sync($sousServiceIds);
+
+        return redirect()->route('services.sous-services', $service)
+            ->with('success', 'Sous-services mis à jour avec succès. Le montant total a été recalculé.');
     }
 }
 

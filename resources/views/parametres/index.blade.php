@@ -125,6 +125,22 @@
                 <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Types de tarification</h3>
                 <p class="text-sm text-gray-500 dark:text-gray-400">Définissez les types de tarifs (Standard, Promotionnelle, Préférentielle...)</p>
             </a>
+
+            <!-- Sous-services Card -->
+            <a href="{{ route('parametres.sous-services') }}" class="group bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow p-6 border border-gray-100 dark:border-gray-700 hover:shadow-lg transition-all duration-200 hover:border-indigo-300 dark:hover:border-indigo-600">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="h-12 w-12 rounded-xl bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center group-hover:bg-indigo-200 dark:group-hover:bg-indigo-900/50 transition-colors">
+                        <svg class="w-6 h-6 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                        </svg>
+                    </div>
+                    <span class="bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 text-xs font-semibold px-3 py-1 rounded-full">
+                        {{ $sousServices->count() }} sous-services
+                    </span>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Sous-services</h3>
+                <p class="text-sm text-gray-500 dark:text-gray-400">Gérez les sous-services à affecter aux services pour calculer le montant total</p>
+            </a>
         </div>
     </div>
 

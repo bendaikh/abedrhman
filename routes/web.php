@@ -80,8 +80,20 @@ Route::middleware('auth')->group(function () {
     // Service Invoice
     Route::get('services/{service}/invoice', [\App\Http\Controllers\ServiceController::class, 'invoice'])->name('services.invoice');
     
+    // Service Sous-Services Management
+    Route::get('services/{service}/sous-services', [\App\Http\Controllers\ServiceController::class, 'sousServices'])->name('services.sous-services');
+    Route::post('services/{service}/sous-services', [\App\Http\Controllers\ServiceController::class, 'syncSousServices'])->name('services.sous-services.sync');
+    
     // Activités CRUD
     Route::resource('activites', \App\Http\Controllers\ActiviteController::class);
+
+    // Factures
+    Route::get('factures', [\App\Http\Controllers\FactureController::class, 'index'])->name('factures.index');
+    Route::get('factures/{facture}', [\App\Http\Controllers\FactureController::class, 'show'])->name('factures.show');
+    Route::post('factures/from-service/{service}', [\App\Http\Controllers\FactureController::class, 'createFromService'])->name('factures.from-service');
+    Route::put('factures/{facture}/statut', [\App\Http\Controllers\FactureController::class, 'updateStatut'])->name('factures.update-statut');
+    Route::delete('factures/{facture}', [\App\Http\Controllers\FactureController::class, 'destroy'])->name('factures.destroy');
+    Route::get('factures/{facture}/print', [\App\Http\Controllers\FactureController::class, 'print'])->name('factures.print');
 
     Route::get('/tarification', function () {
         return view('sections.tarification', ['page_title' => 'Tarification']);
@@ -136,6 +148,12 @@ Route::middleware('auth')->group(function () {
         Route::post('/types-activites', [\App\Http\Controllers\ParametresController::class, 'storeTypeActivite'])->name('parametres.types-activites.store');
         Route::put('/types-activites/{typeActivite}', [\App\Http\Controllers\ParametresController::class, 'updateTypeActivite'])->name('parametres.types-activites.update');
         Route::delete('/types-activites/{typeActivite}', [\App\Http\Controllers\ParametresController::class, 'destroyTypeActivite'])->name('parametres.types-activites.destroy');
+        
+        // Sous-services
+        Route::get('/sous-services', [\App\Http\Controllers\ParametresController::class, 'sousServices'])->name('parametres.sous-services');
+        Route::post('/sous-services', [\App\Http\Controllers\ParametresController::class, 'storeSousService'])->name('parametres.sous-services.store');
+        Route::put('/sous-services/{sousService}', [\App\Http\Controllers\ParametresController::class, 'updateSousService'])->name('parametres.sous-services.update');
+        Route::delete('/sous-services/{sousService}', [\App\Http\Controllers\ParametresController::class, 'destroySousService'])->name('parametres.sous-services.destroy');
     });
 
     // La gestion des achats

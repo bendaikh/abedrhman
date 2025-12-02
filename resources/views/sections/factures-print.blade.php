@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reçu de paiement #{{ str_pad($service->id, 6, '0', STR_PAD_LEFT) }} - Abedrhman</title>
+    <title>Facture {{ $facture->numero }} - Abedrhman</title>
     <style>
         * {
             margin: 0;
@@ -26,7 +26,7 @@
         }
         
         .invoice-header {
-            background: linear-gradient(135deg, #0d9488, #0891b2);
+            background: linear-gradient(135deg, #7c3aed, #8b5cf6);
             color: white;
             padding: 30px 40px;
             display: flex;
@@ -58,6 +58,7 @@
         .invoice-title .invoice-number {
             font-size: 16px;
             opacity: 0.9;
+            font-weight: 600;
         }
         
         .invoice-body {
@@ -82,7 +83,7 @@
             color: #666;
             margin-bottom: 10px;
             padding-bottom: 5px;
-            border-bottom: 2px solid #0d9488;
+            border-bottom: 2px solid #7c3aed;
         }
         
         .meta-section p {
@@ -107,7 +108,7 @@
             color: #666;
             margin-bottom: 15px;
             padding-bottom: 5px;
-            border-bottom: 2px solid #0d9488;
+            border-bottom: 2px solid #7c3aed;
         }
         
         .details-table {
@@ -140,71 +141,6 @@
         .details-table .amount {
             text-align: right;
             font-weight: 600;
-        }
-        
-        .payments-section {
-            margin-bottom: 40px;
-        }
-        
-        .payments-section h3 {
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #666;
-            margin-bottom: 15px;
-            padding-bottom: 5px;
-            border-bottom: 2px solid #0d9488;
-        }
-        
-        .payments-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 13px;
-        }
-        
-        .payments-table th {
-            background: #f8f9fa;
-            padding: 10px 12px;
-            text-align: left;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: #666;
-            border-bottom: 2px solid #e9ecef;
-        }
-        
-        .payments-table td {
-            padding: 10px 12px;
-            border-bottom: 1px solid #e9ecef;
-        }
-        
-        .payments-table .amount {
-            text-align: right;
-            font-weight: 500;
-            color: #10b981;
-        }
-        
-        .badge {
-            display: inline-block;
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: 500;
-        }
-        
-        .badge-avance {
-            background: #dbeafe;
-            color: #1e40af;
-        }
-        
-        .badge-paiement {
-            background: #d1fae5;
-            color: #065f46;
-        }
-        
-        .badge-solde {
-            background: #ede9fe;
-            color: #5b21b6;
         }
         
         .totals-section {
@@ -242,7 +178,7 @@
         }
         
         .total-row.grand-total {
-            background: linear-gradient(135deg, #0d9488, #0891b2);
+            background: linear-gradient(135deg, #7c3aed, #8b5cf6);
             color: white;
         }
         
@@ -274,22 +210,27 @@
             letter-spacing: 0.5px;
         }
         
-        .status-initialiser {
+        .status-brouillon {
+            background: #e5e7eb;
+            color: #4b5563;
+        }
+        
+        .status-envoyee {
             background: #dbeafe;
             color: #1e40af;
         }
         
-        .status-en_cours {
-            background: #fef3c7;
-            color: #d97706;
-        }
-        
-        .status-termine {
+        .status-payee {
             background: #d1fae5;
             color: #065f46;
         }
         
-        .status-annule {
+        .status-partielle {
+            background: #fef3c7;
+            color: #d97706;
+        }
+        
+        .status-annulee {
             background: #fee2e2;
             color: #991b1b;
         }
@@ -310,15 +251,8 @@
         .invoice-footer .thank-you {
             font-size: 16px;
             font-weight: 600;
-            color: #0d9488;
+            color: #7c3aed;
             margin-bottom: 10px;
-        }
-        
-        .no-payments {
-            text-align: center;
-            padding: 20px;
-            color: #666;
-            font-style: italic;
         }
         
         .print-actions {
@@ -328,7 +262,7 @@
         }
         
         .print-actions button {
-            background: linear-gradient(135deg, #0d9488, #0891b2);
+            background: linear-gradient(135deg, #7c3aed, #8b5cf6);
             color: white;
             border: none;
             padding: 12px 30px;
@@ -342,7 +276,7 @@
         
         .print-actions button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(13, 148, 136, 0.3);
+            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
         }
         
         .print-actions .btn-secondary {
@@ -353,22 +287,14 @@
             box-shadow: 0 4px 12px rgba(107, 114, 128, 0.3);
         }
         
-        .print-actions .btn-facture {
-            background: linear-gradient(135deg, #7c3aed, #8b5cf6);
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            font-size: 14px;
-            font-weight: 600;
+        .legal-mention {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
             border-radius: 8px;
-            cursor: pointer;
-            margin: 0 10px;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        
-        .print-actions .btn-facture:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+            font-size: 11px;
+            color: #666;
+            text-align: center;
         }
         
         @media print {
@@ -396,15 +322,6 @@
             </svg>
             Imprimer
         </button>
-        <form action="{{ route('factures.from-service', $service) }}" method="POST" style="display: inline;">
-            @csrf
-            <button type="submit" class="btn-facture" onclick="return confirm('Voulez-vous convertir ce reçu en facture ?');">
-                <svg style="width:16px;height:16px;vertical-align:middle;margin-right:8px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-                Convertir en Facture
-            </button>
-        </form>
         <button class="btn-secondary" onclick="window.history.back()">
             <svg style="width:16px;height:16px;vertical-align:middle;margin-right:8px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -420,34 +337,31 @@
                 <p>Services professionnels</p>
             </div>
             <div class="invoice-title">
-                <h2>REÇU DE PAIEMENT</h2>
-                <div class="invoice-number">#{{ str_pad($service->id, 6, '0', STR_PAD_LEFT) }}</div>
+                <h2>FACTURE</h2>
+                <div class="invoice-number">{{ $facture->numero }}</div>
             </div>
         </div>
         
         <div class="invoice-body">
             <div class="invoice-meta">
                 <div class="meta-section">
-                    <h3>Client</h3>
-                    @if($service->client)
+                    <h3>Facturé à</h3>
+                    @if($facture->client)
                     <p class="name">
-                        {{ $service->client->type === 'morale' ? $service->client->nom_raison_sociale : ($service->client->nom . ' ' . $service->client->prenom) }}
+                        {{ $facture->client->type === 'morale' ? $facture->client->nom_raison_sociale : ($facture->client->nom . ' ' . $facture->client->prenom) }}
                     </p>
-                    @if($service->client->type === 'morale' && $service->client->dirigeants->count() > 0)
-                    <p>Gérant: {{ $service->client->dirigeants->first()->nom ?? 'N/A' }}</p>
+                    @if($facture->client->type === 'morale' && $facture->client->dirigeants->count() > 0)
+                    <p>Gérant: {{ $facture->client->dirigeants->first()->nom ?? 'N/A' }}</p>
                     @endif
-                    @if($service->client->siege_social)
-                    <p>{{ $service->client->siege_social }}</p>
+                    @if($facture->client->siege_social)
+                    <p>{{ $facture->client->siege_social }}</p>
                     @endif
-                    <p>{{ $service->client->ville ?? '' }}{{ $service->client->pays ? ', ' . $service->client->pays : '' }}</p>
-                    @if($service->client->tel_1)
-                    <p>Tél: {{ $service->client->tel_1 }}</p>
+                    <p>{{ $facture->client->ville ?? '' }}{{ $facture->client->pays ? ', ' . $facture->client->pays : '' }}</p>
+                    @if($facture->client->tel_1)
+                    <p>Tél: {{ $facture->client->tel_1 }}</p>
                     @endif
-                    @if($service->client->email)
-                    <p>Email: {{ $service->client->email }}</p>
-                    @endif
-                    @if($service->client->ice)
-                    <p>ICE: {{ $service->client->ice }}</p>
+                    @if($facture->client->ice)
+                    <p>ICE: {{ $facture->client->ice }}</p>
                     @endif
                     @else
                     <p class="name">Client non spécifié</p>
@@ -455,85 +369,56 @@
                 </div>
                 
                 <div class="meta-section">
-                    <h3>Détails du reçu</h3>
-                    <p><strong>Date d'émission:</strong> {{ now()->format('d/m/Y') }}</p>
-                    <p><strong>Date de création:</strong> {{ $service->created_at->format('d/m/Y') }}</p>
+                    <h3>Détails de la facture</h3>
+                    <p><strong>N° Facture:</strong> {{ $facture->numero }}</p>
+                    <p><strong>Date d'émission:</strong> {{ $facture->date_facture->format('d/m/Y') }}</p>
+                    @if($facture->date_echeance)
+                    <p><strong>Date d'échéance:</strong> {{ $facture->date_echeance->format('d/m/Y') }}</p>
+                    @endif
                     <p>
                         <strong>Statut:</strong>
-                        <span class="status-badge status-{{ $service->status }}">{{ $service->status_label }}</span>
+                        <span class="status-badge status-{{ $facture->statut }}">{{ $facture->statut_label }}</span>
                     </p>
                 </div>
             </div>
             
             <div class="service-details">
-                <h3>Détails du service</h3>
+                <h3>Désignation</h3>
                 <table class="details-table">
                     <thead>
                         <tr>
-                            <th style="width: 60%;">Description</th>
-                            <th style="width: 20%;">Type</th>
-                            <th style="width: 20%; text-align: right;">Montant</th>
+                            <th style="width: 70%;">Description</th>
+                            <th style="width: 30%; text-align: right;">Montant HT</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td>
-                                <strong>{{ $service->typeService->nom ?? 'Service' }}</strong>
-                                @if($service->description)
-                                <div class="description">{{ $service->description }}</div>
+                                <strong>{{ $facture->service->typeService->nom ?? 'Service' }}</strong>
+                                @if($facture->service->description)
+                                <div class="description">{{ $facture->service->description }}</div>
                                 @endif
                             </td>
-                            <td>{{ $service->typeService->nom ?? 'N/A' }}</td>
-                            <td class="amount">{{ $service->formatted_montant_total }}</td>
+                            <td class="amount">{{ $facture->formatted_montant_total }}</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-            
-            @if($service->payments->count() > 0)
-            <div class="payments-section">
-                <h3>Historique des paiements</h3>
-                <table class="payments-table">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Type</th>
-                            <th>Mode</th>
-                            <th>Référence</th>
-                            <th style="text-align: right;">Montant</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($service->payments->sortBy('date_paiement') as $payment)
-                        <tr>
-                            <td>{{ $payment->date_paiement->format('d/m/Y') }}</td>
-                            <td>
-                                <span class="badge badge-{{ $payment->type }}">{{ $payment->type_label }}</span>
-                            </td>
-                            <td>{{ $payment->mode_paiement_label }}</td>
-                            <td>{{ $payment->reference ?? '-' }}</td>
-                            <td class="amount">{{ $payment->formatted_montant }}</td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-            @endif
             
             <div class="totals-section">
                 <div class="totals-box">
                     <div class="total-row grand-total">
-                        <span class="label">Total</span>
-                        <span class="value">{{ $service->formatted_montant_total }}</span>
+                        <span class="label">Total TTC</span>
+                        <span class="value">{{ $facture->formatted_montant_total }}</span>
                     </div>
                     <div class="total-row paid">
-                        <span class="label">Total payé</span>
-                        <span class="value">{{ $service->formatted_total_payments }}</span>
+                        <span class="label">Montant payé</span>
+                        <span class="value">{{ $facture->formatted_montant_paye }}</span>
                     </div>
-                    @if($service->remaining_amount > 0)
+                    @if($facture->montant_restant > 0)
                     <div class="total-row remaining">
                         <span class="label">Reste à payer</span>
-                        <span class="value">{{ $service->formatted_remaining_amount }}</span>
+                        <span class="value">{{ $facture->formatted_montant_restant }}</span>
                     </div>
                     @else
                     <div class="total-row" style="background: #d1fae5;">
@@ -543,12 +428,16 @@
                     @endif
                 </div>
             </div>
+            
+            <div class="legal-mention">
+                <p>TVA non applicable, art. 293 B du CGI</p>
+                <p>En cas de retard de paiement, une pénalité de 3 fois le taux d'intérêt légal sera appliquée.</p>
+            </div>
         </div>
         
         <div class="invoice-footer">
             <p class="thank-you">Merci pour votre confiance !</p>
-            <p>Ce reçu a été généré automatiquement par le système Abedrhman.</p>
-            <p>Date d'impression: {{ now()->format('d/m/Y à H:i') }}</p>
+            <p>Facture générée le {{ now()->format('d/m/Y à H:i') }}</p>
         </div>
     </div>
 </body>

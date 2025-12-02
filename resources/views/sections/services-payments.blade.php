@@ -55,7 +55,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Payment Summary Cards -->
         <div class="lg:col-span-3 grid grid-cols-1 sm:grid-cols-4 gap-4">
-            <!-- Total Price -->
+            <!-- Montant Total -->
             <div class="bg-white dark:bg-gray-800 rounded-xl shadow border border-gray-100 dark:border-gray-700 p-4">
                 <div class="flex items-center gap-3">
                     <div class="h-10 w-10 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
@@ -64,8 +64,11 @@
                         </svg>
                     </div>
                     <div>
-                        <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Prix Total</p>
-                        <p class="text-lg font-bold text-gray-900 dark:text-white">{{ $service->formatted_prix }}</p>
+                        <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Montant Total</p>
+                        <p class="text-lg font-bold text-gray-900 dark:text-white">{{ $service->formatted_montant_total }}</p>
+                        @if($service->sousServices->count() > 0)
+                        <p class="text-xs text-indigo-600 dark:text-indigo-400">dont {{ $service->sousServices->count() }} sous-service(s)</p>
+                        @endif
                     </div>
                 </div>
             </div>
