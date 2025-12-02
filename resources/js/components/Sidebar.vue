@@ -46,8 +46,26 @@
                     :is-active="currentRoute.startsWith(menuItems.dashboard.route)"
                 />
 
-                <!-- Regular Sections (before Paramètres) -->
-                <template v-for="section in serviceSections" :key="section.route">
+                <!-- Base clientèle and Base tiers -->
+                <template v-for="section in serviceSections.slice(0, 2)" :key="section.route">
+                    <MenuItem 
+                        :item="section" 
+                        :is-collapsed="isCollapsed"
+                        :is-active="currentRoute === section.route"
+                    />
+                </template>
+
+                <!-- Services with sub-sections -->
+                <CollapsibleMenuItem
+                    :item="servicesMenu"
+                    :is-collapsed="isCollapsed"
+                    :is-open="servicesOpen"
+                    :current-route="currentRoute"
+                    @toggle="servicesOpen = !servicesOpen"
+                />
+
+                <!-- Other sections (Activités, Tarification, etc.) -->
+                <template v-for="section in serviceSections.slice(2)" :key="section.route">
                     <MenuItem 
                         :item="section" 
                         :is-collapsed="isCollapsed"
@@ -94,6 +112,7 @@ import CollapsibleMenuItem from './CollapsibleMenuItem.vue'
 const isCollapsed = ref(false)
 const isMobileOpen = ref(false)
 const isMobile = ref(false)
+const servicesOpen = ref(false)
 const parametresOpen = ref(false)
 
 const getCurrentRoute = () => {
@@ -108,6 +127,10 @@ const currentRoute = ref(getCurrentRoute())
 // Update route on navigation
 const updateRoute = () => {
     currentRoute.value = getCurrentRoute()
+    // Auto-open Services menu if we're on a services or payments route
+    if (currentRoute.value.startsWith('/services') || currentRoute.value.startsWith('/payments')) {
+        servicesOpen.value = true
+    }
     // Auto-open Paramètres menu if we're on a parametres route
     if (currentRoute.value.startsWith('/parametres')) {
         parametresOpen.value = true
@@ -134,11 +157,6 @@ const serviceSections = [
         icon: 'M4 6a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm3 4h10M7 14h6'
     },
     {
-        title: 'Services',
-        route: '/services',
-        icon: 'M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z'
-    },
-    {
         title: 'Activités',
         route: '/activites',
         icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01'
@@ -159,6 +177,24 @@ const serviceSections = [
         icon: 'M9 5l7 7-7 7'
     }
 ]
+
+// Services menu with sub-sections
+const servicesMenu = {
+    title: 'Services',
+    icon: 'M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z',
+    children: [
+        {
+            title: 'Liste des Services',
+            route: '/services',
+            icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2'
+        },
+        {
+            title: 'Paiements',
+            route: '/payments',
+            icon: 'M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z'
+        }
+    ]
+}
 
 // Paramètres menu with sub-sections
 const parametresMenu = {
@@ -210,6 +246,11 @@ onMounted(() => {
     
     // Update route on initial load
     updateRoute()
+    
+    // Auto-open Services menu if we're on a services or payments route
+    if (currentRoute.value.startsWith('/services') || currentRoute.value.startsWith('/payments')) {
+        servicesOpen.value = true
+    }
     
     // Auto-open Paramètres menu if we're on a parametres route
     if (currentRoute.value.startsWith('/parametres')) {

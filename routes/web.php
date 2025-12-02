@@ -69,6 +69,9 @@ Route::middleware('auth')->group(function () {
     // Services CRUD
     Route::resource('services', \App\Http\Controllers\ServiceController::class);
     
+    // All Payments Management (must be before service-specific payments route)
+    Route::get('payments', [\App\Http\Controllers\ServiceController::class, 'allPayments'])->name('payments.index');
+    
     // Service Payments
     Route::get('services/{service}/payments', [\App\Http\Controllers\ServiceController::class, 'payments'])->name('services.payments');
     Route::post('services/{service}/payments', [\App\Http\Controllers\ServiceController::class, 'storePayment'])->name('services.payments.store');

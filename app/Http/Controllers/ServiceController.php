@@ -193,6 +193,57 @@ class ServiceController extends Controller
             'service' => $service->load(['typeService', 'client.dirigeants', 'payments']),
         ]);
     }
+
+    /**
+     * Display all payments across all services
+     */
+    public function allPayments(Request $request)
+    {
+        $query = Payment::with(['service.typeService', 'service.client']);
+
+        // Apply filters
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->whereHas('service.client', function ($q) use ($search) {
+                $q->where('nom', 'like', "%{$search}%")
+                  ->orWhere('prenom', 'like', "%{$search}%")
+                  ->orWhere('nom_raison_sociale', 'like', "%{$search}%");
+            })->orWhere('reference', 'like', "%{$search}%");
+        }
+
+        if ($request->filled('type')) {
+            $query->where('type', $request->type);
+        }
+
+        if ($request->filled('mode')) {
+            $query->where('mode_paiement', $request->mode);
+        }
+
+        if ($request->filled('date_from')) {
+            $query->whereDate('date_paiement', '>=', $request->date_from);
+        }
+
+        if ($request->filled('date_to')) {
+            $query->whereDate('date_paiement', '<=', $request->date_to);
+        }
+
+        $payments = $query->orderBy('date_paiement', 'desc')->paginate(20)->withQueryString();
+
+        // Calculate statistics
+        $totalAmount = Payment::sum('montant');
+        $todayAmount = Payment::whereDate('date_paiement', today())->sum('montant');
+        $monthAmount = Payment::whereMonth('date_paiement', now()->month)
+            ->whereYear('date_paiement', now()->year)
+            ->sum('montant');
+
+        return view('sections.payments', [
+            'page_title' => 'Gestion des Paiements',
+            'payments' => $payments,
+            'totalAmount' => $totalAmount,
+            'todayAmount' => $todayAmount,
+            'monthAmount' => $monthAmount,
+        ]);
+    }
 }
 
 
