@@ -139,11 +139,20 @@ class ServiceController extends Controller
         $validated = $request->validate([
             'montant' => 'required|numeric|min:0.01',
             'type' => 'required|in:avance,paiement,solde',
-            'mode_paiement' => 'required|in:especes,cheque,virement,carte',
+            'mode_paiement' => 'required|in:especes,cheque,virement,carte,lcn',
             'reference' => 'nullable|string|max:255',
+            'numero_transaction' => 'nullable|string|max:255',
+            'date_emission' => 'nullable|date',
+            'date_echeance' => 'nullable|date',
+            'encaisse' => 'nullable|boolean',
+            'numero_recu' => 'nullable|string|max:255',
+            'commentaire' => 'nullable|string|max:1000',
             'date_paiement' => 'required|date',
             'notes' => 'nullable|string|max:1000',
         ]);
+
+        // Set encaisse default to true if not provided
+        $validated['encaisse'] = $request->has('encaisse') ? true : false;
 
         $service->payments()->create($validated);
 

@@ -13,6 +13,12 @@ class Payment extends Model
         'type',
         'mode_paiement',
         'reference',
+        'numero_transaction',
+        'date_emission',
+        'date_echeance',
+        'encaisse',
+        'numero_recu',
+        'commentaire',
         'date_paiement',
         'notes',
     ];
@@ -20,6 +26,9 @@ class Payment extends Model
     protected $casts = [
         'montant' => 'decimal:2',
         'date_paiement' => 'date',
+        'date_emission' => 'date',
+        'date_echeance' => 'date',
+        'encaisse' => 'boolean',
     ];
 
     /**
@@ -61,8 +70,16 @@ class Payment extends Model
             'cheque' => 'Chèque',
             'virement' => 'Virement',
             'carte' => 'Carte bancaire',
+            'lcn' => 'LCN (traite)',
         ];
         return $labels[$this->mode_paiement] ?? $this->mode_paiement;
     }
-}
 
+    /**
+     * Get encaisse label
+     */
+    public function getEncaisseLabelAttribute(): string
+    {
+        return $this->encaisse ? 'Oui' : 'Non';
+    }
+}

@@ -1,12 +1,12 @@
-@extends('layouts.app')
 
-@section('title', 'Gestion des paiements - Abedrhman')
 
-@section('content')
+<?php $__env->startSection('title', 'Gestion des paiements - Abedrhman'); ?>
+
+<?php $__env->startSection('content'); ?>
 <div class="space-y-6 sm:space-y-8">
     <!-- Breadcrumb -->
     <div class="flex items-center gap-2 text-sm">
-        <a href="{{ route('services.index') }}" class="text-gray-500 dark:text-gray-400 hover:text-teal-600 dark:hover:text-teal-400 transition-colors">Services</a>
+        <a href="<?php echo e(route('services.index')); ?>" class="text-gray-500 dark:text-gray-400 hover:text-teal-600 dark:hover:text-teal-400 transition-colors">Services</a>
         <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
         </svg>
@@ -19,19 +19,20 @@
             <div>
                 <h2 class="text-xl sm:text-2xl font-bold mb-2">Gestion des Paiements</h2>
                 <p class="text-emerald-100 text-sm sm:text-base">
-                    Service: {{ $service->typeService->nom ?? 'N/A' }} - 
-                    Client: {{ $service->client ? ($service->client->type === 'morale' ? $service->client->nom_raison_sociale : ($service->client->nom . ' ' . $service->client->prenom)) : 'N/A' }}
+                    Service: <?php echo e($service->typeService->nom ?? 'N/A'); ?> - 
+                    Client: <?php echo e($service->client ? ($service->client->type === 'morale' ? $service->client->nom_raison_sociale : ($service->client->nom . ' ' . $service->client->prenom)) : 'N/A'); ?>
+
                 </p>
             </div>
             <div class="flex items-center gap-2">
-                <a href="{{ route('services.invoice', $service) }}" target="_blank"
+                <a href="<?php echo e(route('services.invoice', $service)); ?>" target="_blank"
                     class="inline-flex items-center justify-center px-4 py-2 bg-white text-emerald-700 font-medium rounded-lg hover:bg-emerald-50 transition-colors">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
                     Reçu
                 </a>
-                <a href="{{ route('services.index') }}" 
+                <a href="<?php echo e(route('services.index')); ?>" 
                     class="inline-flex items-center justify-center px-4 py-2 bg-white/20 hover:bg-white/30 text-white font-medium rounded-lg transition-colors">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -43,14 +44,14 @@
     </div>
 
     <!-- Success Message -->
-    @if(session('success'))
+    <?php if(session('success')): ?>
     <div class="bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-xl p-4 flex items-start gap-3">
         <svg class="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
-        <span class="text-sm text-emerald-700 dark:text-emerald-300">{{ session('success') }}</span>
+        <span class="text-sm text-emerald-700 dark:text-emerald-300"><?php echo e(session('success')); ?></span>
     </div>
-    @endif
+    <?php endif; ?>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Payment Summary Cards -->
@@ -65,7 +66,7 @@
                     </div>
                     <div>
                         <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Prix Total</p>
-                        <p class="text-lg font-bold text-gray-900 dark:text-white">{{ $service->formatted_prix }}</p>
+                        <p class="text-lg font-bold text-gray-900 dark:text-white"><?php echo e($service->formatted_prix); ?></p>
                     </div>
                 </div>
             </div>
@@ -80,7 +81,7 @@
                     </div>
                     <div>
                         <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Total Payé</p>
-                        <p class="text-lg font-bold text-emerald-600 dark:text-emerald-400">{{ $service->formatted_total_payments }}</p>
+                        <p class="text-lg font-bold text-emerald-600 dark:text-emerald-400"><?php echo e($service->formatted_total_payments); ?></p>
                     </div>
                 </div>
             </div>
@@ -88,15 +89,16 @@
             <!-- Remaining -->
             <div class="bg-white dark:bg-gray-800 rounded-xl shadow border border-gray-100 dark:border-gray-700 p-4">
                 <div class="flex items-center gap-3">
-                    <div class="h-10 w-10 rounded-lg {{ $service->remaining_amount > 0 ? 'bg-amber-100 dark:bg-amber-900/30' : 'bg-emerald-100 dark:bg-emerald-900/30' }} flex items-center justify-center">
-                        <svg class="w-5 h-5 {{ $service->remaining_amount > 0 ? 'text-amber-600 dark:text-amber-400' : 'text-emerald-600 dark:text-emerald-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="h-10 w-10 rounded-lg <?php echo e($service->remaining_amount > 0 ? 'bg-amber-100 dark:bg-amber-900/30' : 'bg-emerald-100 dark:bg-emerald-900/30'); ?> flex items-center justify-center">
+                        <svg class="w-5 h-5 <?php echo e($service->remaining_amount > 0 ? 'text-amber-600 dark:text-amber-400' : 'text-emerald-600 dark:text-emerald-400'); ?>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                     </div>
                     <div>
                         <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Reste à Payer</p>
-                        <p class="text-lg font-bold {{ $service->remaining_amount > 0 ? 'text-amber-600 dark:text-amber-400' : 'text-emerald-600 dark:text-emerald-400' }}">
-                            {{ $service->formatted_remaining_amount }}
+                        <p class="text-lg font-bold <?php echo e($service->remaining_amount > 0 ? 'text-amber-600 dark:text-amber-400' : 'text-emerald-600 dark:text-emerald-400'); ?>">
+                            <?php echo e($service->formatted_remaining_amount); ?>
+
                         </p>
                     </div>
                 </div>
@@ -114,10 +116,10 @@
                         <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Progression</p>
                         <div class="flex items-center gap-2 mt-1">
                             <div class="flex-1 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                                <div class="h-2 rounded-full transition-all duration-300 {{ $service->is_fully_paid ? 'bg-emerald-500' : 'bg-purple-500' }}" 
-                                     style="width: {{ $service->payment_progress }}%"></div>
+                                <div class="h-2 rounded-full transition-all duration-300 <?php echo e($service->is_fully_paid ? 'bg-emerald-500' : 'bg-purple-500'); ?>" 
+                                     style="width: <?php echo e($service->payment_progress); ?>%"></div>
                             </div>
-                            <span class="text-sm font-bold text-gray-900 dark:text-white">{{ $service->payment_progress }}%</span>
+                            <span class="text-sm font-bold text-gray-900 dark:text-white"><?php echo e($service->payment_progress); ?>%</span>
                         </div>
                     </div>
                 </div>
@@ -133,18 +135,25 @@
                 Nouveau paiement
             </h3>
             
-            <form action="{{ route('services.payments.store', $service) }}" method="POST" class="space-y-4">
-                @csrf
+            <form action="<?php echo e(route('services.payments.store', $service)); ?>" method="POST" class="space-y-4">
+                <?php echo csrf_field(); ?>
                 
                 <!-- Montant -->
                 <div>
                     <label for="montant" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Montant (DH) *</label>
-                    <input type="number" name="montant" id="montant" value="{{ old('montant') }}" required min="0.01" step="0.01"
+                    <input type="number" name="montant" id="montant" value="<?php echo e(old('montant')); ?>" required min="0.01" step="0.01"
                         class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                         placeholder="0.00">
-                    @error('montant')
-                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                    @enderror
+                    <?php $__errorArgs = ['montant'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                    <p class="mt-1 text-sm text-red-600 dark:text-red-400"><?php echo e($message); ?></p>
+                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                 </div>
 
                 <!-- Type -->
@@ -152,13 +161,20 @@
                     <label for="type" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Type *</label>
                     <select name="type" id="type" required
                         class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors">
-                        <option value="avance" {{ old('type') == 'avance' ? 'selected' : '' }}>Avance</option>
-                        <option value="paiement" {{ old('type', 'paiement') == 'paiement' ? 'selected' : '' }}>Paiement</option>
-                        <option value="solde" {{ old('type') == 'solde' ? 'selected' : '' }}>Solde</option>
+                        <option value="avance" <?php echo e(old('type') == 'avance' ? 'selected' : ''); ?>>Avance</option>
+                        <option value="paiement" <?php echo e(old('type', 'paiement') == 'paiement' ? 'selected' : ''); ?>>Paiement</option>
+                        <option value="solde" <?php echo e(old('type') == 'solde' ? 'selected' : ''); ?>>Solde</option>
                     </select>
-                    @error('type')
-                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                    @enderror
+                    <?php $__errorArgs = ['type'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                    <p class="mt-1 text-sm text-red-600 dark:text-red-400"><?php echo e($message); ?></p>
+                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                 </div>
 
                 <!-- Mode de paiement -->
@@ -166,51 +182,80 @@
                     <label for="mode_paiement" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Mode de paiement *</label>
                     <select name="mode_paiement" id="mode_paiement" required
                         class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors">
-                        <option value="especes" {{ old('mode_paiement', 'especes') == 'especes' ? 'selected' : '' }}>Espèces</option>
-                        <option value="cheque" {{ old('mode_paiement') == 'cheque' ? 'selected' : '' }}>Chèque</option>
-                        <option value="virement" {{ old('mode_paiement') == 'virement' ? 'selected' : '' }}>Virement</option>
-                        <option value="carte" {{ old('mode_paiement') == 'carte' ? 'selected' : '' }}>Carte bancaire</option>
-                        <option value="lcn" {{ old('mode_paiement') == 'lcn' ? 'selected' : '' }}>LCN (traite)</option>
+                        <option value="especes" <?php echo e(old('mode_paiement', 'especes') == 'especes' ? 'selected' : ''); ?>>Espèces</option>
+                        <option value="cheque" <?php echo e(old('mode_paiement') == 'cheque' ? 'selected' : ''); ?>>Chèque</option>
+                        <option value="virement" <?php echo e(old('mode_paiement') == 'virement' ? 'selected' : ''); ?>>Virement</option>
+                        <option value="carte" <?php echo e(old('mode_paiement') == 'carte' ? 'selected' : ''); ?>>Carte bancaire</option>
+                        <option value="lcn" <?php echo e(old('mode_paiement') == 'lcn' ? 'selected' : ''); ?>>LCN (traite)</option>
                     </select>
-                    @error('mode_paiement')
-                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                    @enderror
+                    <?php $__errorArgs = ['mode_paiement'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                    <p class="mt-1 text-sm text-red-600 dark:text-red-400"><?php echo e($message); ?></p>
+                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                 </div>
 
                 <!-- N° Transaction -->
                 <div>
                     <label for="numero_transaction" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">N° Transaction</label>
-                    <input type="text" name="numero_transaction" id="numero_transaction" value="{{ old('numero_transaction') }}"
+                    <input type="text" name="numero_transaction" id="numero_transaction" value="<?php echo e(old('numero_transaction')); ?>"
                         class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                         placeholder="N° de transaction">
-                    @error('numero_transaction')
-                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                    @enderror
+                    <?php $__errorArgs = ['numero_transaction'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                    <p class="mt-1 text-sm text-red-600 dark:text-red-400"><?php echo e($message); ?></p>
+                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                 </div>
 
                 <!-- Date d'émission -->
                 <div>
                     <label for="date_emission" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Date d'émission</label>
-                    <input type="date" name="date_emission" id="date_emission" value="{{ old('date_emission') }}"
+                    <input type="date" name="date_emission" id="date_emission" value="<?php echo e(old('date_emission')); ?>"
                         class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors">
-                    @error('date_emission')
-                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                    @enderror
+                    <?php $__errorArgs = ['date_emission'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                    <p class="mt-1 text-sm text-red-600 dark:text-red-400"><?php echo e($message); ?></p>
+                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                 </div>
 
                 <!-- Date d'échéance -->
                 <div>
                     <label for="date_echeance" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Date d'échéance</label>
-                    <input type="date" name="date_echeance" id="date_echeance" value="{{ old('date_echeance') }}"
+                    <input type="date" name="date_echeance" id="date_echeance" value="<?php echo e(old('date_echeance')); ?>"
                         class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors">
-                    @error('date_echeance')
-                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                    @enderror
+                    <?php $__errorArgs = ['date_echeance'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                    <p class="mt-1 text-sm text-red-600 dark:text-red-400"><?php echo e($message); ?></p>
+                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                 </div>
 
                 <!-- Encaissé -->
                 <div class="flex items-center">
-                    <input type="checkbox" name="encaisse" id="encaisse" value="1" {{ old('encaisse', true) ? 'checked' : '' }}
+                    <input type="checkbox" name="encaisse" id="encaisse" value="1" <?php echo e(old('encaisse', true) ? 'checked' : ''); ?>
+
                         class="w-4 h-4 text-emerald-600 bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded focus:ring-emerald-500 focus:ring-2">
                     <label for="encaisse" class="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300">Encaissé</label>
                 </div>
@@ -218,22 +263,36 @@
                 <!-- N° Reçu de paiement -->
                 <div>
                     <label for="numero_recu" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">N° Reçu de paiement</label>
-                    <input type="text" name="numero_recu" id="numero_recu" value="{{ old('numero_recu') }}"
+                    <input type="text" name="numero_recu" id="numero_recu" value="<?php echo e(old('numero_recu')); ?>"
                         class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                         placeholder="N° du reçu">
-                    @error('numero_recu')
-                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                    @enderror
+                    <?php $__errorArgs = ['numero_recu'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                    <p class="mt-1 text-sm text-red-600 dark:text-red-400"><?php echo e($message); ?></p>
+                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                 </div>
 
                 <!-- Date de paiement -->
                 <div>
                     <label for="date_paiement" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Date de paiement *</label>
-                    <input type="date" name="date_paiement" id="date_paiement" value="{{ old('date_paiement', date('Y-m-d')) }}" required
+                    <input type="date" name="date_paiement" id="date_paiement" value="<?php echo e(old('date_paiement', date('Y-m-d'))); ?>" required
                         class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors">
-                    @error('date_paiement')
-                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                    @enderror
+                    <?php $__errorArgs = ['date_paiement'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                    <p class="mt-1 text-sm text-red-600 dark:text-red-400"><?php echo e($message); ?></p>
+                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                 </div>
 
                 <!-- Commentaire -->
@@ -241,27 +300,34 @@
                     <label for="commentaire" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Commentaire</label>
                     <textarea name="commentaire" id="commentaire" rows="2"
                         class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors resize-none"
-                        placeholder="Commentaire...">{{ old('commentaire') }}</textarea>
-                    @error('commentaire')
-                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                    @enderror
+                        placeholder="Commentaire..."><?php echo e(old('commentaire')); ?></textarea>
+                    <?php $__errorArgs = ['commentaire'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                    <p class="mt-1 text-sm text-red-600 dark:text-red-400"><?php echo e($message); ?></p>
+                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                 </div>
 
                 <!-- Quick Amount Buttons -->
-                @if($service->remaining_amount > 0)
+                <?php if($service->remaining_amount > 0): ?>
                 <div class="flex flex-wrap gap-2">
-                    <button type="button" onclick="setAmount({{ $service->remaining_amount }})" 
+                    <button type="button" onclick="setAmount(<?php echo e($service->remaining_amount); ?>)" 
                         class="px-3 py-1 text-xs bg-amber-100 hover:bg-amber-200 dark:bg-amber-900/30 dark:hover:bg-amber-900/50 text-amber-700 dark:text-amber-300 rounded-full transition-colors">
-                        Solde: {{ number_format($service->remaining_amount, 2, ',', ' ') }} DH
+                        Solde: <?php echo e(number_format($service->remaining_amount, 2, ',', ' ')); ?> DH
                     </button>
-                    @if($service->remaining_amount > 100)
-                    <button type="button" onclick="setAmount({{ round($service->remaining_amount / 2, 2) }})" 
+                    <?php if($service->remaining_amount > 100): ?>
+                    <button type="button" onclick="setAmount(<?php echo e(round($service->remaining_amount / 2, 2)); ?>)" 
                         class="px-3 py-1 text-xs bg-blue-100 hover:bg-blue-200 dark:bg-blue-900/30 dark:hover:bg-blue-900/50 text-blue-700 dark:text-blue-300 rounded-full transition-colors">
-                        50%: {{ number_format($service->remaining_amount / 2, 2, ',', ' ') }} DH
+                        50%: <?php echo e(number_format($service->remaining_amount / 2, 2, ',', ' ')); ?> DH
                     </button>
-                    @endif
+                    <?php endif; ?>
                 </div>
-                @endif
+                <?php endif; ?>
 
                 <button type="submit" class="w-full px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg transition-colors flex items-center justify-center gap-2">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -283,12 +349,12 @@
                     </div>
                     <div>
                         <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Historique des paiements</h3>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">{{ $service->payments->count() }} paiement(s)</p>
+                        <p class="text-sm text-gray-500 dark:text-gray-400"><?php echo e($service->payments->count()); ?> paiement(s)</p>
                     </div>
                 </div>
             </div>
 
-            @if($service->payments->count() > 0)
+            <?php if($service->payments->count() > 0): ?>
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                     <thead class="bg-gray-50 dark:bg-gray-900/50">
@@ -305,44 +371,50 @@
                         </tr>
                     </thead>
                     <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                        @foreach($service->payments->sortByDesc('date_paiement') as $payment)
+                        <?php $__currentLoopData = $service->payments->sortByDesc('date_paiement'); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $payment): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
                             <td class="px-3 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                                {{ $payment->date_paiement->format('d/m/Y') }}
+                                <?php echo e($payment->date_paiement->format('d/m/Y')); ?>
+
                             </td>
                             <td class="px-3 py-3 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
-                                {{ $payment->mode_paiement_label }}
+                                <?php echo e($payment->mode_paiement_label); ?>
+
                             </td>
                             <td class="px-3 py-3 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
-                                {{ $payment->numero_transaction ?? '-' }}
+                                <?php echo e($payment->numero_transaction ?? '-'); ?>
+
                             </td>
                             <td class="px-3 py-3 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
-                                {{ $payment->date_emission ? $payment->date_emission->format('d/m/Y') : '-' }}
+                                <?php echo e($payment->date_emission ? $payment->date_emission->format('d/m/Y') : '-'); ?>
+
                             </td>
                             <td class="px-3 py-3 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
-                                {{ $payment->date_echeance ? $payment->date_echeance->format('d/m/Y') : '-' }}
+                                <?php echo e($payment->date_echeance ? $payment->date_echeance->format('d/m/Y') : '-'); ?>
+
                             </td>
                             <td class="px-3 py-3 whitespace-nowrap">
-                                @if($payment->encaisse)
+                                <?php if($payment->encaisse): ?>
                                 <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300">
                                     Oui
                                 </span>
-                                @else
+                                <?php else: ?>
                                 <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300">
                                     Non
                                 </span>
-                                @endif
+                                <?php endif; ?>
                             </td>
                             <td class="px-3 py-3 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
-                                {{ $payment->numero_recu ?? '-' }}
+                                <?php echo e($payment->numero_recu ?? '-'); ?>
+
                             </td>
                             <td class="px-3 py-3 whitespace-nowrap">
-                                <span class="text-sm font-semibold text-emerald-600 dark:text-emerald-400">{{ $payment->formatted_montant }}</span>
+                                <span class="text-sm font-semibold text-emerald-600 dark:text-emerald-400"><?php echo e($payment->formatted_montant); ?></span>
                             </td>
                             <td class="px-3 py-3 whitespace-nowrap text-right text-sm font-medium">
-                                <form action="{{ route('services.payments.destroy', [$service, $payment]) }}" method="POST" class="inline" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce paiement ?');">
-                                    @csrf
-                                    @method('DELETE')
+                                <form action="<?php echo e(route('services.payments.destroy', [$service, $payment])); ?>" method="POST" class="inline" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce paiement ?');">
+                                    <?php echo csrf_field(); ?>
+                                    <?php echo method_field('DELETE'); ?>
                                     <button type="submit" class="p-2 text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors" title="Supprimer">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -351,18 +423,19 @@
                                 </form>
                             </td>
                         </tr>
-                        @if($payment->commentaire)
+                        <?php if($payment->commentaire): ?>
                         <tr class="bg-gray-50/50 dark:bg-gray-900/20">
                             <td colspan="9" class="px-3 py-2 text-xs text-gray-500 dark:text-gray-400 italic">
-                                <span class="font-medium">Commentaire:</span> {{ $payment->commentaire }}
+                                <span class="font-medium">Commentaire:</span> <?php echo e($payment->commentaire); ?>
+
                             </td>
                         </tr>
-                        @endif
-                        @endforeach
+                        <?php endif; ?>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </tbody>
                 </table>
             </div>
-            @else
+            <?php else: ?>
             <div class="p-8 text-center">
                 <svg class="w-12 h-12 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -370,12 +443,12 @@
                 <h4 class="text-lg font-medium text-gray-900 dark:text-white mb-1">Aucun paiement</h4>
                 <p class="text-sm text-gray-500 dark:text-gray-400">Aucun paiement n'a été enregistré pour ce service.</p>
             </div>
-            @endif
+            <?php endif; ?>
         </div>
     </div>
 
     <!-- Client Info Card -->
-    @if($service->client)
+    <?php if($service->client): ?>
     <div class="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow border border-gray-100 dark:border-gray-700 p-6">
         <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
             <svg class="w-5 h-5 text-teal-600 dark:text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -387,24 +460,25 @@
             <div>
                 <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Nom / Raison sociale</p>
                 <p class="text-sm font-semibold text-gray-900 dark:text-white mt-1">
-                    {{ $service->client->type === 'morale' ? $service->client->nom_raison_sociale : ($service->client->nom . ' ' . $service->client->prenom) }}
+                    <?php echo e($service->client->type === 'morale' ? $service->client->nom_raison_sociale : ($service->client->nom . ' ' . $service->client->prenom)); ?>
+
                 </p>
             </div>
             <div>
                 <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Ville</p>
-                <p class="text-sm font-semibold text-gray-900 dark:text-white mt-1">{{ $service->client->ville ?? 'N/A' }}</p>
+                <p class="text-sm font-semibold text-gray-900 dark:text-white mt-1"><?php echo e($service->client->ville ?? 'N/A'); ?></p>
             </div>
             <div>
                 <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Téléphone</p>
-                <p class="text-sm font-semibold text-gray-900 dark:text-white mt-1">{{ $service->client->tel_1 ?? 'N/A' }}</p>
+                <p class="text-sm font-semibold text-gray-900 dark:text-white mt-1"><?php echo e($service->client->tel_1 ?? 'N/A'); ?></p>
             </div>
             <div>
                 <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Email</p>
-                <p class="text-sm font-semibold text-gray-900 dark:text-white mt-1">{{ $service->client->email ?? 'N/A' }}</p>
+                <p class="text-sm font-semibold text-gray-900 dark:text-white mt-1"><?php echo e($service->client->email ?? 'N/A'); ?></p>
             </div>
         </div>
     </div>
-    @endif
+    <?php endif; ?>
 </div>
 
 <script>
@@ -412,4 +486,6 @@ function setAmount(amount) {
     document.getElementById('montant').value = amount.toFixed(2);
 }
 </script>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\Espacegamers\Documents\abedrhman\resources\views/sections/services-payments.blade.php ENDPATH**/ ?>
