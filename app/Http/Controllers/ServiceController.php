@@ -322,6 +322,63 @@ class ServiceController extends Controller
         return redirect()->route('services.sous-services', $service)
             ->with('success', 'Sous-services mis à jour avec succès. Le montant total a été recalculé.');
     }
+
+    /**
+     * Display all payment receipts from services
+     */
+    public function recusPaiements(Request $request)
+    {
+        $query = Service::with(['typeService', 'client', 'payments', 'sousServices'])
+            ->whereHas('payments'); // Only services that have payments
+
+        // Apply filters
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('client', function ($q2) use ($search) {
+                    $q2->where('nom', 'like', "%{$search}%")
+                      ->orWhere('prenom', 'like', "%{$search}%")
+                      ->orWhere('nom_raison_sociale', 'like', "%{$search}%");
+                });
+            });
+        }
+
+        if ($request->filled('type_service')) {
+            $query->where('type_service_id', $request->type_service);
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('date_from')) {
+            $query->whereDate('created_at', '>=', $request->date_from);
+        }
+
+        if ($request->filled('date_to')) {
+            $query->whereDate('created_at', '<=', $request->date_to);
+        }
+
+        $services = $query->orderBy('created_at', 'desc')->paginate(15)->withQueryString();
+        $typesServices = TypeService::active()->ordered()->get();
+
+        // Statistics
+        $totalServices = Service::whereHas('payments')->count();
+        $totalPaid = Payment::sum('montant');
+        $fullyPaidServices = Service::whereHas('payments')
+            ->get()
+            ->filter(fn($s) => $s->remaining_amount <= 0)
+            ->count();
+
+        return view('sections.recus-paiements', [
+            'page_title' => 'Les reçus de paiements',
+            'services' => $services,
+            'typesServices' => $typesServices,
+            'totalServices' => $totalServices,
+            'totalPaid' => $totalPaid,
+            'fullyPaidServices' => $fullyPaidServices,
+        ]);
+    }
 }
 
 

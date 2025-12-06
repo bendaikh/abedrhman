@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="<?php echo e(str_replace('_', '-', app()->getLocale())); ?>">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Abedrhman - Administration')</title>
+    <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
+    <title><?php echo $__env->yieldContent('title', 'Abedrhman - Administration'); ?></title>
     <script>
         // Initialize theme before page load to prevent flash
         (function() {
@@ -16,13 +16,13 @@
             }
         })();
     </script>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <?php echo app('Illuminate\Foundation\Vite')(['resources/css/app.css', 'resources/js/app.js']); ?>
 </head>
 <body class="bg-gray-50 dark:bg-gray-900 min-h-screen">
     <!-- Hidden logout form template for Vue to use -->
     <template id="logout-form-template" style="display: none;">
-        <form method="POST" action="{{ route('logout') }}" class="ml-4">
-            @csrf
+        <form method="POST" action="<?php echo e(route('logout')); ?>" class="ml-4">
+            <?php echo csrf_field(); ?>
             <button 
                 type="submit" 
                 class="flex items-center px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
@@ -37,11 +37,12 @@
 
     <div 
         id="app" 
-        data-page-title="{{ $page_title ?? 'Tableau de bord' }}"
-        data-user="{{ json_encode(auth()->user()) }}"
+        data-page-title="<?php echo e($page_title ?? 'Tableau de bord'); ?>"
+        data-user="<?php echo e(json_encode(auth()->user())); ?>"
     >
         <!-- Content will be rendered here by Vue -->
-        @yield('content')
+        <?php echo $__env->yieldContent('content'); ?>
     </div>
 </body>
 </html>
+<?php /**PATH C:\Users\Espacegamers\Documents\abedrhman\resources\views/layouts/app.blade.php ENDPATH**/ ?>

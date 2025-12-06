@@ -94,6 +94,52 @@ Route::middleware('auth')->group(function () {
     Route::put('factures/{facture}/statut', [\App\Http\Controllers\FactureController::class, 'updateStatut'])->name('factures.update-statut');
     Route::delete('factures/{facture}', [\App\Http\Controllers\FactureController::class, 'destroy'])->name('factures.destroy');
     Route::get('factures/{facture}/print', [\App\Http\Controllers\FactureController::class, 'print'])->name('factures.print');
+    
+    // Reçus de paiements (Payment Receipts from Services)
+    Route::get('recus-paiements', [\App\Http\Controllers\ServiceController::class, 'recusPaiements'])->name('recus-paiements.index');
+
+    // Gestion financière - Placeholder routes
+    Route::get('/budget-caisation', function () {
+        return view('sections.placeholder', [
+            'page_title' => 'Budget caisation',
+            'section_name' => 'Budget caisation',
+            'section_description' => 'Gestion et suivi du budget de caisse',
+            'icon' => 'calculator',
+            'color' => 'emerald'
+        ]);
+    })->name('budget-caisation');
+
+    Route::get('/rapports-financiers', function () {
+        return view('sections.placeholder', [
+            'page_title' => 'Rapports financiers',
+            'section_name' => 'Rapports financiers',
+            'section_description' => 'Génération et consultation des rapports financiers',
+            'icon' => 'chart',
+            'color' => 'blue'
+        ]);
+    })->name('rapports-financiers');
+
+    // Relance & Recouvrement
+    Route::get('/relance-recouvrement', function () {
+        return view('sections.placeholder', [
+            'page_title' => 'Relance & Recouvrement',
+            'section_name' => 'Relance & Recouvrement',
+            'section_description' => 'Gestion des relances et du recouvrement des créances',
+            'icon' => 'mail',
+            'color' => 'amber'
+        ]);
+    })->name('relance-recouvrement');
+
+    // Actions commerciales - Rendez-vous
+    Route::get('/rendez-vous', function () {
+        return view('sections.placeholder', [
+            'page_title' => 'Rendez-vous',
+            'section_name' => 'Rendez-vous',
+            'section_description' => 'Planification et gestion des rendez-vous commerciaux',
+            'icon' => 'calendar',
+            'color' => 'purple'
+        ]);
+    })->name('rendez-vous');
 
     Route::get('/tarification', function () {
         return view('sections.tarification', ['page_title' => 'Tarification']);

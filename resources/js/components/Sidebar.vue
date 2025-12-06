@@ -46,14 +46,19 @@
                     :is-active="currentRoute.startsWith(menuItems.dashboard.route)"
                 />
 
-                <!-- Base clientèle and Base tiers -->
-                <template v-for="section in serviceSections.slice(0, 2)" :key="section.route">
-                    <MenuItem 
-                        :item="section" 
-                        :is-collapsed="isCollapsed"
-                        :is-active="currentRoute === section.route"
-                    />
-                </template>
+                <!-- Base clientèle -->
+                <MenuItem 
+                    :item="baseClienteleItem" 
+                    :is-collapsed="isCollapsed"
+                    :is-active="currentRoute === baseClienteleItem.route"
+                />
+
+                <!-- Base tiers -->
+                <MenuItem 
+                    :item="baseTiersItem" 
+                    :is-collapsed="isCollapsed"
+                    :is-active="currentRoute === baseTiersItem.route"
+                />
 
                 <!-- Services with sub-sections -->
                 <CollapsibleMenuItem
@@ -64,14 +69,39 @@
                     @toggle="servicesOpen = !servicesOpen"
                 />
 
-                <!-- Other sections (Activités, Tarification, etc.) -->
-                <template v-for="section in serviceSections.slice(2)" :key="section.route">
-                    <MenuItem 
-                        :item="section" 
-                        :is-collapsed="isCollapsed"
-                        :is-active="currentRoute === section.route"
-                    />
-                </template>
+                <!-- Gestion financière with sub-sections -->
+                <CollapsibleMenuItem
+                    :item="gestionFinanciereMenu"
+                    :is-collapsed="isCollapsed"
+                    :is-open="gestionFinanciereOpen"
+                    :current-route="currentRoute"
+                    @toggle="gestionFinanciereOpen = !gestionFinanciereOpen"
+                />
+
+                <!-- Facturations with sub-sections -->
+                <CollapsibleMenuItem
+                    :item="facturationsMenu"
+                    :is-collapsed="isCollapsed"
+                    :is-open="facturationsOpen"
+                    :current-route="currentRoute"
+                    @toggle="facturationsOpen = !facturationsOpen"
+                />
+
+                <!-- Relance & Recouvrement -->
+                <MenuItem 
+                    :item="relanceRecouvrementItem" 
+                    :is-collapsed="isCollapsed"
+                    :is-active="currentRoute === relanceRecouvrementItem.route"
+                />
+
+                <!-- Actions commerciales with sub-sections -->
+                <CollapsibleMenuItem
+                    :item="actionsCommercialesMenu"
+                    :is-collapsed="isCollapsed"
+                    :is-open="actionsCommercialesOpen"
+                    :current-route="currentRoute"
+                    @toggle="actionsCommercialesOpen = !actionsCommercialesOpen"
+                />
 
                 <!-- Paramètres with sub-sections -->
                 <CollapsibleMenuItem
@@ -113,6 +143,9 @@ const isCollapsed = ref(false)
 const isMobileOpen = ref(false)
 const isMobile = ref(false)
 const servicesOpen = ref(false)
+const gestionFinanciereOpen = ref(false)
+const facturationsOpen = ref(false)
+const actionsCommercialesOpen = ref(false)
 const parametresOpen = ref(false)
 
 const getCurrentRoute = () => {
@@ -127,9 +160,21 @@ const currentRoute = ref(getCurrentRoute())
 // Update route on navigation
 const updateRoute = () => {
     currentRoute.value = getCurrentRoute()
-    // Auto-open Services menu if we're on a services or payments route
-    if (currentRoute.value.startsWith('/services') || currentRoute.value.startsWith('/payments')) {
+    // Auto-open Services menu if we're on a services route
+    if (currentRoute.value.startsWith('/services')) {
         servicesOpen.value = true
+    }
+    // Auto-open Gestion financière menu if we're on relevant routes
+    if (currentRoute.value.startsWith('/payments') || currentRoute.value.startsWith('/charges') || currentRoute.value.startsWith('/budget-caisation') || currentRoute.value.startsWith('/rapports-financiers')) {
+        gestionFinanciereOpen.value = true
+    }
+    // Auto-open Facturations menu if we're on relevant routes
+    if (currentRoute.value.startsWith('/factures') || currentRoute.value.startsWith('/recus-paiements')) {
+        facturationsOpen.value = true
+    }
+    // Auto-open Actions commerciales menu if we're on relevant routes
+    if (currentRoute.value.startsWith('/rendez-vous')) {
+        actionsCommercialesOpen.value = true
     }
     // Auto-open Paramètres menu if we're on a parametres route
     if (currentRoute.value.startsWith('/parametres')) {
@@ -145,48 +190,26 @@ const menuItems = {
     }
 }
 
-const serviceSections = [
-    {
-        title: 'Base clientèle',
-        route: '/clients',
-        icon: 'M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87M15 11a3 3 0 10-6 0 3 3 0 006 0z'
-    },
-    {
-        title: 'Base tiers',
-        route: '/tiers',
-        icon: 'M4 6a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm3 4h10M7 14h6'
-    },
-    {
-        title: 'Factures',
-        route: '/factures',
-        icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z'
-    },
-    {
-        title: 'Activités',
-        route: '/activites',
-        icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01'
-    },
-    {
-        title: 'Tarification',
-        route: '/tarification',
-        icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8'
-    },
-    {
-        title: 'Étapes création',
-        route: '/etapes-creation',
-        icon: 'M7 8h10M7 12h6m-6 4h4'
-    },
-    {
-        title: 'Étapes domiciliation',
-        route: '/etapes-domiciliation',
-        icon: 'M9 5l7 7-7 7'
-    },
-    {
-        title: 'Les charges',
-        route: '/charges',
-        icon: 'M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z'
-    }
-]
+// Base clientèle menu item
+const baseClienteleItem = {
+    title: 'Base clientèle',
+    route: '/clients',
+    icon: 'M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87M15 11a3 3 0 10-6 0 3 3 0 006 0z'
+}
+
+// Base tiers menu item
+const baseTiersItem = {
+    title: 'Base tiers',
+    route: '/tiers',
+    icon: 'M4 6a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm3 4h10M7 14h6'
+}
+
+// Relance & Recouvrement menu item
+const relanceRecouvrementItem = {
+    title: 'Relance & Recouvrement',
+    route: '/relance-recouvrement',
+    icon: 'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z'
+}
 
 // Services menu with sub-sections
 const servicesMenu = {
@@ -197,11 +220,65 @@ const servicesMenu = {
             title: 'Liste des Services',
             route: '/services',
             icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2'
-        },
+        }
+    ]
+}
+
+// Gestion financière menu with sub-sections
+const gestionFinanciereMenu = {
+    title: 'Gestion financière',
+    icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 4a9 9 0 110-18 9 9 0 010 18z',
+    children: [
         {
-            title: 'Paiements',
+            title: 'Encaissement',
             route: '/payments',
             icon: 'M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z'
+        },
+        {
+            title: 'Les charges',
+            route: '/charges',
+            icon: 'M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z'
+        },
+        {
+            title: 'Budget caisation',
+            route: '/budget-caisation',
+            icon: 'M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z'
+        },
+        {
+            title: 'Rapports financiers',
+            route: '/rapports-financiers',
+            icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z'
+        }
+    ]
+}
+
+// Facturations menu with sub-sections
+const facturationsMenu = {
+    title: 'Facturations',
+    icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z',
+    children: [
+        {
+            title: 'Factures',
+            route: '/factures',
+            icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z'
+        },
+        {
+            title: 'Les reçus de paiements',
+            route: '/recus-paiements',
+            icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4'
+        }
+    ]
+}
+
+// Actions commerciales menu with sub-sections
+const actionsCommercialesMenu = {
+    title: 'Actions commerciales',
+    icon: 'M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z',
+    children: [
+        {
+            title: 'Rendez-vous',
+            route: '/rendez-vous',
+            icon: 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'
         }
     ]
 }
@@ -271,16 +348,6 @@ onMounted(() => {
     
     // Update route on initial load
     updateRoute()
-    
-    // Auto-open Services menu if we're on a services or payments route
-    if (currentRoute.value.startsWith('/services') || currentRoute.value.startsWith('/payments')) {
-        servicesOpen.value = true
-    }
-    
-    // Auto-open Paramètres menu if we're on a parametres route
-    if (currentRoute.value.startsWith('/parametres')) {
-        parametresOpen.value = true
-    }
     
     // Listen for browser back/forward navigation
     window.addEventListener('popstate', updateRoute)
