@@ -10,6 +10,8 @@ use App\Models\TarificationCrea;
 use App\Models\TypeService;
 use App\Models\TypeActivite;
 use App\Models\SousService;
+use App\Models\Rubrique;
+use App\Models\TypeCharge;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -540,6 +542,136 @@ class ParametresController extends Controller
 
         return redirect()->route('parametres.sous-services')
             ->with('success', 'Sous-service supprimé avec succès.');
+    }
+
+    // ==================== Rubriques Methods ====================
+
+    /**
+     * Display rubriques management page
+     */
+    public function rubriques()
+    {
+        $rubriques = Rubrique::with('typeCharges')->ordered()->get();
+        
+        return view('parametres.rubriques', [
+            'page_title' => 'Rubriques',
+            'rubriques' => $rubriques,
+        ]);
+    }
+
+    /**
+     * Store a new rubrique
+     */
+    public function storeRubrique(Request $request)
+    {
+        $validated = $request->validate([
+            'nom' => 'required|string|max:255',
+            'description' => 'nullable|string|max:1000',
+        ]);
+
+        $validated['is_active'] = $request->has('is_active');
+        $validated['ordre'] = Rubrique::max('ordre') + 1;
+
+        Rubrique::create($validated);
+
+        return redirect()->route('parametres.rubriques')
+            ->with('success', 'Rubrique créée avec succès.');
+    }
+
+    /**
+     * Update a rubrique
+     */
+    public function updateRubrique(Request $request, Rubrique $rubrique)
+    {
+        $validated = $request->validate([
+            'nom' => 'required|string|max:255',
+            'description' => 'nullable|string|max:1000',
+        ]);
+
+        $validated['is_active'] = $request->has('is_active');
+
+        $rubrique->update($validated);
+
+        return redirect()->route('parametres.rubriques')
+            ->with('success', 'Rubrique mise à jour avec succès.');
+    }
+
+    /**
+     * Delete a rubrique
+     */
+    public function destroyRubrique(Rubrique $rubrique)
+    {
+        $rubrique->delete();
+
+        return redirect()->route('parametres.rubriques')
+            ->with('success', 'Rubrique supprimée avec succès.');
+    }
+
+    // ==================== Types de Charge Methods ====================
+
+    /**
+     * Display types de charge management page
+     */
+    public function typesCharge()
+    {
+        $rubriques = Rubrique::active()->ordered()->get();
+        $typesCharge = TypeCharge::with('rubrique')->ordered()->get();
+        
+        return view('parametres.types-charge', [
+            'page_title' => 'Types de charge',
+            'rubriques' => $rubriques,
+            'typesCharge' => $typesCharge,
+        ]);
+    }
+
+    /**
+     * Store a new type charge
+     */
+    public function storeTypeCharge(Request $request)
+    {
+        $validated = $request->validate([
+            'rubrique_id' => 'required|exists:rubriques,id',
+            'nom' => 'required|string|max:255',
+            'description' => 'nullable|string|max:1000',
+        ]);
+
+        $validated['is_active'] = $request->has('is_active');
+        $validated['ordre'] = TypeCharge::max('ordre') + 1;
+
+        TypeCharge::create($validated);
+
+        return redirect()->route('parametres.types-charge')
+            ->with('success', 'Type de charge créé avec succès.');
+    }
+
+    /**
+     * Update a type charge
+     */
+    public function updateTypeCharge(Request $request, TypeCharge $typeCharge)
+    {
+        $validated = $request->validate([
+            'rubrique_id' => 'required|exists:rubriques,id',
+            'nom' => 'required|string|max:255',
+            'description' => 'nullable|string|max:1000',
+        ]);
+
+        $validated['is_active'] = $request->has('is_active');
+
+        $typeCharge->update($validated);
+
+        return redirect()->route('parametres.types-charge')
+            ->with('success', 'Type de charge mis à jour avec succès.');
+    }
+
+    /**
+     * Delete a type charge
+     */
+    public function destroyTypeCharge(TypeCharge $typeCharge)
+    {
+        $typeCharge->delete();
+
+        return redirect()->route('parametres.types-charge')
+            ->with('success', 'Type de charge supprimé avec succès.');
     }
 }
 

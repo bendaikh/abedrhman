@@ -3,13 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class OffreCrea extends Model
+class TypeCharge extends Model
 {
-    protected $table = 'offres_crea';
-    
     protected $fillable = [
+        'rubrique_id',
         'nom',
         'description',
         'is_active',
@@ -22,15 +22,23 @@ class OffreCrea extends Model
     ];
 
     /**
-     * Get the tarifications for this offer
+     * Get the rubrique that owns this type charge
      */
-    public function tarifications(): HasMany
+    public function rubrique(): BelongsTo
     {
-        return $this->hasMany(TarificationCrea::class, 'offre_crea_id');
+        return $this->belongsTo(Rubrique::class);
     }
 
     /**
-     * Scope to get only active offers
+     * Get the charges for this type charge
+     */
+    public function charges(): HasMany
+    {
+        return $this->hasMany(Charge::class);
+    }
+
+    /**
+     * Scope to get only active type charges
      */
     public function scopeActive($query)
     {
@@ -45,11 +53,3 @@ class OffreCrea extends Model
         return $query->orderBy('ordre');
     }
 }
-
-
-
-
-
-
-
-

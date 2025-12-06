@@ -180,6 +180,11 @@ const serviceSections = [
         title: 'Étapes domiciliation',
         route: '/etapes-domiciliation',
         icon: 'M9 5l7 7-7 7'
+    },
+    {
+        title: 'Les charges',
+        route: '/charges',
+        icon: 'M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z'
     }
 ]
 
@@ -225,6 +230,16 @@ const parametresMenu = {
             title: 'Sous-services',
             route: '/parametres/sous-services',
             icon: 'M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10'
+        },
+        {
+            title: 'Rubriques',
+            route: '/parametres/rubriques',
+            icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2'
+        },
+        {
+            title: 'Types de charge',
+            route: '/parametres/types-charge',
+            icon: 'M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4'
         }
     ]
 }

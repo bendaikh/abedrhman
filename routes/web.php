@@ -154,7 +154,22 @@ Route::middleware('auth')->group(function () {
         Route::post('/sous-services', [\App\Http\Controllers\ParametresController::class, 'storeSousService'])->name('parametres.sous-services.store');
         Route::put('/sous-services/{sousService}', [\App\Http\Controllers\ParametresController::class, 'updateSousService'])->name('parametres.sous-services.update');
         Route::delete('/sous-services/{sousService}', [\App\Http\Controllers\ParametresController::class, 'destroySousService'])->name('parametres.sous-services.destroy');
+        
+        // Rubriques
+        Route::get('/rubriques', [\App\Http\Controllers\ParametresController::class, 'rubriques'])->name('parametres.rubriques');
+        Route::post('/rubriques', [\App\Http\Controllers\ParametresController::class, 'storeRubrique'])->name('parametres.rubriques.store');
+        Route::put('/rubriques/{rubrique}', [\App\Http\Controllers\ParametresController::class, 'updateRubrique'])->name('parametres.rubriques.update');
+        Route::delete('/rubriques/{rubrique}', [\App\Http\Controllers\ParametresController::class, 'destroyRubrique'])->name('parametres.rubriques.destroy');
+        
+        // Types de charge
+        Route::get('/types-charge', [\App\Http\Controllers\ParametresController::class, 'typesCharge'])->name('parametres.types-charge');
+        Route::post('/types-charge', [\App\Http\Controllers\ParametresController::class, 'storeTypeCharge'])->name('parametres.types-charge.store');
+        Route::put('/types-charge/{typeCharge}', [\App\Http\Controllers\ParametresController::class, 'updateTypeCharge'])->name('parametres.types-charge.update');
+        Route::delete('/types-charge/{typeCharge}', [\App\Http\Controllers\ParametresController::class, 'destroyTypeCharge'])->name('parametres.types-charge.destroy');
     });
+
+    // Charges
+    Route::resource('charges', \App\Http\Controllers\ChargeController::class);
 
     // La gestion des achats
     Route::prefix('achats')->group(function () {

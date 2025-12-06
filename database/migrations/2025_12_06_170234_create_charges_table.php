@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('comptes_associes', function (Blueprint $table) {
+        Schema::create('charges', function (Blueprint $table) {
             $table->id();
-            $table->string('nom_prenom')->nullable();
-            $table->string('tel')->nullable();
-            $table->string('email')->nullable();
-            $table->string('rib')->nullable();
+            $table->foreignId('type_charge_id')->constrained('type_charges')->onDelete('cascade');
+            $table->decimal('montant', 10, 2);
+            $table->string('numero_recu_paiement')->nullable();
+            $table->text('observation')->nullable();
+            $table->date('date_charge');
             $table->timestamps();
         });
     }
@@ -26,17 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('comptes_associes');
+        Schema::dropIfExists('charges');
     }
 };
-
-
-
-
-
-
-
-
-
-
-

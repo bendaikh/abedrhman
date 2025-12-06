@@ -150,20 +150,6 @@
                     @enderror
                 </div>
 
-                <!-- Type -->
-                <div>
-                    <label for="type" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Type *</label>
-                    <select name="type" id="type" required
-                        class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors">
-                        <option value="avance" {{ old('type') == 'avance' ? 'selected' : '' }}>Avance</option>
-                        <option value="paiement" {{ old('type', 'paiement') == 'paiement' ? 'selected' : '' }}>Paiement</option>
-                        <option value="solde" {{ old('type') == 'solde' ? 'selected' : '' }}>Solde</option>
-                    </select>
-                    @error('type')
-                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                    @enderror
-                </div>
-
                 <!-- Mode de paiement -->
                 <div>
                     <label for="mode_paiement" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Mode de paiement *</label>
@@ -216,17 +202,6 @@
                     <input type="checkbox" name="encaisse" id="encaisse" value="1" {{ old('encaisse', true) ? 'checked' : '' }}
                         class="w-4 h-4 text-emerald-600 bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded focus:ring-emerald-500 focus:ring-2">
                     <label for="encaisse" class="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300">Encaissé</label>
-                </div>
-
-                <!-- N° Reçu de paiement -->
-                <div>
-                    <label for="numero_recu" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">N° Reçu de paiement</label>
-                    <input type="text" name="numero_recu" id="numero_recu" value="{{ old('numero_recu') }}"
-                        class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
-                        placeholder="N° du reçu">
-                    @error('numero_recu')
-                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                    @enderror
                 </div>
 
                 <!-- Date de paiement -->
