@@ -41,13 +41,18 @@
                         <option value="">Sélectionner un client</option>
                         @foreach($clients as $client)
                         <option value="{{ $client->id }}" 
-                            data-nom="{{ $client->type === 'morale' ? $client->nom_raison_sociale : ($client->nom . ' ' . $client->prenom) }}"
-                            data-gerant="{{ $client->type === 'morale' ? ($client->dirigeants->first()->nom ?? 'N/A') : 'N/A' }}"
+                            data-nom="{{ $client->type === 'particulier' ? ($client->nom . ' ' . $client->prenom) : $client->nom_raison_sociale }}"
+                            data-raison-sociale="{{ $client->type !== 'particulier' ? $client->nom_raison_sociale : '' }}"
+                            data-gerant="{{ $client->type !== 'particulier' ? ($client->dirigeants->first()->nom ?? 'N/A') : 'N/A' }}"
                             data-ville="{{ $client->ville ?? 'N/A' }}"
                             data-type="{{ $client->type }}"
                             {{ old('client_id') == $client->id ? 'selected' : '' }}>
-                            {{ $client->type === 'morale' ? $client->nom_raison_sociale : ($client->nom . ' ' . $client->prenom) }}
-                            @if($client->num_client) ({{ $client->num_client }}) @endif
+                            @if($client->type === 'particulier')
+                                {{ $client->nom }} {{ $client->prenom }}
+                            @else
+                                {{ $client->nom_raison_sociale }}@if($client->sigle) ({{ $client->sigle }})@endif
+                            @endif
+                            @if($client->num_client) - {{ $client->num_client }}@endif
                         </option>
                         @endforeach
                     </select>

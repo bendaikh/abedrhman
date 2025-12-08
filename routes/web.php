@@ -212,6 +212,20 @@ Route::middleware('auth')->group(function () {
         Route::post('/types-charge', [\App\Http\Controllers\ParametresController::class, 'storeTypeCharge'])->name('parametres.types-charge.store');
         Route::put('/types-charge/{typeCharge}', [\App\Http\Controllers\ParametresController::class, 'updateTypeCharge'])->name('parametres.types-charge.update');
         Route::delete('/types-charge/{typeCharge}', [\App\Http\Controllers\ParametresController::class, 'destroyTypeCharge'])->name('parametres.types-charge.destroy');
+        
+        // Réglages de l'entreprise
+        Route::get('/reglages-entreprise', [\App\Http\Controllers\ParametresController::class, 'reglagesEntreprise'])->name('parametres.reglages-entreprise');
+        Route::put('/reglages-entreprise', [\App\Http\Controllers\ParametresController::class, 'updateReglagesEntreprise'])->name('parametres.reglages-entreprise.update');
+        
+        // Dirigeants de l'entreprise
+        Route::post('/reglages-entreprise/dirigeants', [\App\Http\Controllers\ParametresController::class, 'storeDirigeant'])->name('parametres.dirigeants.store');
+        Route::put('/reglages-entreprise/dirigeants/{dirigeant}', [\App\Http\Controllers\ParametresController::class, 'updateDirigeant'])->name('parametres.dirigeants.update');
+        Route::delete('/reglages-entreprise/dirigeants/{dirigeant}', [\App\Http\Controllers\ParametresController::class, 'destroyDirigeant'])->name('parametres.dirigeants.destroy');
+        
+        // Associés de l'entreprise
+        Route::post('/reglages-entreprise/associes', [\App\Http\Controllers\ParametresController::class, 'storeAssocie'])->name('parametres.associes.store');
+        Route::put('/reglages-entreprise/associes/{associe}', [\App\Http\Controllers\ParametresController::class, 'updateAssocie'])->name('parametres.associes.update');
+        Route::delete('/reglages-entreprise/associes/{associe}', [\App\Http\Controllers\ParametresController::class, 'destroyAssocie'])->name('parametres.associes.destroy');
     });
 
     // Charges

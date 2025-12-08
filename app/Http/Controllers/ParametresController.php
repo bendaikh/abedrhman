@@ -12,6 +12,9 @@ use App\Models\TypeActivite;
 use App\Models\SousService;
 use App\Models\Rubrique;
 use App\Models\TypeCharge;
+use App\Models\EntrepriseSetting;
+use App\Models\EntrepriseDirigeant;
+use App\Models\EntrepriseAssocie;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -552,10 +555,12 @@ class ParametresController extends Controller
     public function rubriques()
     {
         $rubriques = Rubrique::with('typeCharges')->ordered()->get();
+        $typesCharge = TypeCharge::with('rubrique')->ordered()->get();
         
         return view('parametres.rubriques', [
-            'page_title' => 'Rubriques',
+            'page_title' => 'Rubriques & Types de charge',
             'rubriques' => $rubriques,
+            'typesCharge' => $typesCharge,
         ]);
     }
 
@@ -640,7 +645,7 @@ class ParametresController extends Controller
 
         TypeCharge::create($validated);
 
-        return redirect()->route('parametres.types-charge')
+        return redirect()->route('parametres.rubriques', ['#types-charge'])
             ->with('success', 'Type de charge créé avec succès.');
     }
 
@@ -659,7 +664,7 @@ class ParametresController extends Controller
 
         $typeCharge->update($validated);
 
-        return redirect()->route('parametres.types-charge')
+        return redirect()->route('parametres.rubriques', ['#types-charge'])
             ->with('success', 'Type de charge mis à jour avec succès.');
     }
 
@@ -670,8 +675,171 @@ class ParametresController extends Controller
     {
         $typeCharge->delete();
 
-        return redirect()->route('parametres.types-charge')
+        return redirect()->route('parametres.rubriques', ['#types-charge'])
             ->with('success', 'Type de charge supprimé avec succès.');
+    }
+
+    // ==================== Réglages de l'entreprise Methods ====================
+
+    /**
+     * Display company settings page
+     */
+    public function reglagesEntreprise()
+    {
+        $settings = EntrepriseSetting::getSettings();
+        $settings->load(['dirigeants', 'associes']);
+        
+        return view('parametres.reglages-entreprise', [
+            'page_title' => 'Réglages de l\'entreprise',
+            'settings' => $settings,
+        ]);
+    }
+
+    /**
+     * Update company settings
+     */
+    public function updateReglagesEntreprise(Request $request)
+    {
+        $validated = $request->validate([
+            'raison_sociale' => 'nullable|string|max:255',
+            'sigle' => 'nullable|string|max:50',
+            'forme_juridique' => 'nullable|string|max:100',
+            'capital_social' => 'nullable|string|max:100',
+            'ice' => 'nullable|string|max:50',
+            'id_fiscale' => 'nullable|string|max:50',
+            'patente' => 'nullable|string|max:50',
+            'rc' => 'nullable|string|max:50',
+            'cnss' => 'nullable|string|max:50',
+            'date_creation' => 'nullable|date',
+            'siege_social' => 'nullable|string|max:1000',
+            'ville' => 'nullable|string|max:100',
+            'pays' => 'nullable|string|max:100',
+            'tel_1' => 'nullable|string|max:20',
+            'tel_2' => 'nullable|string|max:20',
+            'fixe' => 'nullable|string|max:20',
+            'email' => 'nullable|email|max:255',
+            'site_web' => 'nullable|string|max:255',
+            'secteur_activite' => 'nullable|string|max:100',
+            'activite_principale' => 'nullable|string|max:1000',
+        ]);
+
+        $settings = EntrepriseSetting::getSettings();
+        $settings->update($validated);
+
+        return redirect()->route('parametres.reglages-entreprise')
+            ->with('success', 'Informations de l\'entreprise mises à jour avec succès.');
+    }
+
+    /**
+     * Store a new dirigeant for the company
+     */
+    public function storeDirigeant(Request $request)
+    {
+        $validated = $request->validate([
+            'nom' => 'required|string|max:255',
+            'prenom' => 'nullable|string|max:255',
+            'fonction' => 'nullable|string|max:255',
+            'cin' => 'nullable|string|max:50',
+            'telephone' => 'nullable|string|max:20',
+            'email' => 'nullable|email|max:255',
+        ]);
+
+        $settings = EntrepriseSetting::getSettings();
+        $validated['entreprise_setting_id'] = $settings->id;
+        $validated['is_representant_legal'] = $request->has('is_representant_legal');
+
+        EntrepriseDirigeant::create($validated);
+
+        return redirect()->route('parametres.reglages-entreprise')
+            ->with('success', 'Dirigeant ajouté avec succès.');
+    }
+
+    /**
+     * Update a dirigeant
+     */
+    public function updateDirigeant(Request $request, EntrepriseDirigeant $dirigeant)
+    {
+        $validated = $request->validate([
+            'nom' => 'required|string|max:255',
+            'prenom' => 'nullable|string|max:255',
+            'fonction' => 'nullable|string|max:255',
+            'cin' => 'nullable|string|max:50',
+            'telephone' => 'nullable|string|max:20',
+            'email' => 'nullable|email|max:255',
+        ]);
+
+        $validated['is_representant_legal'] = $request->has('is_representant_legal');
+        $dirigeant->update($validated);
+
+        return redirect()->route('parametres.reglages-entreprise')
+            ->with('success', 'Dirigeant mis à jour avec succès.');
+    }
+
+    /**
+     * Delete a dirigeant
+     */
+    public function destroyDirigeant(EntrepriseDirigeant $dirigeant)
+    {
+        $dirigeant->delete();
+
+        return redirect()->route('parametres.reglages-entreprise')
+            ->with('success', 'Dirigeant supprimé avec succès.');
+    }
+
+    /**
+     * Store a new associe for the company
+     */
+    public function storeAssocie(Request $request)
+    {
+        $validated = $request->validate([
+            'nom' => 'required|string|max:255',
+            'prenom' => 'nullable|string|max:255',
+            'cin' => 'nullable|string|max:50',
+            'parts_sociales' => 'nullable|numeric|min:0',
+            'pourcentage' => 'nullable|numeric|min:0|max:100',
+            'telephone' => 'nullable|string|max:20',
+            'email' => 'nullable|email|max:255',
+        ]);
+
+        $settings = EntrepriseSetting::getSettings();
+        $validated['entreprise_setting_id'] = $settings->id;
+
+        EntrepriseAssocie::create($validated);
+
+        return redirect()->route('parametres.reglages-entreprise')
+            ->with('success', 'Associé ajouté avec succès.');
+    }
+
+    /**
+     * Update an associe
+     */
+    public function updateAssocie(Request $request, EntrepriseAssocie $associe)
+    {
+        $validated = $request->validate([
+            'nom' => 'required|string|max:255',
+            'prenom' => 'nullable|string|max:255',
+            'cin' => 'nullable|string|max:50',
+            'parts_sociales' => 'nullable|numeric|min:0',
+            'pourcentage' => 'nullable|numeric|min:0|max:100',
+            'telephone' => 'nullable|string|max:20',
+            'email' => 'nullable|email|max:255',
+        ]);
+
+        $associe->update($validated);
+
+        return redirect()->route('parametres.reglages-entreprise')
+            ->with('success', 'Associé mis à jour avec succès.');
+    }
+
+    /**
+     * Delete an associe
+     */
+    public function destroyAssocie(EntrepriseAssocie $associe)
+    {
+        $associe->delete();
+
+        return redirect()->route('parametres.reglages-entreprise')
+            ->with('success', 'Associé supprimé avec succès.');
     }
 }
 

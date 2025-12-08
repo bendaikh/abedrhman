@@ -144,7 +144,7 @@
         </div>
     </div>
 
-    <!-- Charges Section -->
+    <!-- Décaissements Section -->
     <div>
         <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
             <div class="h-8 w-8 rounded-lg bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
@@ -152,10 +152,10 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
             </div>
-            Gestion des charges
+            Gestion des décaissements
         </h3>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-            <!-- Rubriques Card -->
+            <!-- Rubriques & Types de charge Card -->
             <a href="{{ route('parametres.rubriques') }}" class="group bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow p-6 border border-gray-100 dark:border-gray-700 hover:shadow-lg transition-all duration-200 hover:border-blue-300 dark:hover:border-blue-600">
                 <div class="flex items-center justify-between mb-4">
                     <div class="h-12 w-12 rounded-xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center group-hover:bg-blue-200 dark:group-hover:bg-blue-900/50 transition-colors">
@@ -164,27 +164,11 @@
                         </svg>
                     </div>
                     <span class="bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 text-xs font-semibold px-3 py-1 rounded-full">
-                        Rubriques
+                        Rubriques & Types
                     </span>
                 </div>
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Rubriques</h3>
-                <p class="text-sm text-gray-500 dark:text-gray-400">Gérez les rubriques pour catégoriser les types de charges</p>
-            </a>
-
-            <!-- Types de charge Card -->
-            <a href="{{ route('parametres.types-charge') }}" class="group bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow p-6 border border-gray-100 dark:border-gray-700 hover:shadow-lg transition-all duration-200 hover:border-purple-300 dark:hover:border-purple-600">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="h-12 w-12 rounded-xl bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center group-hover:bg-purple-200 dark:group-hover:bg-purple-900/50 transition-colors">
-                        <svg class="w-6 h-6 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
-                        </svg>
-                    </div>
-                    <span class="bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 text-xs font-semibold px-3 py-1 rounded-full">
-                        Types
-                    </span>
-                </div>
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Types de charge</h3>
-                <p class="text-sm text-gray-500 dark:text-gray-400">Définissez les types de charge associés à chaque rubrique</p>
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Rubriques & Types de charge</h3>
+                <p class="text-sm text-gray-500 dark:text-gray-400">Gérez les rubriques et les types de charge pour catégoriser vos décaissements</p>
             </a>
         </div>
     </div>
