@@ -9,6 +9,7 @@ class Charge extends Model
 {
     protected $fillable = [
         'type_charge_id',
+        'designation',
         'montant',
         'numero_recu_paiement',
         'observation',

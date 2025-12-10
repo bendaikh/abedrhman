@@ -16,7 +16,7 @@
     <!-- Page Header -->
     <div class="bg-gradient-to-r from-blue-600 to-purple-700 rounded-xl sm:rounded-2xl p-6 sm:p-8 text-white">
         <h2 class="text-xl sm:text-2xl font-bold mb-2">Rubriques & Types de charge</h2>
-        <p class="text-blue-100 text-sm sm:text-base">Gérez les rubriques et leurs types de charges associés pour catégoriser vos décaissements.</p>
+        <p class="text-blue-100 text-sm sm:text-base">Gérez les rubriques et leurs types de charges. Vous pouvez créer des types de charge sans rubrique et les affecter plus tard.</p>
     </div>
 
     <!-- Success Message -->
@@ -189,23 +189,24 @@
                             <form action="{{ route('parametres.types-charge.store') }}" method="POST" class="space-y-4">
                                 @csrf
                                 <div>
-                                    <label for="rubrique_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Rubrique *</label>
-                                    <select name="rubrique_id" id="rubrique_id" required
-                                        class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors">
-                                        <option value="">Sélectionner une rubrique</option>
-                                        @foreach($rubriques as $rubrique)
-                                        <option value="{{ $rubrique->id }}">{{ $rubrique->nom }}</option>
-                                        @endforeach
-                                    </select>
-                                    @error('rubrique_id')
-                                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                                    @enderror
-                                </div>
-                                <div>
                                     <label for="nom_charge" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nom du type de charge *</label>
                                     <input type="text" name="nom" id="nom_charge" required placeholder="Ex: Loyer" 
                                         class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors">
                                     @error('nom')
+                                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                                <div>
+                                    <label for="rubrique_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Rubrique (optionnel)</label>
+                                    <select name="rubrique_id" id="rubrique_id"
+                                        class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors">
+                                        <option value="">-- Sans rubrique --</option>
+                                        @foreach($rubriques as $rubrique)
+                                        <option value="{{ $rubrique->id }}">{{ $rubrique->nom }}</option>
+                                        @endforeach
+                                    </select>
+                                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Vous pouvez affecter une rubrique plus tard.</p>
+                                    @error('rubrique_id')
                                     <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                                     @enderror
                                 </div>
@@ -238,25 +239,26 @@
                         @if($typesCharge->count() > 0)
                         <div class="space-y-4">
                             @foreach($typesCharge as $typeCharge)
-                            <div class="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4 sm:p-6">
+                            <div class="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4 sm:p-6 {{ !$typeCharge->rubrique_id ? 'border-l-4 border-amber-400' : '' }}">
                                 <form action="{{ route('parametres.types-charge.update', $typeCharge) }}" method="POST" class="space-y-4">
                                     @csrf
                                     @method('PUT')
                                     <div class="flex flex-col gap-4">
                                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                             <div>
-                                                <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Rubrique</label>
-                                                <select name="rubrique_id" required
+                                                <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Nom</label>
+                                                <input type="text" name="nom" value="{{ $typeCharge->nom }}" required 
                                                     class="w-full px-3 py-2 text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors">
+                                            </div>
+                                            <div>
+                                                <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Rubrique</label>
+                                                <select name="rubrique_id"
+                                                    class="w-full px-3 py-2 text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors">
+                                                    <option value="">-- Sans rubrique --</option>
                                                     @foreach($rubriques as $rubrique)
                                                     <option value="{{ $rubrique->id }}" {{ $typeCharge->rubrique_id == $rubrique->id ? 'selected' : '' }}>{{ $rubrique->nom }}</option>
                                                     @endforeach
                                                 </select>
-                                            </div>
-                                            <div>
-                                                <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Nom</label>
-                                                <input type="text" name="nom" value="{{ $typeCharge->nom }}" required 
-                                                    class="w-full px-3 py-2 text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors">
                                             </div>
                                         </div>
                                         <div>
@@ -272,9 +274,15 @@
                                                 @if(!$typeCharge->is_active)
                                                 <span class="px-2 py-0.5 text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded-full">Désactivé</span>
                                                 @endif
+                                                @if($typeCharge->rubrique)
                                                 <span class="px-2 py-0.5 text-xs font-semibold bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded-full">
                                                     {{ $typeCharge->rubrique->nom }}
                                                 </span>
+                                                @else
+                                                <span class="px-2 py-0.5 text-xs font-semibold bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 rounded-full">
+                                                    Sans rubrique
+                                                </span>
+                                                @endif
                                             </div>
                                             <button type="submit" class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium rounded-lg transition-colors">
                                                 Sauvegarder
@@ -282,17 +290,19 @@
                                         </div>
                                     </div>
                                 </form>
-                                <form action="{{ route('parametres.types-charge.destroy', $typeCharge) }}" method="POST" class="mt-2 flex justify-end" 
-                                    onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce type de charge ?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="px-3 py-1.5 text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 text-sm font-medium hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors flex items-center gap-1">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                        </svg>
-                                        Supprimer
-                                    </button>
-                                </form>
+                                <div class="mt-2 flex justify-end">
+                                    <form action="{{ route('parametres.types-charge.destroy', $typeCharge) }}" method="POST" class="inline" 
+                                        onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce type de charge ?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="px-3 py-1.5 text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 text-sm font-medium hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors flex items-center gap-1">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                            </svg>
+                                            Supprimer
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
                             @endforeach
                         </div>
@@ -302,7 +312,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
                             </svg>
                             <h4 class="text-lg font-medium text-gray-900 dark:text-white mb-1">Aucun type de charge</h4>
-                            <p class="text-sm text-gray-500 dark:text-gray-400">Créez d'abord des rubriques, puis ajoutez des types de charge.</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Utilisez le formulaire pour créer votre premier type de charge.</p>
                         </div>
                         @endif
                     </div>

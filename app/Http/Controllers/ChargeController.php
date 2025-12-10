@@ -30,6 +30,7 @@ class ChargeController extends Controller
     {
         $validated = $request->validate([
             'type_charge_id' => 'required|exists:type_charges,id',
+            'designation' => 'nullable|string|max:255',
             'montant' => 'required|numeric|min:0.01',
             'numero_recu_paiement' => 'nullable|string|max:255',
             'observation' => 'nullable|string|max:1000',
@@ -49,6 +50,7 @@ class ChargeController extends Controller
     {
         $validated = $request->validate([
             'type_charge_id' => 'required|exists:type_charges,id',
+            'designation' => 'nullable|string|max:255',
             'montant' => 'required|numeric|min:0.01',
             'numero_recu_paiement' => 'nullable|string|max:255',
             'observation' => 'nullable|string|max:1000',

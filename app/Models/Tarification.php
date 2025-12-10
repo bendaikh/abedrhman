@@ -5,12 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class TarificationCrea extends Model
+class Tarification extends Model
 {
-    protected $table = 'tarifications_crea';
+    protected $table = 'tarifications';
     
     protected $fillable = [
-        'offre_crea_id',
+        'offre_id',
         'type_tarification_id',
         'prix',
         'is_default',
@@ -19,16 +19,16 @@ class TarificationCrea extends Model
     protected $casts = [
         'prix' => 'decimal:2',
         'is_default' => 'boolean',
-        'offre_crea_id' => 'integer',
+        'offre_id' => 'integer',
         'type_tarification_id' => 'integer',
     ];
 
     /**
-     * Get the offer for this tarification
+     * Get the offre for this tarification
      */
-    public function offreCrea(): BelongsTo
+    public function offre(): BelongsTo
     {
-        return $this->belongsTo(OffreCrea::class, 'offre_crea_id');
+        return $this->belongsTo(Offre::class, 'offre_id');
     }
 
     /**
@@ -38,16 +38,13 @@ class TarificationCrea extends Model
     {
         return $this->belongsTo(TypeTarification::class, 'type_tarification_id');
     }
+
+    /**
+     * Get formatted price
+     */
+    public function getFormattedPrixAttribute(): string
+    {
+        return number_format($this->prix, 2, ',', ' ') . ' DH';
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
 

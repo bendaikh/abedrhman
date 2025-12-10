@@ -71,6 +71,8 @@ Route::middleware('auth')->group(function () {
     
     // All Payments Management (must be before service-specific payments route)
     Route::get('payments', [\App\Http\Controllers\ServiceController::class, 'allPayments'])->name('payments.index');
+    Route::post('payments/store', [\App\Http\Controllers\ServiceController::class, 'storeGlobalPayment'])->name('payments.store');
+    Route::put('payments/{payment}/toggle-encaisse', [\App\Http\Controllers\ServiceController::class, 'toggleEncaisse'])->name('payments.toggle-encaisse');
     
     // Service Payments
     Route::get('services/{service}/payments', [\App\Http\Controllers\ServiceController::class, 'payments'])->name('services.payments');
@@ -212,6 +214,14 @@ Route::middleware('auth')->group(function () {
         Route::post('/types-charge', [\App\Http\Controllers\ParametresController::class, 'storeTypeCharge'])->name('parametres.types-charge.store');
         Route::put('/types-charge/{typeCharge}', [\App\Http\Controllers\ParametresController::class, 'updateTypeCharge'])->name('parametres.types-charge.update');
         Route::delete('/types-charge/{typeCharge}', [\App\Http\Controllers\ParametresController::class, 'destroyTypeCharge'])->name('parametres.types-charge.destroy');
+        Route::delete('/types-charge/{typeCharge}/remove-rubrique', [\App\Http\Controllers\ParametresController::class, 'removeRubriqueFromTypeCharge'])->name('parametres.types-charge.remove-rubrique');
+        
+        // Unified Offres & Tarifications
+        Route::get('/type-service/{typeService}/offres', [\App\Http\Controllers\ParametresController::class, 'getOffresForTypeService'])->name('parametres.type-service.offres');
+        Route::post('/offres', [\App\Http\Controllers\ParametresController::class, 'storeOffre'])->name('parametres.offres.store');
+        Route::put('/offres/{offre}', [\App\Http\Controllers\ParametresController::class, 'updateOffre'])->name('parametres.offres.update');
+        Route::delete('/offres/{offre}', [\App\Http\Controllers\ParametresController::class, 'destroyOffre'])->name('parametres.offres.destroy');
+        Route::put('/type-service/{typeService}/tarifications', [\App\Http\Controllers\ParametresController::class, 'updateTarifications'])->name('parametres.tarifications.update');
         
         // Réglages de l'entreprise
         Route::get('/reglages-entreprise', [\App\Http\Controllers\ParametresController::class, 'reglagesEntreprise'])->name('parametres.reglages-entreprise');

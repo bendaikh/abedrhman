@@ -49,6 +49,44 @@
     </div>
     @endif
 
+    <!-- Type Services Cards - Quick Creation -->
+    @if($typesServices->count() > 0)
+    <div class="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow border border-gray-100 dark:border-gray-700 p-6">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                <svg class="w-5 h-5 text-teal-600 dark:text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+                Créer un service rapidement
+            </h3>
+            <span class="text-sm text-gray-500 dark:text-gray-400">Sélectionnez un type pour créer un service</span>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
+            @foreach($typesServices as $typeService)
+            <a href="{{ route('services.create') }}?type_service_id={{ $typeService->id }}" 
+                class="group relative p-4 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600 hover:border-teal-500 dark:hover:border-teal-400 hover:bg-teal-50 dark:hover:bg-teal-900/20 transition-all duration-200 text-center">
+                <div class="h-12 w-12 mx-auto rounded-lg bg-gradient-to-br from-teal-500 to-cyan-600 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+                    <span class="text-white font-bold text-xl">{{ strtoupper(substr($typeService->nom, 0, 1)) }}</span>
+                </div>
+                <h4 class="font-semibold text-gray-900 dark:text-white text-sm truncate">{{ $typeService->nom }}</h4>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ $typeService->code }}</p>
+                @if($typeService->prix)
+                <span class="mt-2 inline-block px-2 py-0.5 text-xs font-medium rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300">
+                    {{ $typeService->formatted_prix }}
+                </span>
+                @endif
+                <!-- Hover overlay -->
+                <div class="absolute inset-0 bg-teal-500/10 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <svg class="w-8 h-8 text-teal-600 dark:text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                </div>
+            </a>
+            @endforeach
+        </div>
+    </div>
+    @endif
+
     <!-- Services Table -->
     <div class="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow border border-gray-100 dark:border-gray-700 overflow-hidden">
         <div class="p-4 sm:p-6 border-b border-gray-100 dark:border-gray-700 bg-teal-50 dark:bg-teal-900/20">
@@ -68,6 +106,16 @@
         </div>
 
         @if($services->count() > 0)
+        @php
+            // Sort services: pending payments first (lower payment progress first)
+            $sortedServices = $services->sortBy(function($service) {
+                // Services with remaining payments come first
+                if ($service->remaining_amount > 0) {
+                    return 0 + ($service->payment_progress / 1000); // Lower progress = higher priority
+                }
+                return 1; // Fully paid services last
+            });
+        @endphp
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                 <thead class="bg-gray-50 dark:bg-gray-900/50">
@@ -82,8 +130,8 @@
                     </tr>
                 </thead>
                 <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                    @foreach($services as $service)
-                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                    @foreach($sortedServices as $service)
+                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors {{ $service->remaining_amount > 0 ? 'bg-amber-50/50 dark:bg-amber-900/10' : '' }}">
                         <td class="px-4 py-4 whitespace-nowrap">
                             @if($service->client)
                             <div class="flex items-center gap-3">
@@ -104,9 +152,15 @@
                             @endif
                         </td>
                         <td class="px-4 py-4 whitespace-nowrap">
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-teal-100 dark:bg-teal-900/30 text-teal-800 dark:text-teal-300">
+                            <a href="{{ route('services.show', $service) }}" 
+                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-teal-100 dark:bg-teal-900/30 text-teal-800 dark:text-teal-300 hover:bg-teal-200 dark:hover:bg-teal-900/50 transition-colors cursor-pointer"
+                                title="Voir les détails du service">
                                 {{ $service->typeService->nom ?? 'N/A' }}
-                            </span>
+                                <svg class="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                            </a>
                         </td>
                         <td class="px-4 py-4 whitespace-nowrap">
                             <span class="text-sm text-gray-600 dark:text-gray-400">{{ $service->formatted_prix }}</span>
@@ -131,7 +185,7 @@
                                          style="width: {{ $service->payment_progress }}%"></div>
                                 </div>
                                 @if($service->remaining_amount > 0)
-                                <span class="text-xs text-amber-600 dark:text-amber-400">Reste: {{ $service->formatted_remaining_amount }}</span>
+                                <span class="text-xs text-amber-600 dark:text-amber-400 font-medium">Reste: {{ $service->formatted_remaining_amount }}</span>
                                 @else
                                 <span class="text-xs text-emerald-600 dark:text-emerald-400">Soldé</span>
                                 @endif
@@ -144,6 +198,12 @@
                         </td>
                         <td class="px-4 py-4 whitespace-nowrap text-right text-sm font-medium">
                             <div class="flex items-center justify-end gap-1">
+                                <a href="{{ route('services.show', $service) }}" class="p-2 text-gray-600 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-900/20 rounded-lg transition-colors" title="Voir les détails">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                    </svg>
+                                </a>
                                 <a href="{{ route('services.sous-services', $service) }}" class="p-2 text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded-lg transition-colors relative" title="Gérer les sous-services">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />

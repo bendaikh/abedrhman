@@ -54,11 +54,22 @@
                         <option value="">Sélectionner un type de charge</option>
                         @foreach($typesCharge as $typeCharge)
                         <option value="{{ $typeCharge->id }}" {{ old('type_charge_id') == $typeCharge->id ? 'selected' : '' }}>
-                            {{ $typeCharge->rubrique->nom }} - {{ $typeCharge->nom }}
+                            {{ $typeCharge->nom }}
                         </option>
                         @endforeach
                     </select>
                     @error('type_charge_id')
+                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <!-- Designation -->
+                <div>
+                    <label for="designation" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Désignation</label>
+                    <input type="text" name="designation" id="designation" value="{{ old('designation') }}"
+                        class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors"
+                        placeholder="Description de la charge">
+                    @error('designation')
                     <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                     @enderror
                 </div>
@@ -137,8 +148,8 @@
                     <thead class="bg-gray-50 dark:bg-gray-900/50">
                         <tr>
                             <th class="px-3 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Date</th>
-                            <th class="px-3 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Rubrique</th>
                             <th class="px-3 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Type de charge</th>
+                            <th class="px-3 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Désignation</th>
                             <th class="px-3 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">N° Reçu</th>
                             <th class="px-3 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Montant</th>
                             <th class="px-3 py-3 text-right text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Actions</th>
@@ -151,10 +162,10 @@
                                 {{ $charge->date_charge->format('d/m/Y') }}
                             </td>
                             <td class="px-3 py-3 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
-                                {{ $charge->typeCharge->rubrique->nom }}
-                            </td>
-                            <td class="px-3 py-3 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
                                 {{ $charge->typeCharge->nom }}
+                            </td>
+                            <td class="px-3 py-3 text-sm text-gray-600 dark:text-gray-300 max-w-[200px] truncate">
+                                {{ $charge->designation ?? '-' }}
                             </td>
                             <td class="px-3 py-3 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
                                 {{ $charge->numero_recu_paiement ?? '-' }}
@@ -186,12 +197,11 @@
                     <tfoot class="bg-gray-50 dark:bg-gray-900/50">
                         <tr>
                             <td colspan="4" class="px-3 py-3 text-sm font-semibold text-gray-900 dark:text-white text-right">Total:</td>
-                            <td class="px-3 py-3 whitespace-nowrap">
+                            <td class="px-3 py-3 whitespace-nowrap" colspan="2">
                                 <span class="text-sm font-bold text-red-600 dark:text-red-400">
                                     {{ number_format($charges->sum('montant'), 2, ',', ' ') }} DH
                                 </span>
                             </td>
-                            <td></td>
                         </tr>
                     </tfoot>
                 </table>

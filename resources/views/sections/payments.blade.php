@@ -18,6 +18,13 @@
                     Gérez et suivez tous les paiements de vos services
                 </p>
             </div>
+            <button type="button" onclick="openPaymentModal()" 
+                class="inline-flex items-center justify-center px-4 py-2 bg-white text-emerald-700 font-semibold rounded-lg hover:bg-emerald-50 transition-colors shadow-lg">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+                Ajouter paiement
+            </button>
         </div>
     </div>
 
@@ -31,6 +38,49 @@
     </div>
     @endif
 
+    <!-- Encaissé / Non Encaissé Blocks -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <!-- Encaissé Block -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow border border-emerald-200 dark:border-emerald-800 p-5">
+            <div class="flex items-center gap-4">
+                <div class="h-14 w-14 rounded-xl bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
+                    <svg class="w-7 h-7 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="flex-1">
+                    <div class="flex items-center justify-between">
+                        <p class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase">Encaissé</p>
+                        <span class="px-2 py-0.5 text-xs font-semibold rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300">
+                            {{ $encaisseCount }} paiement(s)
+                        </span>
+                    </div>
+                    <p class="text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-1">{{ number_format($encaisseAmount, 2, ',', ' ') }} DH</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Non Encaissé Block -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow border border-amber-200 dark:border-amber-800 p-5">
+            <div class="flex items-center gap-4">
+                <div class="h-14 w-14 rounded-xl bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
+                    <svg class="w-7 h-7 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="flex-1">
+                    <div class="flex items-center justify-between">
+                        <p class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase">Non Encaissé</p>
+                        <span class="px-2 py-0.5 text-xs font-semibold rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300">
+                            {{ $nonEncaisseCount }} paiement(s)
+                        </span>
+                    </div>
+                    <p class="text-2xl font-bold text-amber-600 dark:text-amber-400 mt-1">{{ number_format($nonEncaisseAmount, 2, ',', ' ') }} DH</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Statistics Cards -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <!-- Total Payments -->
@@ -43,7 +93,7 @@
                 </div>
                 <div>
                     <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Total Paiements</p>
-                    <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $payments->count() }}</p>
+                    <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $payments->total() }}</p>
                 </div>
             </div>
         </div>
@@ -199,7 +249,7 @@
                 </thead>
                 <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                     @foreach($payments as $payment)
-                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors {{ !$payment->encaisse ? 'bg-amber-50/50 dark:bg-amber-900/10' : '' }}">
                         <td class="px-3 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                             {{ $payment->date_paiement->format('d/m/Y') }}
                         </td>
@@ -216,6 +266,14 @@
                                         {{ $payment->service->client->type === 'morale' ? $payment->service->client->nom_raison_sociale : ($payment->service->client->nom . ' ' . $payment->service->client->prenom) }}
                                     </p>
                                 </div>
+                                <a href="{{ route('services.payments', $payment->service_id) }}" 
+                                    class="ml-2 p-1.5 text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors" 
+                                    title="Voir les paiements du service">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                    </svg>
+                                </a>
                             </div>
                             @else
                             <span class="text-gray-400">N/A</span>
@@ -251,7 +309,21 @@
                             <span class="text-sm font-semibold text-emerald-600 dark:text-emerald-400">{{ $payment->formatted_montant }}</span>
                         </td>
                         <td class="px-3 py-3 whitespace-nowrap text-right text-sm font-medium">
-                            <div class="flex items-center justify-end gap-2">
+                            <div class="flex items-center justify-end gap-1">
+                                @if(!$payment->encaisse)
+                                <!-- Toggle Encaisse Button -->
+                                <form action="{{ route('payments.toggle-encaisse', $payment) }}" method="POST" class="inline">
+                                    @csrf
+                                    @method('PUT')
+                                    <button type="submit" 
+                                        class="p-2 text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded-lg transition-colors" 
+                                        title="Marquer comme encaissé">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                    </button>
+                                </form>
+                                @endif
                                 <a href="{{ route('services.payments', $payment->service_id) }}" 
                                     class="p-2 text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors" 
                                     title="Voir le service">
@@ -307,5 +379,131 @@
         @endif
     </div>
 </div>
-@endsection
 
+<!-- Payment Modal -->
+<div id="payment-modal" class="fixed inset-0 z-50 hidden">
+    <div class="absolute inset-0 bg-black/50" onclick="closePaymentModal()"></div>
+    <div class="absolute inset-0 flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+            <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Ajouter un paiement</h3>
+                    <button type="button" onclick="closePaymentModal()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <form action="{{ route('payments.store') }}" method="POST" class="p-6 space-y-4">
+                @csrf
+                
+                <!-- Client Selection -->
+                <div>
+                    <label for="modal_client_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Client *</label>
+                    <select id="modal_client_id" onchange="updateServicesDropdown()" required
+                        class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors">
+                        <option value="">Sélectionner un client</option>
+                        @foreach($clients as $client)
+                        <option value="{{ $client->id }}" data-services="{{ json_encode($client->services) }}">
+                            {{ $client->type === 'morale' ? $client->nom_raison_sociale : ($client->nom . ' ' . $client->prenom) }}
+                        </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- Service Selection -->
+                <div>
+                    <label for="modal_service_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Service *</label>
+                    <select name="service_id" id="modal_service_id" required
+                        class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors">
+                        <option value="">Sélectionner d'abord un client</option>
+                    </select>
+                </div>
+
+                <!-- Montant -->
+                <div>
+                    <label for="modal_montant" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Montant (DH) *</label>
+                    <input type="number" name="montant" id="modal_montant" required min="0.01" step="0.01"
+                        class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+                        placeholder="0.00">
+                </div>
+
+                <!-- Mode de paiement -->
+                <div>
+                    <label for="modal_mode_paiement" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Mode de paiement *</label>
+                    <select name="mode_paiement" id="modal_mode_paiement" required
+                        class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors">
+                        <option value="especes">Espèces</option>
+                        <option value="cheque">Chèque</option>
+                        <option value="virement">Virement</option>
+                        <option value="carte">Carte bancaire</option>
+                        <option value="lcn">LCN (traite)</option>
+                    </select>
+                </div>
+
+                <!-- Date de paiement -->
+                <div>
+                    <label for="modal_date_paiement" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Date de paiement *</label>
+                    <input type="date" name="date_paiement" id="modal_date_paiement" value="{{ date('Y-m-d') }}" required
+                        class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors">
+                </div>
+
+                <!-- Encaissé -->
+                <div class="flex items-center">
+                    <input type="checkbox" name="encaisse" id="modal_encaisse" value="1" checked
+                        class="w-4 h-4 text-emerald-600 bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded focus:ring-emerald-500 focus:ring-2">
+                    <label for="modal_encaisse" class="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300">Encaissé</label>
+                </div>
+
+                <!-- Commentaire -->
+                <div>
+                    <label for="modal_commentaire" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Commentaire</label>
+                    <textarea name="commentaire" id="modal_commentaire" rows="2"
+                        class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors resize-none"
+                        placeholder="Commentaire..."></textarea>
+                </div>
+
+                <div class="flex justify-end gap-3 pt-4">
+                    <button type="button" onclick="closePaymentModal()" class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                        Annuler
+                    </button>
+                    <button type="submit" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg transition-colors">
+                        Enregistrer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function openPaymentModal() {
+    document.getElementById('payment-modal').classList.remove('hidden');
+}
+
+function closePaymentModal() {
+    document.getElementById('payment-modal').classList.add('hidden');
+}
+
+function updateServicesDropdown() {
+    const clientSelect = document.getElementById('modal_client_id');
+    const serviceSelect = document.getElementById('modal_service_id');
+    const selectedOption = clientSelect.options[clientSelect.selectedIndex];
+    
+    // Clear services
+    serviceSelect.innerHTML = '<option value="">Sélectionner un service</option>';
+    
+    if (selectedOption && selectedOption.dataset.services) {
+        const services = JSON.parse(selectedOption.dataset.services);
+        services.forEach(service => {
+            const option = document.createElement('option');
+            option.value = service.id;
+            option.textContent = (service.type_service ? service.type_service.nom : 'Service') + ' - ' + 
+                new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'MAD' }).format(service.prix).replace('MAD', 'DH');
+            serviceSelect.appendChild(option);
+        });
+    }
+}
+</script>
+@endsection

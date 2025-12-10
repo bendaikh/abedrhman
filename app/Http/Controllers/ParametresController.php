@@ -15,32 +15,164 @@ use App\Models\TypeCharge;
 use App\Models\EntrepriseSetting;
 use App\Models\EntrepriseDirigeant;
 use App\Models\EntrepriseAssocie;
+use App\Models\Offre;
+use App\Models\Tarification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class ParametresController extends Controller
 {
     /**
-     * Display the main parameters page
+     * Display the main parameters page (Tarification)
      */
-    public function index()
+    public function index(Request $request)
     {
+        $typesServices = TypeService::with(['offres.tarifications.typeTarification'])->active()->ordered()->get();
+        $typesTarification = TypeTarification::active()->ordered()->get();
+        $sousServices = SousService::ordered()->get();
+        
+        // Get selected type service (from query param or first one)
+        $selectedTypeServiceId = $request->get('type_service');
+        if ($selectedTypeServiceId) {
+            $selectedTypeService = $typesServices->firstWhere('id', $selectedTypeServiceId);
+            if ($selectedTypeService) {
+                // Reorder to put selected first
+                $typesServices = $typesServices->sortBy(function($item) use ($selectedTypeServiceId) {
+                    return $item->id == $selectedTypeServiceId ? 0 : 1;
+                })->values();
+            }
+        }
+        
+        // Legacy data for backward compatibility
         $offresDom = OffreDom::ordered()->get();
         $offresCrea = OffreCrea::ordered()->get();
-        $typesTarification = TypeTarification::ordered()->get();
         $tarificationsDom = TarificationDom::with(['offreDom', 'typeTarification'])->get();
         $tarificationsCrea = TarificationCrea::with(['offreCrea', 'typeTarification'])->get();
-        $sousServices = SousService::ordered()->get();
 
         return view('parametres.index', [
-            'page_title' => 'Paramètres',
+            'page_title' => 'Tarification',
+            'typesServices' => $typesServices,
+            'typesTarification' => $typesTarification,
+            'sousServices' => $sousServices,
+            'selectedTypeServiceId' => $selectedTypeServiceId,
+            // Legacy
             'offresDom' => $offresDom,
             'offresCrea' => $offresCrea,
-            'typesTarification' => $typesTarification,
             'tarificationsDom' => $tarificationsDom,
             'tarificationsCrea' => $tarificationsCrea,
-            'sousServices' => $sousServices,
         ]);
+    }
+
+    /**
+     * Get offres for a specific type service (AJAX)
+     */
+    public function getOffresForTypeService(TypeService $typeService)
+    {
+        $offres = $typeService->offres()->active()->ordered()->get();
+        $typesTarification = TypeTarification::active()->ordered()->get();
+        
+        // Build tarifications matrix
+        $tarificationsMatrix = [];
+        foreach ($offres as $offre) {
+            $tarificationsMatrix[$offre->id] = [];
+            foreach ($typesTarification as $type) {
+                $tarification = Tarification::where('offre_id', $offre->id)
+                    ->where('type_tarification_id', $type->id)
+                    ->first();
+                $tarificationsMatrix[$offre->id][$type->id] = $tarification ? $tarification->prix : null;
+            }
+        }
+
+        return response()->json([
+            'offres' => $offres,
+            'typesTarification' => $typesTarification,
+            'tarificationsMatrix' => $tarificationsMatrix,
+        ]);
+    }
+
+    /**
+     * Store a new offre for a type service
+     */
+    public function storeOffre(Request $request)
+    {
+        $validated = $request->validate([
+            'type_service_id' => 'required|exists:types_services,id',
+            'nom' => 'required|string|max:255',
+            'description' => 'nullable|string|max:1000',
+            'duree_mois' => 'nullable|integer|min:1',
+        ]);
+
+        $validated['is_active'] = $request->has('is_active');
+        $validated['ordre'] = Offre::where('type_service_id', $validated['type_service_id'])->max('ordre') + 1;
+
+        Offre::create($validated);
+
+        return redirect()->route('parametres.index')
+            ->with('success', 'Offre créée avec succès.');
+    }
+
+    /**
+     * Update an offre
+     */
+    public function updateOffre(Request $request, Offre $offre)
+    {
+        $validated = $request->validate([
+            'nom' => 'required|string|max:255',
+            'description' => 'nullable|string|max:1000',
+            'duree_mois' => 'nullable|integer|min:1',
+        ]);
+
+        $validated['is_active'] = $request->has('is_active');
+
+        $offre->update($validated);
+
+        return redirect()->route('parametres.index')
+            ->with('success', 'Offre mise à jour avec succès.');
+    }
+
+    /**
+     * Delete an offre
+     */
+    public function destroyOffre(Offre $offre)
+    {
+        $offre->delete();
+
+        return redirect()->route('parametres.index')
+            ->with('success', 'Offre supprimée avec succès.');
+    }
+
+    /**
+     * Update tarifications for a type service
+     */
+    public function updateTarifications(Request $request, TypeService $typeService)
+    {
+        $tarifications = $request->input('tarifications', []);
+
+        DB::transaction(function () use ($tarifications) {
+            foreach ($tarifications as $offreId => $types) {
+                foreach ($types as $typeId => $prix) {
+                    if ($prix !== null && $prix !== '') {
+                        Tarification::updateOrCreate(
+                            [
+                                'offre_id' => $offreId,
+                                'type_tarification_id' => $typeId,
+                            ],
+                            [
+                                'prix' => floatval($prix),
+                            ]
+                        );
+                    } else {
+                        // Remove the tarification if price is empty
+                        Tarification::where('offre_id', $offreId)
+                            ->where('type_tarification_id', $typeId)
+                            ->delete();
+                    }
+                }
+            }
+        });
+
+        return redirect()->route('parametres.index')
+            ->with('success', 'Tarifications mises à jour avec succès.');
     }
 
     /**
@@ -375,6 +507,7 @@ class ParametresController extends Controller
         $validated = $request->validate([
             'nom' => 'required|string|max:255',
             'code' => 'required|string|max:50|unique:types_services,code',
+            'prix' => 'nullable|numeric|min:0',
             'description' => 'nullable|string|max:1000',
         ]);
 
@@ -395,6 +528,7 @@ class ParametresController extends Controller
         $validated = $request->validate([
             'nom' => 'required|string|max:255',
             'code' => 'required|string|max:50|unique:types_services,code,' . $typeService->id,
+            'prix' => 'nullable|numeric|min:0',
             'description' => 'nullable|string|max:1000',
         ]);
 
@@ -635,13 +769,14 @@ class ParametresController extends Controller
     public function storeTypeCharge(Request $request)
     {
         $validated = $request->validate([
-            'rubrique_id' => 'required|exists:rubriques,id',
+            'rubrique_id' => 'nullable|exists:rubriques,id',
             'nom' => 'required|string|max:255',
             'description' => 'nullable|string|max:1000',
         ]);
 
         $validated['is_active'] = $request->has('is_active');
         $validated['ordre'] = TypeCharge::max('ordre') + 1;
+        $validated['rubrique_id'] = $request->rubrique_id ?: null;
 
         TypeCharge::create($validated);
 
@@ -655,17 +790,29 @@ class ParametresController extends Controller
     public function updateTypeCharge(Request $request, TypeCharge $typeCharge)
     {
         $validated = $request->validate([
-            'rubrique_id' => 'required|exists:rubriques,id',
+            'rubrique_id' => 'nullable|exists:rubriques,id',
             'nom' => 'required|string|max:255',
             'description' => 'nullable|string|max:1000',
         ]);
 
         $validated['is_active'] = $request->has('is_active');
+        $validated['rubrique_id'] = $request->rubrique_id ?: null;
 
         $typeCharge->update($validated);
 
         return redirect()->route('parametres.rubriques', ['#types-charge'])
             ->with('success', 'Type de charge mis à jour avec succès.');
+    }
+
+    /**
+     * Remove rubrique from a type charge
+     */
+    public function removeRubriqueFromTypeCharge(TypeCharge $typeCharge)
+    {
+        $typeCharge->update(['rubrique_id' => null]);
+
+        return redirect()->route('parametres.rubriques', ['#types-charge'])
+            ->with('success', 'Rubrique retirée du type de charge avec succès.');
     }
 
     /**

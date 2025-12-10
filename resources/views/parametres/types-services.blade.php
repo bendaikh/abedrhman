@@ -59,6 +59,15 @@
                         @enderror
                     </div>
                     <div>
+                        <label for="prix" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Prix par défaut (DH)</label>
+                        <input type="number" name="prix" id="prix" min="0" step="0.01" placeholder="0.00"
+                            class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors">
+                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Ce prix sera utilisé par défaut lors de la création d'un service de ce type</p>
+                        @error('prix')
+                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    <div>
                         <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description (optionnel)</label>
                         <textarea name="description" id="description" rows="3" placeholder="Description du type de service..."
                             class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors resize-none"></textarea>
@@ -115,10 +124,17 @@
                                             class="w-full px-3 py-2 text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors">
                                     </div>
                                 </div>
-                                <div>
-                                    <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Description</label>
-                                    <textarea name="description" rows="2"
-                                        class="w-full px-3 py-2 text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors resize-none">{{ $type->description }}</textarea>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Prix par défaut (DH)</label>
+                                        <input type="number" name="prix" value="{{ $type->prix }}" min="0" step="0.01"
+                                            class="w-full px-3 py-2 text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Description</label>
+                                        <textarea name="description" rows="2"
+                                            class="w-full px-3 py-2 text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors resize-none">{{ $type->description }}</textarea>
+                                    </div>
                                 </div>
                                 <div class="flex items-center justify-between">
                                     <div class="flex items-center gap-2">

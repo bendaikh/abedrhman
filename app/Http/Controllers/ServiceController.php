@@ -30,15 +30,19 @@ class ServiceController extends Controller
     /**
      * Show the form for creating a new service.
      */
-    public function create()
+    public function create(Request $request)
     {
         $typesServices = TypeService::active()->ordered()->get();
         $clients = Client::orderBy('nom_raison_sociale')->orderBy('nom')->get();
+        $sousServices = SousService::active()->ordered()->get();
+        $selectedTypeServiceId = $request->get('type_service_id');
 
         return view('sections.services-create', [
             'page_title' => 'Nouveau service',
             'typesServices' => $typesServices,
             'clients' => $clients,
+            'sousServices' => $sousServices,
+            'selectedTypeServiceId' => $selectedTypeServiceId,
         ]);
     }
 
@@ -52,12 +56,19 @@ class ServiceController extends Controller
             'type_service_id' => 'required|exists:types_services,id',
             'description' => 'nullable|string|max:1000',
             'prix' => 'required|numeric|min:0',
+            'sous_services' => 'nullable|array',
+            'sous_services.*' => 'exists:sous_services,id',
         ]);
 
         $validated['is_active'] = $request->has('is_active');
         $validated['status'] = 'initialiser'; // Set initial status
 
-        Service::create($validated);
+        $service = Service::create($validated);
+        
+        // Attach sous-services if provided
+        if (!empty($validated['sous_services'])) {
+            $service->sousServices()->sync($validated['sous_services']);
+        }
 
         return redirect()->route('services.index')
             ->with('success', 'Service créé avec succès.');
@@ -70,7 +81,7 @@ class ServiceController extends Controller
     {
         return view('sections.services-show', [
             'page_title' => 'Détails du service',
-            'service' => $service->load(['typeService', 'client', 'payments']),
+            'service' => $service->load(['typeService', 'client', 'payments', 'sousServices']),
         ]);
     }
 
@@ -214,6 +225,45 @@ class ServiceController extends Controller
     }
 
     /**
+     * Toggle encaisse status for a payment
+     */
+    public function toggleEncaisse(Payment $payment)
+    {
+        $payment->update(['encaisse' => !$payment->encaisse]);
+
+        return redirect()->back()
+            ->with('success', 'Statut d\'encaissement mis à jour avec succès.');
+    }
+
+    /**
+     * Store a global payment (from payments page)
+     */
+    public function storeGlobalPayment(Request $request)
+    {
+        $validated = $request->validate([
+            'service_id' => 'required|exists:services,id',
+            'montant' => 'required|numeric|min:0.01',
+            'mode_paiement' => 'required|in:especes,cheque,virement,carte,lcn',
+            'reference' => 'nullable|string|max:255',
+            'numero_transaction' => 'nullable|string|max:255',
+            'date_emission' => 'nullable|date',
+            'date_echeance' => 'nullable|date',
+            'encaisse' => 'nullable|boolean',
+            'commentaire' => 'nullable|string|max:1000',
+            'date_paiement' => 'required|date',
+        ]);
+
+        $validated['type'] = 'paiement';
+        $validated['encaisse'] = $request->has('encaisse') ? true : false;
+        $validated['numero_recu'] = $this->generateReceiptNumber($validated['date_paiement']);
+
+        Payment::create($validated);
+
+        return redirect()->route('payments.index')
+            ->with('success', 'Paiement enregistré avec succès.');
+    }
+
+    /**
      * Get client details for AJAX request
      */
     public function getClientDetails(Client $client)
@@ -282,6 +332,17 @@ class ServiceController extends Controller
         $monthAmount = Payment::whereMonth('date_paiement', now()->month)
             ->whereYear('date_paiement', now()->year)
             ->sum('montant');
+        
+        // Encaissé statistics
+        $encaisseCount = Payment::where('encaisse', true)->count();
+        $encaisseAmount = Payment::where('encaisse', true)->sum('montant');
+        $nonEncaisseCount = Payment::where('encaisse', false)->count();
+        $nonEncaisseAmount = Payment::where('encaisse', false)->sum('montant');
+        
+        // Get clients with services for the payment form
+        $clients = Client::with(['services' => function($q) {
+            $q->with('typeService')->orderBy('created_at', 'desc');
+        }])->orderBy('nom_raison_sociale')->orderBy('nom')->get();
 
         return view('sections.payments', [
             'page_title' => 'Gestion des Paiements',
@@ -289,6 +350,11 @@ class ServiceController extends Controller
             'totalAmount' => $totalAmount,
             'todayAmount' => $todayAmount,
             'monthAmount' => $monthAmount,
+            'encaisseCount' => $encaisseCount,
+            'encaisseAmount' => $encaisseAmount,
+            'nonEncaisseCount' => $nonEncaisseCount,
+            'nonEncaisseAmount' => $nonEncaisseAmount,
+            'clients' => $clients,
         ]);
     }
 

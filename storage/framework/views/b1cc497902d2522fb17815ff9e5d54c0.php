@@ -54,12 +54,30 @@
                         <option value="">Sélectionner un type de charge</option>
                         <?php $__currentLoopData = $typesCharge; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $typeCharge): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <option value="<?php echo e($typeCharge->id); ?>" <?php echo e(old('type_charge_id') == $typeCharge->id ? 'selected' : ''); ?>>
-                            <?php echo e($typeCharge->rubrique->nom); ?> - <?php echo e($typeCharge->nom); ?>
+                            <?php echo e($typeCharge->nom); ?>
 
                         </option>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </select>
                     <?php $__errorArgs = ['type_charge_id'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                    <p class="mt-1 text-sm text-red-600 dark:text-red-400"><?php echo e($message); ?></p>
+                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+                </div>
+
+                <!-- Designation -->
+                <div>
+                    <label for="designation" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Désignation</label>
+                    <input type="text" name="designation" id="designation" value="<?php echo e(old('designation')); ?>"
+                        class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors"
+                        placeholder="Description de la charge">
+                    <?php $__errorArgs = ['designation'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
@@ -173,8 +191,8 @@ unset($__errorArgs, $__bag); ?>
                     <thead class="bg-gray-50 dark:bg-gray-900/50">
                         <tr>
                             <th class="px-3 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Date</th>
-                            <th class="px-3 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Rubrique</th>
                             <th class="px-3 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Type de charge</th>
+                            <th class="px-3 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Désignation</th>
                             <th class="px-3 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">N° Reçu</th>
                             <th class="px-3 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Montant</th>
                             <th class="px-3 py-3 text-right text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Actions</th>
@@ -188,11 +206,11 @@ unset($__errorArgs, $__bag); ?>
 
                             </td>
                             <td class="px-3 py-3 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
-                                <?php echo e($charge->typeCharge->rubrique->nom); ?>
+                                <?php echo e($charge->typeCharge->nom); ?>
 
                             </td>
-                            <td class="px-3 py-3 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
-                                <?php echo e($charge->typeCharge->nom); ?>
+                            <td class="px-3 py-3 text-sm text-gray-600 dark:text-gray-300 max-w-[200px] truncate">
+                                <?php echo e($charge->designation ?? '-'); ?>
 
                             </td>
                             <td class="px-3 py-3 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
@@ -227,12 +245,11 @@ unset($__errorArgs, $__bag); ?>
                     <tfoot class="bg-gray-50 dark:bg-gray-900/50">
                         <tr>
                             <td colspan="4" class="px-3 py-3 text-sm font-semibold text-gray-900 dark:text-white text-right">Total:</td>
-                            <td class="px-3 py-3 whitespace-nowrap">
+                            <td class="px-3 py-3 whitespace-nowrap" colspan="2">
                                 <span class="text-sm font-bold text-red-600 dark:text-red-400">
                                     <?php echo e(number_format($charges->sum('montant'), 2, ',', ' ')); ?> DH
                                 </span>
                             </td>
-                            <td></td>
                         </tr>
                     </tfoot>
                 </table>

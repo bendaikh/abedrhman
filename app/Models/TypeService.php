@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class TypeService extends Model
 {
@@ -12,6 +13,7 @@ class TypeService extends Model
         'nom',
         'code',
         'description',
+        'prix',
         'is_active',
         'ordre',
     ];
@@ -19,7 +21,24 @@ class TypeService extends Model
     protected $casts = [
         'is_active' => 'boolean',
         'ordre' => 'integer',
+        'prix' => 'decimal:2',
     ];
+
+    /**
+     * Get the offres for this type service
+     */
+    public function offres(): HasMany
+    {
+        return $this->hasMany(Offre::class, 'type_service_id');
+    }
+
+    /**
+     * Get the services of this type
+     */
+    public function services(): HasMany
+    {
+        return $this->hasMany(Service::class, 'type_service_id');
+    }
 
     /**
      * Scope to get only active types
@@ -35,6 +54,14 @@ class TypeService extends Model
     public function scopeOrdered($query)
     {
         return $query->orderBy('ordre');
+    }
+
+    /**
+     * Get formatted price
+     */
+    public function getFormattedPrixAttribute(): string
+    {
+        return number_format($this->prix ?? 0, 2, ',', ' ') . ' DH';
     }
 }
 

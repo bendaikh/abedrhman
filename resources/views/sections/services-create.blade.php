@@ -106,8 +106,11 @@
                             class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors">
                             <option value="">Sélectionner un type</option>
                             @foreach($typesServices as $type)
-                            <option value="{{ $type->id }}" {{ old('type_service_id') == $type->id ? 'selected' : '' }}>
+                            <option value="{{ $type->id }}" 
+                                data-prix="{{ $type->prix ?? 0 }}"
+                                {{ (old('type_service_id', $selectedTypeServiceId ?? '') == $type->id) ? 'selected' : '' }}>
                                 {{ $type->nom }}
+                                @if($type->prix) - {{ $type->formatted_prix }}@endif
                             </option>
                             @endforeach
                         </select>
@@ -145,6 +148,65 @@
                         class="w-4 h-4 text-teal-600 bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded focus:ring-teal-500 focus:ring-2">
                     <label for="is_active" class="text-sm font-medium text-gray-700 dark:text-gray-300">Service actif</label>
                 </div>
+            </div>
+
+            <hr class="border-gray-200 dark:border-gray-700">
+
+            <!-- Sous-Services Section -->
+            <div class="space-y-4">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                    <svg class="w-5 h-5 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                    </svg>
+                    Sous-services (optionnel)
+                    <span class="text-sm font-normal text-gray-500 dark:text-gray-400">- Sélectionnez les sous-services à inclure</span>
+                </h3>
+
+                @if($sousServices->count() > 0)
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    @foreach($sousServices as $sousService)
+                    <label class="relative flex items-start p-4 rounded-lg border border-gray-200 dark:border-gray-600 hover:border-indigo-300 dark:hover:border-indigo-600 cursor-pointer transition-colors sous-service-item">
+                        <input type="checkbox" name="sous_services[]" value="{{ $sousService->id }}"
+                            class="w-4 h-4 mt-0.5 text-indigo-600 bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded focus:ring-indigo-500 focus:ring-2"
+                            data-prix="{{ $sousService->prix }}"
+                            onchange="updateTotalPreview()">
+                        <div class="ml-3 flex-1">
+                            <span class="text-sm font-medium text-gray-900 dark:text-white">{{ $sousService->nom }}</span>
+                            <span class="block text-sm text-indigo-600 dark:text-indigo-400 font-semibold">{{ $sousService->formatted_prix }}</span>
+                            @if($sousService->description)
+                            <span class="block text-xs text-gray-500 dark:text-gray-400 mt-1">{{ $sousService->description }}</span>
+                            @endif
+                        </div>
+                    </label>
+                    @endforeach
+                </div>
+
+                <!-- Total Preview -->
+                <div class="bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-200 dark:border-indigo-800 rounded-lg p-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-indigo-800 dark:text-indigo-200">Aperçu du montant total</p>
+                            <p class="text-xs text-indigo-600 dark:text-indigo-400">Prix de base + sous-services sélectionnés</p>
+                        </div>
+                        <div class="text-right">
+                            <p id="total-preview" class="text-2xl font-bold text-indigo-700 dark:text-indigo-300">0,00 DH</p>
+                            <p class="text-xs text-indigo-600 dark:text-indigo-400">
+                                Base: <span id="base-preview">0,00</span> + Sous-services: <span id="sous-services-preview">0,00</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                @else
+                <div class="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-4 text-center">
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Aucun sous-service disponible. Vous pouvez en ajouter depuis les paramètres.</p>
+                    <a href="{{ route('parametres.sous-services') }}" class="inline-flex items-center mt-2 text-sm text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300">
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                        </svg>
+                        Créer des sous-services
+                    </a>
+                </div>
+                @endif
             </div>
 
             <!-- Info Note -->
@@ -198,12 +260,54 @@ function showClientInfo(clientId) {
     }
 }
 
-// Show client info on page load if already selected
+function updateTotalPreview() {
+    const prixInput = document.getElementById('prix');
+    const basePrix = parseFloat(prixInput.value) || 0;
+    
+    let sousServicesTotal = 0;
+    document.querySelectorAll('input[name="sous_services[]"]:checked').forEach(checkbox => {
+        sousServicesTotal += parseFloat(checkbox.dataset.prix) || 0;
+    });
+    
+    const total = basePrix + sousServicesTotal;
+    
+    document.getElementById('base-preview').textContent = formatCurrency(basePrix);
+    document.getElementById('sous-services-preview').textContent = formatCurrency(sousServicesTotal);
+    document.getElementById('total-preview').textContent = formatCurrency(total) + ' DH';
+}
+
+function formatCurrency(value) {
+    return value.toFixed(2).replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+}
+
+// Auto-set price from type service selection
+document.getElementById('type_service_id').addEventListener('change', function() {
+    const selectedOption = this.options[this.selectedIndex];
+    const prix = selectedOption.dataset.prix;
+    if (prix && parseFloat(prix) > 0) {
+        document.getElementById('prix').value = parseFloat(prix).toFixed(2);
+        updateTotalPreview();
+    }
+});
+
+// Update preview on price change
+document.getElementById('prix').addEventListener('input', updateTotalPreview);
+
+// Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
     const clientId = document.getElementById('client_id').value;
     if (clientId) {
         showClientInfo(clientId);
     }
+    
+    // Trigger type service change to set default price
+    const typeServiceSelect = document.getElementById('type_service_id');
+    if (typeServiceSelect.value) {
+        const event = new Event('change');
+        typeServiceSelect.dispatchEvent(event);
+    }
+    
+    updateTotalPreview();
 });
 </script>
 @endsection

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Client extends Model
 {
@@ -74,5 +75,13 @@ class Client extends Model
     public function dirigeants()
     {
         return $this->hasMany(Dirigeant::class);
+    }
+
+    /**
+     * Get the services for the client
+     */
+    public function services(): HasMany
+    {
+        return $this->hasMany(Service::class);
     }
 }
