@@ -102,18 +102,35 @@
                     <!-- Type Service -->
                     <div>
                         <label for="type_service_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Type de service *</label>
-                        <select name="type_service_id" id="type_service_id" required
-                            class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors">
-                            <option value="">Sélectionner un type</option>
-                            @foreach($typesServices as $type)
-                            <option value="{{ $type->id }}" 
-                                data-prix="{{ $type->prix ?? 0 }}"
-                                {{ (old('type_service_id', $selectedTypeServiceId ?? '') == $type->id) ? 'selected' : '' }}>
-                                {{ $type->nom }}
-                                @if($type->prix) - {{ $type->formatted_prix }}@endif
-                            </option>
-                            @endforeach
-                        </select>
+                        @if(isset($selectedTypeServiceId) && $selectedTypeServiceId)
+                            {{-- Type de service is pre-selected and read-only --}}
+                            @php $selectedType = $typesServices->firstWhere('id', $selectedTypeServiceId); @endphp
+                            <input type="hidden" name="type_service_id" value="{{ $selectedTypeServiceId }}">
+                            <div class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-600 text-gray-700 dark:text-gray-200 cursor-not-allowed">
+                                <span class="flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                    </svg>
+                                    {{ $selectedType->nom ?? 'Type sélectionné' }}
+                                    @if($selectedType && $selectedType->prix) - {{ $selectedType->formatted_prix }}@endif
+                                </span>
+                            </div>
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Le type de service est pré-sélectionné et ne peut pas être modifié.</p>
+                        @else
+                            {{-- Normal select dropdown --}}
+                            <select name="type_service_id" id="type_service_id" required
+                                class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors">
+                                <option value="">Sélectionner un type</option>
+                                @foreach($typesServices as $type)
+                                <option value="{{ $type->id }}" 
+                                    data-prix="{{ $type->prix ?? 0 }}"
+                                    {{ (old('type_service_id') == $type->id) ? 'selected' : '' }}>
+                                    {{ $type->nom }}
+                                    @if($type->prix) - {{ $type->formatted_prix }}@endif
+                                </option>
+                                @endforeach
+                            </select>
+                        @endif
                         @error('type_service_id')
                         <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                         @enderror
@@ -122,8 +139,56 @@
                     <!-- Prix -->
                     <div>
                         <label for="prix" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Prix (DH) *</label>
-                        <input type="number" name="prix" id="prix" value="{{ old('prix', 0) }}" required min="0" step="0.01"
-                            class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors"
+                        @if(isset($offersWithPrices) && count($offersWithPrices) > 0)
+                            {{-- Show dropdown with offers/tarification prices --}}
+                            <div class="space-y-2">
+                                <select id="offre_tarification_select" 
+                                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors"
+                                    onchange="updatePriceFromOffer(this)">
+                                    <option value="">-- Sélectionner une offre/tarification --</option>
+                                    @php $defaultPriceSet = false; @endphp
+                                    @foreach($offersWithPrices as $offre)
+                                        @if(count($offre['prices']) > 0)
+                                            @foreach($offre['prices'] as $price)
+                                                @php
+                                                    $isStandard = strtolower($price['type_name']) === 'standard';
+                                                    $isFirst = !$defaultPriceSet && $isStandard;
+                                                    if($isFirst) $defaultPriceSet = true;
+                                                @endphp
+                                                <option value="{{ $price['prix'] }}" {{ $isFirst ? 'selected' : '' }}
+                                                    data-offre="{{ $offre['nom'] }}"
+                                                    data-type="{{ $price['type_name'] }}">
+                                                    {{ $offre['nom'] }} - {{ $price['type_name'] }}: {{ number_format($price['prix'], 2, ',', ' ') }} DH
+                                                    @if($offre['duree_mois']) ({{ $offre['duree_mois'] }} mois)@endif
+                                                </option>
+                                            @endforeach
+                                        @endif
+                                    @endforeach
+                                    {{-- If no standard price was found, select the first one --}}
+                                    @if(!$defaultPriceSet && count($offersWithPrices) > 0 && count($offersWithPrices[0]['prices'] ?? []) > 0)
+                                        <script>
+                                            document.addEventListener('DOMContentLoaded', function() {
+                                                var select = document.getElementById('offre_tarification_select');
+                                                if (select && select.options.length > 1) {
+                                                    select.selectedIndex = 1;
+                                                    updatePriceFromOffer(select);
+                                                }
+                                            });
+                                        </script>
+                                    @endif
+                                </select>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">
+                                    <svg class="inline w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    Prix basé sur la tarification configurée. Vous pouvez le modifier ci-dessous.
+                                </p>
+                            </div>
+                        @endif
+                        <input type="number" name="prix" id="prix" 
+                            value="{{ old('prix', isset($offersWithPrices) && count($offersWithPrices) > 0 ? collect($offersWithPrices)->pluck('prices')->flatten(1)->firstWhere('type_name', 'Standard')['prix'] ?? (collect($offersWithPrices)->pluck('prices')->flatten(1)->first()['prix'] ?? 0) : 0) }}" 
+                            required min="0" step="0.01"
+                            class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors {{ isset($offersWithPrices) && count($offersWithPrices) > 0 ? 'mt-2' : '' }}"
                             placeholder="0.00">
                         @error('prix')
                         <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
@@ -260,6 +325,16 @@ function showClientInfo(clientId) {
     }
 }
 
+function updatePriceFromOffer(selectElement) {
+    const prixInput = document.getElementById('prix');
+    const selectedValue = selectElement.value;
+    
+    if (selectedValue && prixInput) {
+        prixInput.value = parseFloat(selectedValue).toFixed(2);
+        updateTotalPreview();
+    }
+}
+
 function updateTotalPreview() {
     const prixInput = document.getElementById('prix');
     const basePrix = parseFloat(prixInput.value) || 0;
@@ -300,9 +375,15 @@ document.addEventListener('DOMContentLoaded', function() {
         showClientInfo(clientId);
     }
     
-    // Trigger type service change to set default price
+    // If there's an offer tarification select, set the default price
+    const offreTarificationSelect = document.getElementById('offre_tarification_select');
+    if (offreTarificationSelect && offreTarificationSelect.value) {
+        updatePriceFromOffer(offreTarificationSelect);
+    }
+    
+    // Trigger type service change to set default price (only if no pre-selected type)
     const typeServiceSelect = document.getElementById('type_service_id');
-    if (typeServiceSelect.value) {
+    if (typeServiceSelect && typeServiceSelect.value) {
         const event = new Event('change');
         typeServiceSelect.dispatchEvent(event);
     }

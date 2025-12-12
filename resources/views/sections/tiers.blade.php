@@ -95,6 +95,16 @@
                         Comptes Associés
                     </span>
                 </button>
+                <button onclick="switchTab('prestataires')" 
+                    class="tab-button whitespace-nowrap py-4 px-4 sm:px-6 text-sm font-medium border-b-2 transition-colors" 
+                    data-tab="prestataires">
+                    <span class="flex items-center">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                        Prestataires
+                    </span>
+                </button>
             </nav>
         </div>
 
@@ -215,6 +225,23 @@
                 </div>
                 <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Gérez vos comptes associés et leurs informations</p>
                 <a href="{{ route('comptes-associes.index') }}" class="text-blue-600 hover:text-blue-700 dark:text-blue-400 text-sm font-medium">
+                    Voir la liste complète →
+                </a>
+            </div>
+
+            <!-- Prestataires Tab -->
+            <div id="tab-prestataires" class="tab-content hidden">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Liste des prestataires</h3>
+                    <a href="{{ route('prestataires.create') }}" class="inline-flex items-center px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium rounded-lg transition-colors">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                        </svg>
+                        Créer un prestataire
+                    </a>
+                </div>
+                <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Gérez vos prestataires de services (comptables, avocats, consultants, etc.)</p>
+                <a href="{{ route('prestataires.index') }}" class="text-purple-600 hover:text-purple-700 dark:text-purple-400 text-sm font-medium">
                     Voir la liste complète →
                 </a>
             </div>

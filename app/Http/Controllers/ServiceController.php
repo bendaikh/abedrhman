@@ -32,10 +32,34 @@ class ServiceController extends Controller
      */
     public function create(Request $request)
     {
-        $typesServices = TypeService::active()->ordered()->get();
+        $typesServices = TypeService::with(['offres.tarifications.typeTarification'])->active()->ordered()->get();
         $clients = Client::orderBy('nom_raison_sociale')->orderBy('nom')->get();
         $sousServices = SousService::active()->ordered()->get();
         $selectedTypeServiceId = $request->get('type_service_id');
+        
+        // Build offers with prices for JavaScript
+        $offersWithPrices = [];
+        if ($selectedTypeServiceId) {
+            $selectedType = $typesServices->firstWhere('id', $selectedTypeServiceId);
+            if ($selectedType && $selectedType->offres) {
+                foreach ($selectedType->offres as $offre) {
+                    $prices = [];
+                    foreach ($offre->tarifications as $tarif) {
+                        $prices[] = [
+                            'type_tarification_id' => $tarif->type_tarification_id,
+                            'type_name' => $tarif->typeTarification->nom ?? 'Standard',
+                            'prix' => $tarif->prix,
+                        ];
+                    }
+                    $offersWithPrices[] = [
+                        'id' => $offre->id,
+                        'nom' => $offre->nom,
+                        'duree_mois' => $offre->duree_mois,
+                        'prices' => $prices,
+                    ];
+                }
+            }
+        }
 
         return view('sections.services-create', [
             'page_title' => 'Nouveau service',
@@ -43,6 +67,7 @@ class ServiceController extends Controller
             'clients' => $clients,
             'sousServices' => $sousServices,
             'selectedTypeServiceId' => $selectedTypeServiceId,
+            'offersWithPrices' => $offersWithPrices,
         ]);
     }
 

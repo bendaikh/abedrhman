@@ -39,6 +39,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('comptables', \App\Http\Controllers\ComptableController::class);
     Route::resource('bailleurs', \App\Http\Controllers\BailleurController::class);
     Route::resource('comptes-associes', \App\Http\Controllers\CompteAssocieController::class);
+    Route::resource('prestataires', \App\Http\Controllers\PrestataireController::class);
 
     // Actionnaires routes (nested under clients)
     Route::prefix('clients/{client}/actionnaires')->group(function () {
