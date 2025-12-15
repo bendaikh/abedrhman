@@ -134,10 +134,10 @@
                         <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
                             @forelse($fournisseurs ?? [] as $fournisseur)
                                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                    <td class="px-4 py-2">{{ $fournisseur->raison_sociale ?? 'N/A' }}</td>
-                                    <td class="px-4 py-2">{{ trim(($fournisseur->responsable_nom ?? '') . ' ' . ($fournisseur->responsable_prenom ?? '')) ?: 'N/A' }}</td>
-                                    <td class="px-4 py-2">{{ $fournisseur->activite ?? 'N/A' }}</td>
-                                    <td class="px-4 py-2">{{ $fournisseur->tel ?? 'N/A' }}</td>
+                                    <td class="px-4 py-2 text-gray-900 dark:text-gray-100">{{ $fournisseur->raison_sociale ?? 'N/A' }}</td>
+                                    <td class="px-4 py-2 text-gray-900 dark:text-gray-100">{{ trim(($fournisseur->responsable_nom ?? '') . ' ' . ($fournisseur->responsable_prenom ?? '')) ?: 'N/A' }}</td>
+                                    <td class="px-4 py-2 text-gray-900 dark:text-gray-100">{{ $fournisseur->activite ?? 'N/A' }}</td>
+                                    <td class="px-4 py-2 text-gray-900 dark:text-gray-100">{{ $fournisseur->tel ?? 'N/A' }}</td>
                                 </tr>
                             @empty
                                 <tr>
@@ -178,10 +178,10 @@
                         <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
                             @forelse($personnel ?? [] as $person)
                                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                    <td class="px-4 py-2">{{ $person->nom ?? 'N/A' }}</td>
-                                    <td class="px-4 py-2">{{ $person->prenom ?? 'N/A' }}</td>
-                                    <td class="px-4 py-2">{{ $person->poste ?? 'N/A' }}</td>
-                                    <td class="px-4 py-2">{{ $person->tel ?? 'N/A' }}</td>
+                                    <td class="px-4 py-2 text-gray-900 dark:text-gray-100">{{ $person->nom ?? 'N/A' }}</td>
+                                    <td class="px-4 py-2 text-gray-900 dark:text-gray-100">{{ $person->prenom ?? 'N/A' }}</td>
+                                    <td class="px-4 py-2 text-gray-900 dark:text-gray-100">{{ $person->poste ?? 'N/A' }}</td>
+                                    <td class="px-4 py-2 text-gray-900 dark:text-gray-100">{{ $person->tel ?? 'N/A' }}</td>
                                 </tr>
                             @empty
                                 <tr>
@@ -222,10 +222,10 @@
                         <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
                             @forelse($administrations ?? [] as $administration)
                                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                    <td class="px-4 py-2">{{ $administration->raison_sociale ?? 'N/A' }}</td>
-                                    <td class="px-4 py-2">{{ trim(($administration->responsable_nom ?? '') . ' ' . ($administration->responsable_prenom ?? '')) ?: 'N/A' }}</td>
-                                    <td class="px-4 py-2">{{ $administration->tel ?? 'N/A' }}</td>
-                                    <td class="px-4 py-2">{{ $administration->email ?? 'N/A' }}</td>
+                                    <td class="px-4 py-2 text-gray-900 dark:text-gray-100">{{ $administration->raison_sociale ?? 'N/A' }}</td>
+                                    <td class="px-4 py-2 text-gray-900 dark:text-gray-100">{{ trim(($administration->responsable_nom ?? '') . ' ' . ($administration->responsable_prenom ?? '')) ?: 'N/A' }}</td>
+                                    <td class="px-4 py-2 text-gray-900 dark:text-gray-100">{{ $administration->tel ?? 'N/A' }}</td>
+                                    <td class="px-4 py-2 text-gray-900 dark:text-gray-100">{{ $administration->email ?? 'N/A' }}</td>
                                 </tr>
                             @empty
                                 <tr>
@@ -266,10 +266,10 @@
                         <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
                             @forelse($partenaires ?? [] as $partenaire)
                                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                    <td class="px-4 py-2">{{ $partenaire->raison_sociale ?? 'N/A' }}</td>
-                                    <td class="px-4 py-2">{{ $partenaire->activite ?? 'N/A' }}</td>
-                                    <td class="px-4 py-2">{{ $partenaire->prestation ?? 'N/A' }}</td>
-                                    <td class="px-4 py-2">{{ $partenaire->tel ?? 'N/A' }}</td>
+                                    <td class="px-4 py-2 text-gray-900 dark:text-gray-100">{{ $partenaire->raison_sociale ?? 'N/A' }}</td>
+                                    <td class="px-4 py-2 text-gray-900 dark:text-gray-100">{{ $partenaire->activite ?? 'N/A' }}</td>
+                                    <td class="px-4 py-2 text-gray-900 dark:text-gray-100">{{ $partenaire->prestation ?? 'N/A' }}</td>
+                                    <td class="px-4 py-2 text-gray-900 dark:text-gray-100">{{ $partenaire->tel ?? 'N/A' }}</td>
                                 </tr>
                             @empty
                                 <tr>
@@ -310,10 +310,10 @@
                         <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
                             @forelse($comptables ?? [] as $comptable)
                                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                    <td class="px-4 py-2">{{ $comptable->raison_sociale ?? 'N/A' }}</td>
-                                    <td class="px-4 py-2">{{ $comptable->activite ?? 'N/A' }}</td>
-                                    <td class="px-4 py-2">{{ $comptable->prestation ?? 'N/A' }}</td>
-                                    <td class="px-4 py-2">{{ $comptable->tel ?? 'N/A' }}</td>
+                                    <td class="px-4 py-2 text-gray-900 dark:text-gray-100">{{ $comptable->raison_sociale ?? 'N/A' }}</td>
+                                    <td class="px-4 py-2 text-gray-900 dark:text-gray-100">{{ $comptable->activite ?? 'N/A' }}</td>
+                                    <td class="px-4 py-2 text-gray-900 dark:text-gray-100">{{ $comptable->prestation ?? 'N/A' }}</td>
+                                    <td class="px-4 py-2 text-gray-900 dark:text-gray-100">{{ $comptable->tel ?? 'N/A' }}</td>
                                 </tr>
                             @empty
                                 <tr>
@@ -354,10 +354,10 @@
                         <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
                             @forelse($bailleurs ?? [] as $bailleur)
                                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                    <td class="px-4 py-2">{{ $bailleur->raison_sociale ?? 'N/A' }}</td>
-                                    <td class="px-4 py-2">{{ trim(($bailleur->responsable_nom ?? '') . ' ' . ($bailleur->responsable_prenom ?? '')) ?: 'N/A' }}</td>
-                                    <td class="px-4 py-2">{{ $bailleur->activite ?? 'N/A' }}</td>
-                                    <td class="px-4 py-2">{{ $bailleur->tel ?? 'N/A' }}</td>
+                                    <td class="px-4 py-2 text-gray-900 dark:text-gray-100">{{ $bailleur->raison_sociale ?? 'N/A' }}</td>
+                                    <td class="px-4 py-2 text-gray-900 dark:text-gray-100">{{ trim(($bailleur->responsable_nom ?? '') . ' ' . ($bailleur->responsable_prenom ?? '')) ?: 'N/A' }}</td>
+                                    <td class="px-4 py-2 text-gray-900 dark:text-gray-100">{{ $bailleur->activite ?? 'N/A' }}</td>
+                                    <td class="px-4 py-2 text-gray-900 dark:text-gray-100">{{ $bailleur->tel ?? 'N/A' }}</td>
                                 </tr>
                             @empty
                                 <tr>
@@ -398,10 +398,10 @@
                         <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
                             @forelse($comptesAssocies ?? [] as $compte)
                                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                    <td class="px-4 py-2">{{ $compte->nom ?? 'N/A' }}</td>
-                                    <td class="px-4 py-2">{{ $compte->prenom ?? 'N/A' }}</td>
-                                    <td class="px-4 py-2">{{ $compte->tel ?? 'N/A' }}</td>
-                                    <td class="px-4 py-2">{{ $compte->email ?? 'N/A' }}</td>
+                                    <td class="px-4 py-2 text-gray-900 dark:text-gray-100">{{ $compte->nom ?? 'N/A' }}</td>
+                                    <td class="px-4 py-2 text-gray-900 dark:text-gray-100">{{ $compte->prenom ?? 'N/A' }}</td>
+                                    <td class="px-4 py-2 text-gray-900 dark:text-gray-100">{{ $compte->tel ?? 'N/A' }}</td>
+                                    <td class="px-4 py-2 text-gray-900 dark:text-gray-100">{{ $compte->email ?? 'N/A' }}</td>
                                 </tr>
                             @empty
                                 <tr>
@@ -442,10 +442,10 @@
                         <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
                             @forelse($prestataires ?? [] as $prestataire)
                                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                    <td class="px-4 py-2">{{ $prestataire->raison_sociale ?? 'N/A' }}</td>
-                                    <td class="px-4 py-2">{{ $prestataire->activite ?? 'N/A' }}</td>
-                                    <td class="px-4 py-2">{{ $prestataire->prestation ?? 'N/A' }}</td>
-                                    <td class="px-4 py-2">{{ $prestataire->tel ?? 'N/A' }}</td>
+                                    <td class="px-4 py-2 text-gray-900 dark:text-gray-100">{{ $prestataire->raison_sociale ?? 'N/A' }}</td>
+                                    <td class="px-4 py-2 text-gray-900 dark:text-gray-100">{{ $prestataire->activite ?? 'N/A' }}</td>
+                                    <td class="px-4 py-2 text-gray-900 dark:text-gray-100">{{ $prestataire->prestation ?? 'N/A' }}</td>
+                                    <td class="px-4 py-2 text-gray-900 dark:text-gray-100">{{ $prestataire->tel ?? 'N/A' }}</td>
                                 </tr>
                             @empty
                                 <tr>
