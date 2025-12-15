@@ -204,13 +204,6 @@
                                 class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                         </div>
 
-                        <!-- Date création -->
-                        <div>
-                            <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Date création</label>
-                            <input type="date" name="date_creation" value="{{ old('date_creation', ($client && $client->date_creation) ? $client->date_creation->format('Y-m-d') : '') }}" 
-                                class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        </div>
-
                         <!-- Forme juridique créée -->
                         <div>
                             <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Forme juridique créée</label>
@@ -219,6 +212,13 @@
                                 <option value="Oui" {{ old('forme_juridique_creee', $client->forme_juridique_creee ?? '') === 'Oui' ? 'selected' : '' }}>Oui</option>
                                 <option value="Encours" {{ old('forme_juridique_creee', $client->forme_juridique_creee ?? '') === 'Encours' ? 'selected' : '' }}>Encours</option>
                             </select>
+                        </div>
+
+                        <!-- Date création -->
+                        <div>
+                            <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Date création</label>
+                            <input type="date" name="date_creation" value="{{ old('date_creation', ($client && $client->date_creation) ? $client->date_creation->format('Y-m-d') : '') }}" 
+                                class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                         </div>
 
                         <!-- Siège social -->
@@ -242,23 +242,14 @@
                                 class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                         </div>
 
-                        <!-- Secteur d'activité -->
+                        <!-- Secteur d'activite -->
                         <div>
                             <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Secteur d'activité</label>
                             <select name="secteur_activite" class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                                 <option value="">Sélectionner</option>
-                                <option value="COMMERCE" {{ old('secteur_activite', $client->secteur_activite ?? '') === 'COMMERCE' ? 'selected' : '' }}>COMMERCE</option>
-                                <option value="INDUSTRIE" {{ old('secteur_activite', $client->secteur_activite ?? '') === 'INDUSTRIE' ? 'selected' : '' }}>INDUSTRIE</option>
-                                <option value="SERVICES" {{ old('secteur_activite', $client->secteur_activite ?? '') === 'SERVICES' ? 'selected' : '' }}>SERVICES</option>
-                                <option value="INFORMATIQUE" {{ old('secteur_activite', $client->secteur_activite ?? '') === 'INFORMATIQUE' ? 'selected' : '' }}>INFORMATIQUE</option>
-                                <option value="AGRICULTURE" {{ old('secteur_activite', $client->secteur_activite ?? '') === 'AGRICULTURE' ? 'selected' : '' }}>AGRICULTURE</option>
-                                <option value="ARTISANAT" {{ old('secteur_activite', $client->secteur_activite ?? '') === 'ARTISANAT' ? 'selected' : '' }}>ARTISANAT</option>
-                                <option value="TOURISME" {{ old('secteur_activite', $client->secteur_activite ?? '') === 'TOURISME' ? 'selected' : '' }}>TOURISME</option>
-                                <option value="TRAVAUX ET INSTALATION" {{ old('secteur_activite', $client->secteur_activite ?? '') === 'TRAVAUX ET INSTALATION' ? 'selected' : '' }}>TRAVAUX ET INSTALATION</option>
-                                <option value="SANTE" {{ old('secteur_activite', $client->secteur_activite ?? '') === 'SANTE' ? 'selected' : '' }}>SANTE</option>
-                                <option value="IMPORT ET EXPORT" {{ old('secteur_activite', $client->secteur_activite ?? '') === 'IMPORT ET EXPORT' ? 'selected' : '' }}>IMPORT ET EXPORT</option>
-                                <option value="SPORT ET DIVERTISSEMENT" {{ old('secteur_activite', $client->secteur_activite ?? '') === 'SPORT ET DIVERTISSEMENT' ? 'selected' : '' }}>SPORT ET DIVERTISSEMENT</option>
-                                <option value="EDUCATION" {{ old('secteur_activite', $client->secteur_activite ?? '') === 'EDUCATION' ? 'selected' : '' }}>EDUCATION</option>
+                                @foreach($secteurActivites ?? [] as $secteur)
+                                    <option value="{{ $secteur->nom }}" {{ old('secteur_activite', $client->secteur_activite ?? '') === $secteur->nom ? 'selected' : '' }}>{{ $secteur->nom }}</option>
+                                @endforeach
                             </select>
                         </div>
 
@@ -390,7 +381,7 @@ function toggleClientTypeFields() {
     }
 }
 
-function updateIntituleSourceOptions() {
+async function updateIntituleSourceOptions() {
     const sourceSelect = document.getElementById('source_select');
     const intituleSourceSelect = document.getElementById('intitule_source_select');
     
@@ -414,20 +405,80 @@ function updateIntituleSourceOptions() {
     
     switch(selectedSource) {
         case 'Client':
-            options = ['Liste client'];
-            break;
+            // Fetch clients from API
+            try {
+                const response = await fetch('{{ route("clients.api.for-source") }}');
+                const clients = await response.json();
+                clients.forEach(client => {
+                    const option = document.createElement('option');
+                    option.value = client.id;
+                    option.textContent = client.name;
+                    if (currentValue == client.id) {
+                        option.selected = true;
+                    }
+                    intituleSourceSelect.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error fetching clients:', error);
+            }
+            // Update the data field visibility after updating options
+            toggleIntituleSourceDataField();
+            return;
         case 'Comptable':
-            options = ['Liste comptables'];
-            break;
+            // Fetch comptables from API
+            try {
+                const response = await fetch('{{ route("comptables.api.for-source") }}');
+                const comptables = await response.json();
+                comptables.forEach(comptable => {
+                    const option = document.createElement('option');
+                    option.value = comptable.id;
+                    option.textContent = comptable.name;
+                    if (currentValue == comptable.id) {
+                        option.selected = true;
+                    }
+                    intituleSourceSelect.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error fetching comptables:', error);
+            }
+            // Update the data field visibility after updating options
+            toggleIntituleSourceDataField();
+            return;
         case 'Média':
             options = ['Facebook', 'Instagram', 'Youtube', 'Tiktok', 'Linkedin', 'Site web centre', 'Autre'];
             break;
         case 'Spontané':
             options = ['Spontané'];
-            break;
+            // Auto-select if only one option
+            if (options.length === 1) {
+                const option = document.createElement('option');
+                option.value = options[0];
+                option.textContent = options[0];
+                option.selected = true;
+                intituleSourceSelect.appendChild(option);
+            }
+            toggleIntituleSourceDataField();
+            return;
         case 'Administration':
-            options = ['Liste administration'];
-            break;
+            // Fetch administrations from API
+            try {
+                const response = await fetch('{{ route("administrations.api.for-source") }}');
+                const administrations = await response.json();
+                administrations.forEach(administration => {
+                    const option = document.createElement('option');
+                    option.value = administration.id;
+                    option.textContent = administration.name;
+                    if (currentValue == administration.id) {
+                        option.selected = true;
+                    }
+                    intituleSourceSelect.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error fetching administrations:', error);
+            }
+            // Update the data field visibility after updating options
+            toggleIntituleSourceDataField();
+            return;
         case 'Autre':
             options = ['Autre'];
             break;
@@ -567,6 +618,14 @@ function updateFormeJuridiqueAndPieceJustificative() {
         }
         pieceJustificativeSelect.appendChild(option);
     });
+    
+    // Auto-select if there's only one option
+    if (formeJuridiqueOptions.length === 1 && !currentFormeJuridique) {
+        formeJuridiqueSelect.value = formeJuridiqueOptions[0];
+    }
+    if (pieceJustificativeOptions.length === 1 && !currentPieceJustificative) {
+        pieceJustificativeSelect.value = pieceJustificativeOptions[0];
+    }
 }
 
 document.addEventListener('DOMContentLoaded', function() {

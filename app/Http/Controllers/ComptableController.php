@@ -32,6 +32,7 @@ class ComptableController extends Controller
             'responsable_prenom' => 'nullable|string|max:255',
             'fonction' => 'nullable|string|max:255',
             'activite' => 'nullable|string|max:255',
+            'prestation' => 'nullable|string|max:255',
             'tel' => 'nullable|string|max:255',
             'email' => 'nullable|email|max:255',
             'adresse' => 'nullable|string',
@@ -72,6 +73,7 @@ class ComptableController extends Controller
             'responsable_prenom' => 'nullable|string|max:255',
             'fonction' => 'nullable|string|max:255',
             'activite' => 'nullable|string|max:255',
+            'prestation' => 'nullable|string|max:255',
             'tel' => 'nullable|string|max:255',
             'email' => 'nullable|email|max:255',
             'adresse' => 'nullable|string',
@@ -90,5 +92,24 @@ class ComptableController extends Controller
         $comptable->delete();
 
         return redirect()->route('tiers.index', ['tab' => 'comptables'])->with('success', 'Comptable supprimé avec succès.');
+    }
+
+    /**
+     * Get comptables list for source dropdown (AJAX)
+     */
+    public function getComptablesForSource()
+    {
+        $comptables = Comptable::select('id', 'raison_sociale')
+            ->whereNotNull('raison_sociale')
+            ->orderBy('raison_sociale')
+            ->get()
+            ->map(function($comptable) {
+                return [
+                    'id' => $comptable->id,
+                    'name' => $comptable->raison_sociale
+                ];
+            });
+        
+        return response()->json($comptables);
     }
 }

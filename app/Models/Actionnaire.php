@@ -13,6 +13,8 @@ class Actionnaire extends Model
         'nom',
         'prenom',
         'part_sociale_pct',
+        'type_piece_id',
+        'n_piece_id',
         'piece_id',
         'date_naissance',
         'lieu_naissance',

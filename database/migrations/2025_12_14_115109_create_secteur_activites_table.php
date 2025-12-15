@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('offres_crea', function (Blueprint $table) {
+        Schema::create('secteur_activites', function (Blueprint $table) {
             $table->id();
-            $table->string('nom'); // e.g., "CREA Standard", "CREA Premium", etc.
-            $table->text('description')->nullable(); // Description of the offer
+            $table->string('nom');
             $table->boolean('is_active')->default(true);
-            $table->integer('ordre')->default(0); // For sorting
+            $table->integer('order')->default(0);
             $table->timestamps();
         });
     }
@@ -26,21 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('offres_crea');
+        Schema::dropIfExists('secteur_activites');
     }
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

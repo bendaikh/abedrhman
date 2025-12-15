@@ -85,4 +85,23 @@ class AdministrationController extends Controller
 
         return redirect()->route('tiers.index', ['tab' => 'administrations'])->with('success', 'Administration supprimée avec succès.');
     }
+
+    /**
+     * Get administrations list for source dropdown (AJAX)
+     */
+    public function getAdministrationsForSource()
+    {
+        $administrations = Administration::select('id', 'raison_sociale')
+            ->whereNotNull('raison_sociale')
+            ->orderBy('raison_sociale')
+            ->get()
+            ->map(function($administration) {
+                return [
+                    'id' => $administration->id,
+                    'name' => $administration->raison_sociale
+                ];
+            });
+        
+        return response()->json($administrations);
+    }
 }

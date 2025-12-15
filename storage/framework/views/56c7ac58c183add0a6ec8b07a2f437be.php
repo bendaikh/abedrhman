@@ -120,10 +120,37 @@
                         Créer un fournisseur
                     </a>
                 </div>
-                <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Gérez vos fournisseurs et leurs informations</p>
-                <a href="<?php echo e(route('fournisseurs.index')); ?>" class="text-blue-600 hover:text-blue-700 dark:text-blue-400 text-sm font-medium">
-                    Voir la liste complète →
-                </a>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="bg-gray-50 dark:bg-gray-700">
+                            <tr>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Raison sociale</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Responsable</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Activité</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Téléphone</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                            <?php $__empty_1 = true; $__currentLoopData = $fournisseurs ?? []; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $fournisseur): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                                    <td class="px-4 py-2"><?php echo e($fournisseur->raison_sociale ?? 'N/A'); ?></td>
+                                    <td class="px-4 py-2"><?php echo e(trim(($fournisseur->responsable_nom ?? '') . ' ' . ($fournisseur->responsable_prenom ?? '')) ?: 'N/A'); ?></td>
+                                    <td class="px-4 py-2"><?php echo e($fournisseur->activite ?? 'N/A'); ?></td>
+                                    <td class="px-4 py-2"><?php echo e($fournisseur->tel ?? 'N/A'); ?></td>
+                                </tr>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+                                <tr>
+                                    <td colspan="4" class="px-4 py-4 text-center text-gray-500 dark:text-gray-400">Aucun fournisseur</td>
+                                </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-4">
+                    <a href="<?php echo e(route('fournisseurs.index')); ?>" class="text-blue-600 hover:text-blue-700 dark:text-blue-400 text-sm font-medium">
+                        Voir la liste complète →
+                    </a>
+                </div>
             </div>
 
             <!-- Personnel Tab -->
@@ -137,10 +164,37 @@
                         Créer un personnel
                     </a>
                 </div>
-                <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Gérez votre personnel et leurs informations</p>
-                <a href="<?php echo e(route('personnel.index')); ?>" class="text-blue-600 hover:text-blue-700 dark:text-blue-400 text-sm font-medium">
-                    Voir la liste complète →
-                </a>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="bg-gray-50 dark:bg-gray-700">
+                            <tr>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Nom</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Prénom</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Poste</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Téléphone</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                            <?php $__empty_1 = true; $__currentLoopData = $personnel ?? []; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $person): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                                    <td class="px-4 py-2"><?php echo e($person->nom ?? 'N/A'); ?></td>
+                                    <td class="px-4 py-2"><?php echo e($person->prenom ?? 'N/A'); ?></td>
+                                    <td class="px-4 py-2"><?php echo e($person->poste ?? 'N/A'); ?></td>
+                                    <td class="px-4 py-2"><?php echo e($person->tel ?? 'N/A'); ?></td>
+                                </tr>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+                                <tr>
+                                    <td colspan="4" class="px-4 py-4 text-center text-gray-500 dark:text-gray-400">Aucun personnel</td>
+                                </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-4">
+                    <a href="<?php echo e(route('personnel.index')); ?>" class="text-blue-600 hover:text-blue-700 dark:text-blue-400 text-sm font-medium">
+                        Voir la liste complète →
+                    </a>
+                </div>
             </div>
 
             <!-- Administrations Tab -->
@@ -154,10 +208,37 @@
                         Créer une administration
                     </a>
                 </div>
-                <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Gérez vos administrations et leurs informations</p>
-                <a href="<?php echo e(route('administrations.index')); ?>" class="text-blue-600 hover:text-blue-700 dark:text-blue-400 text-sm font-medium">
-                    Voir la liste complète →
-                </a>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="bg-gray-50 dark:bg-gray-700">
+                            <tr>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Raison sociale</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Responsable</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Téléphone</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Email</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                            <?php $__empty_1 = true; $__currentLoopData = $administrations ?? []; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $administration): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                                    <td class="px-4 py-2"><?php echo e($administration->raison_sociale ?? 'N/A'); ?></td>
+                                    <td class="px-4 py-2"><?php echo e(trim(($administration->responsable_nom ?? '') . ' ' . ($administration->responsable_prenom ?? '')) ?: 'N/A'); ?></td>
+                                    <td class="px-4 py-2"><?php echo e($administration->tel ?? 'N/A'); ?></td>
+                                    <td class="px-4 py-2"><?php echo e($administration->email ?? 'N/A'); ?></td>
+                                </tr>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+                                <tr>
+                                    <td colspan="4" class="px-4 py-4 text-center text-gray-500 dark:text-gray-400">Aucune administration</td>
+                                </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-4">
+                    <a href="<?php echo e(route('administrations.index')); ?>" class="text-blue-600 hover:text-blue-700 dark:text-blue-400 text-sm font-medium">
+                        Voir la liste complète →
+                    </a>
+                </div>
             </div>
 
             <!-- Partenaires Tab -->
@@ -171,10 +252,37 @@
                         Créer un partenaire
                     </a>
                 </div>
-                <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Gérez vos partenaires et leurs informations</p>
-                <a href="<?php echo e(route('partenaires.index')); ?>" class="text-blue-600 hover:text-blue-700 dark:text-blue-400 text-sm font-medium">
-                    Voir la liste complète →
-                </a>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="bg-gray-50 dark:bg-gray-700">
+                            <tr>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Raison sociale</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Activité</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Prestation</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Téléphone</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                            <?php $__empty_1 = true; $__currentLoopData = $partenaires ?? []; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $partenaire): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                                    <td class="px-4 py-2"><?php echo e($partenaire->raison_sociale ?? 'N/A'); ?></td>
+                                    <td class="px-4 py-2"><?php echo e($partenaire->activite ?? 'N/A'); ?></td>
+                                    <td class="px-4 py-2"><?php echo e($partenaire->prestation ?? 'N/A'); ?></td>
+                                    <td class="px-4 py-2"><?php echo e($partenaire->tel ?? 'N/A'); ?></td>
+                                </tr>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+                                <tr>
+                                    <td colspan="4" class="px-4 py-4 text-center text-gray-500 dark:text-gray-400">Aucun partenaire</td>
+                                </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-4">
+                    <a href="<?php echo e(route('partenaires.index')); ?>" class="text-blue-600 hover:text-blue-700 dark:text-blue-400 text-sm font-medium">
+                        Voir la liste complète →
+                    </a>
+                </div>
             </div>
 
             <!-- Comptables Tab -->
@@ -188,10 +296,37 @@
                         Créer un comptable
                     </a>
                 </div>
-                <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Gérez vos comptables et leurs informations</p>
-                <a href="<?php echo e(route('comptables.index')); ?>" class="text-blue-600 hover:text-blue-700 dark:text-blue-400 text-sm font-medium">
-                    Voir la liste complète →
-                </a>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="bg-gray-50 dark:bg-gray-700">
+                            <tr>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Raison sociale</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Activité</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Prestation</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Téléphone</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                            <?php $__empty_1 = true; $__currentLoopData = $comptables ?? []; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $comptable): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                                    <td class="px-4 py-2"><?php echo e($comptable->raison_sociale ?? 'N/A'); ?></td>
+                                    <td class="px-4 py-2"><?php echo e($comptable->activite ?? 'N/A'); ?></td>
+                                    <td class="px-4 py-2"><?php echo e($comptable->prestation ?? 'N/A'); ?></td>
+                                    <td class="px-4 py-2"><?php echo e($comptable->tel ?? 'N/A'); ?></td>
+                                </tr>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+                                <tr>
+                                    <td colspan="4" class="px-4 py-4 text-center text-gray-500 dark:text-gray-400">Aucun comptable</td>
+                                </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-4">
+                    <a href="<?php echo e(route('comptables.index')); ?>" class="text-blue-600 hover:text-blue-700 dark:text-blue-400 text-sm font-medium">
+                        Voir la liste complète →
+                    </a>
+                </div>
             </div>
 
             <!-- Bailleurs Tab -->
@@ -205,10 +340,37 @@
                         Créer un bailleur
                     </a>
                 </div>
-                <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Gérez vos bailleurs et leurs informations</p>
-                <a href="<?php echo e(route('bailleurs.index')); ?>" class="text-blue-600 hover:text-blue-700 dark:text-blue-400 text-sm font-medium">
-                    Voir la liste complète →
-                </a>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="bg-gray-50 dark:bg-gray-700">
+                            <tr>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Raison sociale</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Responsable</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Activité</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Téléphone</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                            <?php $__empty_1 = true; $__currentLoopData = $bailleurs ?? []; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $bailleur): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                                    <td class="px-4 py-2"><?php echo e($bailleur->raison_sociale ?? 'N/A'); ?></td>
+                                    <td class="px-4 py-2"><?php echo e(trim(($bailleur->responsable_nom ?? '') . ' ' . ($bailleur->responsable_prenom ?? '')) ?: 'N/A'); ?></td>
+                                    <td class="px-4 py-2"><?php echo e($bailleur->activite ?? 'N/A'); ?></td>
+                                    <td class="px-4 py-2"><?php echo e($bailleur->tel ?? 'N/A'); ?></td>
+                                </tr>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+                                <tr>
+                                    <td colspan="4" class="px-4 py-4 text-center text-gray-500 dark:text-gray-400">Aucun bailleur</td>
+                                </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-4">
+                    <a href="<?php echo e(route('bailleurs.index')); ?>" class="text-blue-600 hover:text-blue-700 dark:text-blue-400 text-sm font-medium">
+                        Voir la liste complète →
+                    </a>
+                </div>
             </div>
 
             <!-- Comptes Associés Tab -->
@@ -222,10 +384,37 @@
                         Créer un compte associé
                     </a>
                 </div>
-                <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Gérez vos comptes associés et leurs informations</p>
-                <a href="<?php echo e(route('comptes-associes.index')); ?>" class="text-blue-600 hover:text-blue-700 dark:text-blue-400 text-sm font-medium">
-                    Voir la liste complète →
-                </a>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="bg-gray-50 dark:bg-gray-700">
+                            <tr>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Nom</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Prénom</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Téléphone</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Email</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                            <?php $__empty_1 = true; $__currentLoopData = $comptesAssocies ?? []; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $compte): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                                    <td class="px-4 py-2"><?php echo e($compte->nom ?? 'N/A'); ?></td>
+                                    <td class="px-4 py-2"><?php echo e($compte->prenom ?? 'N/A'); ?></td>
+                                    <td class="px-4 py-2"><?php echo e($compte->tel ?? 'N/A'); ?></td>
+                                    <td class="px-4 py-2"><?php echo e($compte->email ?? 'N/A'); ?></td>
+                                </tr>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+                                <tr>
+                                    <td colspan="4" class="px-4 py-4 text-center text-gray-500 dark:text-gray-400">Aucun compte associé</td>
+                                </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-4">
+                    <a href="<?php echo e(route('comptes-associes.index')); ?>" class="text-blue-600 hover:text-blue-700 dark:text-blue-400 text-sm font-medium">
+                        Voir la liste complète →
+                    </a>
+                </div>
             </div>
 
             <!-- Prestataires Tab -->
@@ -239,10 +428,37 @@
                         Créer un prestataire
                     </a>
                 </div>
-                <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Gérez vos prestataires de services (comptables, avocats, consultants, etc.)</p>
-                <a href="<?php echo e(route('prestataires.index')); ?>" class="text-purple-600 hover:text-purple-700 dark:text-purple-400 text-sm font-medium">
-                    Voir la liste complète →
-                </a>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="bg-gray-50 dark:bg-gray-700">
+                            <tr>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Raison sociale</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Activité</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Prestation</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Téléphone</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                            <?php $__empty_1 = true; $__currentLoopData = $prestataires ?? []; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $prestataire): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                                    <td class="px-4 py-2"><?php echo e($prestataire->raison_sociale ?? 'N/A'); ?></td>
+                                    <td class="px-4 py-2"><?php echo e($prestataire->activite ?? 'N/A'); ?></td>
+                                    <td class="px-4 py-2"><?php echo e($prestataire->prestation ?? 'N/A'); ?></td>
+                                    <td class="px-4 py-2"><?php echo e($prestataire->tel ?? 'N/A'); ?></td>
+                                </tr>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+                                <tr>
+                                    <td colspan="4" class="px-4 py-4 text-center text-gray-500 dark:text-gray-400">Aucun prestataire</td>
+                                </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-4">
+                    <a href="<?php echo e(route('prestataires.index')); ?>" class="text-purple-600 hover:text-purple-700 dark:text-purple-400 text-sm font-medium">
+                        Voir la liste complète →
+                    </a>
+                </div>
             </div>
         </div>
     </div>

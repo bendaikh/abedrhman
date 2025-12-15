@@ -80,6 +80,25 @@
                 </select>
             </div>
 
+            <!-- Type pièce ID -->
+            <div>
+                <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Type pièce ID</label>
+                <select name="type_piece_id" id="type_piece_id_select" onchange="toggleNPieceIdField()" class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                    <option value="">Sélectionner</option>
+                    <option value="CIN" {{ old('type_piece_id', $dirigeant->type_piece_id ?? '') === 'CIN' ? 'selected' : '' }}>CIN</option>
+                    <option value="PASSPORT" {{ old('type_piece_id', $dirigeant->type_piece_id ?? '') === 'PASSPORT' ? 'selected' : '' }}>PASSPORT</option>
+                    <option value="CARTE SEJOUR" {{ old('type_piece_id', $dirigeant->type_piece_id ?? '') === 'CARTE SEJOUR' ? 'selected' : '' }}>CARTE SEJOUR</option>
+                    <option value="CARTE ETRANGERE" {{ old('type_piece_id', $dirigeant->type_piece_id ?? '') === 'CARTE ETRANGERE' ? 'selected' : '' }}>CARTE ETRANGERE</option>
+                </select>
+            </div>
+
+            <!-- N° pièce ID -->
+            <div id="n_piece_id_field" style="display: {{ old('type_piece_id', $dirigeant->type_piece_id ?? '') ? 'block' : 'none' }};">
+                <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">N° pièce ID</label>
+                <input type="text" name="n_piece_id" value="{{ old('n_piece_id', $dirigeant->n_piece_id ?? '') }}" 
+                    class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+            </div>
+
             <!-- Pièce ID -->
             <div>
                 <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Pièce ID</label>
@@ -167,5 +186,28 @@
         </div>
     </form>
 </div>
+
+<script>
+function toggleNPieceIdField() {
+    const typePieceSelect = document.getElementById('type_piece_id_select');
+    const nPieceIdField = document.getElementById('n_piece_id_field');
+    
+    if (!typePieceSelect || !nPieceIdField) {
+        return;
+    }
+    
+    const selectedValue = typePieceSelect.value;
+    
+    if (selectedValue && selectedValue !== '') {
+        nPieceIdField.style.display = 'block';
+    } else {
+        nPieceIdField.style.display = 'none';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    toggleNPieceIdField();
+});
+</script>
 @endsection
 

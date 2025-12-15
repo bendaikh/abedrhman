@@ -14,6 +14,7 @@ class Comptable extends Model
         'responsable_prenom',
         'fonction',
         'activite',
+        'prestation',
         'tel',
         'email',
         'adresse',

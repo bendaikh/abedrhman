@@ -9,6 +9,7 @@ use App\Models\TarificationDom;
 use App\Models\TarificationCrea;
 use App\Models\TypeService;
 use App\Models\TypeActivite;
+use App\Models\SecteurActivite;
 use App\Models\SousService;
 use App\Models\Rubrique;
 use App\Models\TypeCharge;
@@ -614,6 +615,65 @@ class ParametresController extends Controller
 
         return redirect()->route('parametres.types-activites')
             ->with('success', 'Type d\'activité supprimé avec succès.');
+    }
+
+    /**
+     * Display secteur activites management page
+     */
+    public function secteurActivites()
+    {
+        $secteurActivites = SecteurActivite::ordered()->get();
+        
+        return view('parametres.secteur-activites', [
+            'page_title' => 'Secteurs d\'activité',
+            'secteurActivites' => $secteurActivites,
+        ]);
+    }
+
+    /**
+     * Store a new secteur activite
+     */
+    public function storeSecteurActivite(Request $request)
+    {
+        $validated = $request->validate([
+            'nom' => 'required|string|max:255',
+        ]);
+
+        $validated['is_active'] = $request->has('is_active');
+        $validated['order'] = SecteurActivite::max('order') + 1;
+
+        SecteurActivite::create($validated);
+
+        return redirect()->route('parametres.secteur-activites')
+            ->with('success', 'Secteur d\'activité créé avec succès.');
+    }
+
+    /**
+     * Update a secteur activite
+     */
+    public function updateSecteurActivite(Request $request, SecteurActivite $secteurActivite)
+    {
+        $validated = $request->validate([
+            'nom' => 'required|string|max:255',
+        ]);
+
+        $validated['is_active'] = $request->has('is_active');
+
+        $secteurActivite->update($validated);
+
+        return redirect()->route('parametres.secteur-activites')
+            ->with('success', 'Secteur d\'activité mis à jour avec succès.');
+    }
+
+    /**
+     * Delete a secteur activite
+     */
+    public function destroySecteurActivite(SecteurActivite $secteurActivite)
+    {
+        $secteurActivite->delete();
+
+        return redirect()->route('parametres.secteur-activites')
+            ->with('success', 'Secteur d\'activité supprimé avec succès.');
     }
 
     // ==================== Sous-Services Methods ====================

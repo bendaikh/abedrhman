@@ -27,6 +27,7 @@ Route::middleware('auth')->group(function () {
     Route::post('clients/import', [\App\Http\Controllers\ClientController::class, 'import'])->name('clients.import');
     Route::get('clients/export', [\App\Http\Controllers\ClientController::class, 'export'])->name('clients.export');
     Route::get('clients/template', [\App\Http\Controllers\ClientController::class, 'downloadTemplate'])->name('clients.template');
+    Route::get('clients/api/for-source', [\App\Http\Controllers\ClientController::class, 'getClientsForSource'])->name('clients.api.for-source');
     
     // Service sections routes
     Route::resource('clients', \App\Http\Controllers\ClientController::class);
@@ -35,8 +36,10 @@ Route::middleware('auth')->group(function () {
     Route::resource('fournisseurs', \App\Http\Controllers\FournisseurController::class);
     Route::resource('personnel', \App\Http\Controllers\PersonnelController::class);
     Route::resource('administrations', \App\Http\Controllers\AdministrationController::class);
+    Route::get('administrations/api/for-source', [\App\Http\Controllers\AdministrationController::class, 'getAdministrationsForSource'])->name('administrations.api.for-source');
     Route::resource('partenaires', \App\Http\Controllers\PartenaireController::class);
     Route::resource('comptables', \App\Http\Controllers\ComptableController::class);
+    Route::get('comptables/api/for-source', [\App\Http\Controllers\ComptableController::class, 'getComptablesForSource'])->name('comptables.api.for-source');
     Route::resource('bailleurs', \App\Http\Controllers\BailleurController::class);
     Route::resource('comptes-associes', \App\Http\Controllers\CompteAssocieController::class);
     Route::resource('prestataires', \App\Http\Controllers\PrestataireController::class);
@@ -64,7 +67,26 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::get('/tiers', function () {
-        return view('sections.tiers', ['page_title' => 'Base tiers']);
+        $fournisseurs = \App\Models\Fournisseur::orderBy('created_at', 'desc')->limit(10)->get();
+        $personnel = \App\Models\Personnel::orderBy('created_at', 'desc')->limit(10)->get();
+        $administrations = \App\Models\Administration::orderBy('created_at', 'desc')->limit(10)->get();
+        $partenaires = \App\Models\Partenaire::orderBy('created_at', 'desc')->limit(10)->get();
+        $comptables = \App\Models\Comptable::orderBy('created_at', 'desc')->limit(10)->get();
+        $bailleurs = \App\Models\Bailleur::orderBy('created_at', 'desc')->limit(10)->get();
+        $comptesAssocies = \App\Models\CompteAssocie::orderBy('created_at', 'desc')->limit(10)->get();
+        $prestataires = \App\Models\Prestataire::orderBy('created_at', 'desc')->limit(10)->get();
+        
+        return view('sections.tiers', [
+            'page_title' => 'Base tiers',
+            'fournisseurs' => $fournisseurs,
+            'personnel' => $personnel,
+            'administrations' => $administrations,
+            'partenaires' => $partenaires,
+            'comptables' => $comptables,
+            'bailleurs' => $bailleurs,
+            'comptesAssocies' => $comptesAssocies,
+            'prestataires' => $prestataires,
+        ]);
     })->name('tiers.index');
 
     // Services CRUD
@@ -216,6 +238,12 @@ Route::middleware('auth')->group(function () {
         Route::put('/types-charge/{typeCharge}', [\App\Http\Controllers\ParametresController::class, 'updateTypeCharge'])->name('parametres.types-charge.update');
         Route::delete('/types-charge/{typeCharge}', [\App\Http\Controllers\ParametresController::class, 'destroyTypeCharge'])->name('parametres.types-charge.destroy');
         Route::delete('/types-charge/{typeCharge}/remove-rubrique', [\App\Http\Controllers\ParametresController::class, 'removeRubriqueFromTypeCharge'])->name('parametres.types-charge.remove-rubrique');
+        
+        // Secteurs d'activité
+        Route::get('/secteur-activites', [\App\Http\Controllers\ParametresController::class, 'secteurActivites'])->name('parametres.secteur-activites');
+        Route::post('/secteur-activites', [\App\Http\Controllers\ParametresController::class, 'storeSecteurActivite'])->name('parametres.secteur-activites.store');
+        Route::put('/secteur-activites/{secteurActivite}', [\App\Http\Controllers\ParametresController::class, 'updateSecteurActivite'])->name('parametres.secteur-activites.update');
+        Route::delete('/secteur-activites/{secteurActivite}', [\App\Http\Controllers\ParametresController::class, 'destroySecteurActivite'])->name('parametres.secteur-activites.destroy');
         
         // Unified Offres & Tarifications
         Route::get('/type-service/{typeService}/offres', [\App\Http\Controllers\ParametresController::class, 'getOffresForTypeService'])->name('parametres.type-service.offres');

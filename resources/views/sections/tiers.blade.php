@@ -121,10 +121,37 @@
                         Créer un fournisseur
                     </a>
                 </div>
-                <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Gérez vos fournisseurs et leurs informations</p>
-                <a href="{{ route('fournisseurs.index') }}" class="text-blue-600 hover:text-blue-700 dark:text-blue-400 text-sm font-medium">
-                    Voir la liste complète →
-                </a>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="bg-gray-50 dark:bg-gray-700">
+                            <tr>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Raison sociale</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Responsable</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Activité</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Téléphone</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                            @forelse($fournisseurs ?? [] as $fournisseur)
+                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                                    <td class="px-4 py-2">{{ $fournisseur->raison_sociale ?? 'N/A' }}</td>
+                                    <td class="px-4 py-2">{{ trim(($fournisseur->responsable_nom ?? '') . ' ' . ($fournisseur->responsable_prenom ?? '')) ?: 'N/A' }}</td>
+                                    <td class="px-4 py-2">{{ $fournisseur->activite ?? 'N/A' }}</td>
+                                    <td class="px-4 py-2">{{ $fournisseur->tel ?? 'N/A' }}</td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="4" class="px-4 py-4 text-center text-gray-500 dark:text-gray-400">Aucun fournisseur</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-4">
+                    <a href="{{ route('fournisseurs.index') }}" class="text-blue-600 hover:text-blue-700 dark:text-blue-400 text-sm font-medium">
+                        Voir la liste complète →
+                    </a>
+                </div>
             </div>
 
             <!-- Personnel Tab -->
@@ -138,10 +165,37 @@
                         Créer un personnel
                     </a>
                 </div>
-                <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Gérez votre personnel et leurs informations</p>
-                <a href="{{ route('personnel.index') }}" class="text-blue-600 hover:text-blue-700 dark:text-blue-400 text-sm font-medium">
-                    Voir la liste complète →
-                </a>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="bg-gray-50 dark:bg-gray-700">
+                            <tr>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Nom</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Prénom</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Poste</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Téléphone</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                            @forelse($personnel ?? [] as $person)
+                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                                    <td class="px-4 py-2">{{ $person->nom ?? 'N/A' }}</td>
+                                    <td class="px-4 py-2">{{ $person->prenom ?? 'N/A' }}</td>
+                                    <td class="px-4 py-2">{{ $person->poste ?? 'N/A' }}</td>
+                                    <td class="px-4 py-2">{{ $person->tel ?? 'N/A' }}</td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="4" class="px-4 py-4 text-center text-gray-500 dark:text-gray-400">Aucun personnel</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-4">
+                    <a href="{{ route('personnel.index') }}" class="text-blue-600 hover:text-blue-700 dark:text-blue-400 text-sm font-medium">
+                        Voir la liste complète →
+                    </a>
+                </div>
             </div>
 
             <!-- Administrations Tab -->
@@ -155,10 +209,37 @@
                         Créer une administration
                     </a>
                 </div>
-                <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Gérez vos administrations et leurs informations</p>
-                <a href="{{ route('administrations.index') }}" class="text-blue-600 hover:text-blue-700 dark:text-blue-400 text-sm font-medium">
-                    Voir la liste complète →
-                </a>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="bg-gray-50 dark:bg-gray-700">
+                            <tr>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Raison sociale</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Responsable</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Téléphone</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Email</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                            @forelse($administrations ?? [] as $administration)
+                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                                    <td class="px-4 py-2">{{ $administration->raison_sociale ?? 'N/A' }}</td>
+                                    <td class="px-4 py-2">{{ trim(($administration->responsable_nom ?? '') . ' ' . ($administration->responsable_prenom ?? '')) ?: 'N/A' }}</td>
+                                    <td class="px-4 py-2">{{ $administration->tel ?? 'N/A' }}</td>
+                                    <td class="px-4 py-2">{{ $administration->email ?? 'N/A' }}</td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="4" class="px-4 py-4 text-center text-gray-500 dark:text-gray-400">Aucune administration</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-4">
+                    <a href="{{ route('administrations.index') }}" class="text-blue-600 hover:text-blue-700 dark:text-blue-400 text-sm font-medium">
+                        Voir la liste complète →
+                    </a>
+                </div>
             </div>
 
             <!-- Partenaires Tab -->
@@ -172,10 +253,37 @@
                         Créer un partenaire
                     </a>
                 </div>
-                <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Gérez vos partenaires et leurs informations</p>
-                <a href="{{ route('partenaires.index') }}" class="text-blue-600 hover:text-blue-700 dark:text-blue-400 text-sm font-medium">
-                    Voir la liste complète →
-                </a>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="bg-gray-50 dark:bg-gray-700">
+                            <tr>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Raison sociale</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Activité</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Prestation</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Téléphone</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                            @forelse($partenaires ?? [] as $partenaire)
+                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                                    <td class="px-4 py-2">{{ $partenaire->raison_sociale ?? 'N/A' }}</td>
+                                    <td class="px-4 py-2">{{ $partenaire->activite ?? 'N/A' }}</td>
+                                    <td class="px-4 py-2">{{ $partenaire->prestation ?? 'N/A' }}</td>
+                                    <td class="px-4 py-2">{{ $partenaire->tel ?? 'N/A' }}</td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="4" class="px-4 py-4 text-center text-gray-500 dark:text-gray-400">Aucun partenaire</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-4">
+                    <a href="{{ route('partenaires.index') }}" class="text-blue-600 hover:text-blue-700 dark:text-blue-400 text-sm font-medium">
+                        Voir la liste complète →
+                    </a>
+                </div>
             </div>
 
             <!-- Comptables Tab -->
@@ -189,10 +297,37 @@
                         Créer un comptable
                     </a>
                 </div>
-                <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Gérez vos comptables et leurs informations</p>
-                <a href="{{ route('comptables.index') }}" class="text-blue-600 hover:text-blue-700 dark:text-blue-400 text-sm font-medium">
-                    Voir la liste complète →
-                </a>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="bg-gray-50 dark:bg-gray-700">
+                            <tr>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Raison sociale</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Activité</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Prestation</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Téléphone</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                            @forelse($comptables ?? [] as $comptable)
+                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                                    <td class="px-4 py-2">{{ $comptable->raison_sociale ?? 'N/A' }}</td>
+                                    <td class="px-4 py-2">{{ $comptable->activite ?? 'N/A' }}</td>
+                                    <td class="px-4 py-2">{{ $comptable->prestation ?? 'N/A' }}</td>
+                                    <td class="px-4 py-2">{{ $comptable->tel ?? 'N/A' }}</td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="4" class="px-4 py-4 text-center text-gray-500 dark:text-gray-400">Aucun comptable</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-4">
+                    <a href="{{ route('comptables.index') }}" class="text-blue-600 hover:text-blue-700 dark:text-blue-400 text-sm font-medium">
+                        Voir la liste complète →
+                    </a>
+                </div>
             </div>
 
             <!-- Bailleurs Tab -->
@@ -206,10 +341,37 @@
                         Créer un bailleur
                     </a>
                 </div>
-                <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Gérez vos bailleurs et leurs informations</p>
-                <a href="{{ route('bailleurs.index') }}" class="text-blue-600 hover:text-blue-700 dark:text-blue-400 text-sm font-medium">
-                    Voir la liste complète →
-                </a>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="bg-gray-50 dark:bg-gray-700">
+                            <tr>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Raison sociale</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Responsable</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Activité</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Téléphone</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                            @forelse($bailleurs ?? [] as $bailleur)
+                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                                    <td class="px-4 py-2">{{ $bailleur->raison_sociale ?? 'N/A' }}</td>
+                                    <td class="px-4 py-2">{{ trim(($bailleur->responsable_nom ?? '') . ' ' . ($bailleur->responsable_prenom ?? '')) ?: 'N/A' }}</td>
+                                    <td class="px-4 py-2">{{ $bailleur->activite ?? 'N/A' }}</td>
+                                    <td class="px-4 py-2">{{ $bailleur->tel ?? 'N/A' }}</td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="4" class="px-4 py-4 text-center text-gray-500 dark:text-gray-400">Aucun bailleur</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-4">
+                    <a href="{{ route('bailleurs.index') }}" class="text-blue-600 hover:text-blue-700 dark:text-blue-400 text-sm font-medium">
+                        Voir la liste complète →
+                    </a>
+                </div>
             </div>
 
             <!-- Comptes Associés Tab -->
@@ -223,10 +385,37 @@
                         Créer un compte associé
                     </a>
                 </div>
-                <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Gérez vos comptes associés et leurs informations</p>
-                <a href="{{ route('comptes-associes.index') }}" class="text-blue-600 hover:text-blue-700 dark:text-blue-400 text-sm font-medium">
-                    Voir la liste complète →
-                </a>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="bg-gray-50 dark:bg-gray-700">
+                            <tr>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Nom</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Prénom</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Téléphone</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Email</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                            @forelse($comptesAssocies ?? [] as $compte)
+                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                                    <td class="px-4 py-2">{{ $compte->nom ?? 'N/A' }}</td>
+                                    <td class="px-4 py-2">{{ $compte->prenom ?? 'N/A' }}</td>
+                                    <td class="px-4 py-2">{{ $compte->tel ?? 'N/A' }}</td>
+                                    <td class="px-4 py-2">{{ $compte->email ?? 'N/A' }}</td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="4" class="px-4 py-4 text-center text-gray-500 dark:text-gray-400">Aucun compte associé</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-4">
+                    <a href="{{ route('comptes-associes.index') }}" class="text-blue-600 hover:text-blue-700 dark:text-blue-400 text-sm font-medium">
+                        Voir la liste complète →
+                    </a>
+                </div>
             </div>
 
             <!-- Prestataires Tab -->
@@ -240,10 +429,37 @@
                         Créer un prestataire
                     </a>
                 </div>
-                <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Gérez vos prestataires de services (comptables, avocats, consultants, etc.)</p>
-                <a href="{{ route('prestataires.index') }}" class="text-purple-600 hover:text-purple-700 dark:text-purple-400 text-sm font-medium">
-                    Voir la liste complète →
-                </a>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="bg-gray-50 dark:bg-gray-700">
+                            <tr>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Raison sociale</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Activité</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Prestation</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Téléphone</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                            @forelse($prestataires ?? [] as $prestataire)
+                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                                    <td class="px-4 py-2">{{ $prestataire->raison_sociale ?? 'N/A' }}</td>
+                                    <td class="px-4 py-2">{{ $prestataire->activite ?? 'N/A' }}</td>
+                                    <td class="px-4 py-2">{{ $prestataire->prestation ?? 'N/A' }}</td>
+                                    <td class="px-4 py-2">{{ $prestataire->tel ?? 'N/A' }}</td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="4" class="px-4 py-4 text-center text-gray-500 dark:text-gray-400">Aucun prestataire</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-4">
+                    <a href="{{ route('prestataires.index') }}" class="text-purple-600 hover:text-purple-700 dark:text-purple-400 text-sm font-medium">
+                        Voir la liste complète →
+                    </a>
+                </div>
             </div>
         </div>
     </div>

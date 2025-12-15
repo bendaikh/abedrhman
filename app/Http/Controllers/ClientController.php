@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Client;
+use App\Models\SecteurActivite;
 use Illuminate\Http\Request;
 use App\Imports\ClientsImport;
 use App\Exports\ClientsExport;
@@ -27,9 +28,11 @@ class ClientController extends Controller
      */
     public function create()
     {
+        $secteurActivites = SecteurActivite::active()->ordered()->get();
         return view('sections.clients-form', [
             'page_title' => 'Créer un client',
-            'client' => null
+            'client' => null,
+            'secteurActivites' => $secteurActivites
         ]);
     }
 
@@ -104,9 +107,11 @@ class ClientController extends Controller
     public function edit(string $id)
     {
         $client = Client::findOrFail($id);
+        $secteurActivites = SecteurActivite::active()->ordered()->get();
         return view('sections.clients-form', [
             'page_title' => 'Modifier le client',
-            'client' => $client
+            'client' => $client,
+            'secteurActivites' => $secteurActivites
         ]);
     }
 
@@ -195,6 +200,25 @@ class ClientController extends Controller
     public function export()
     {
         return Excel::download(new ClientsExport, 'clients_' . date('Y-m-d_H-i-s') . '.xlsx');
+    }
+
+    /**
+     * Get clients list for source dropdown (AJAX)
+     */
+    public function getClientsForSource()
+    {
+        $clients = Client::select('id', 'nom_raison_sociale', 'num_client')
+            ->whereNotNull('nom_raison_sociale')
+            ->orderBy('nom_raison_sociale')
+            ->get()
+            ->map(function($client) {
+                return [
+                    'id' => $client->id,
+                    'name' => $client->nom_raison_sociale . ' (' . $client->num_client . ')'
+                ];
+            });
+        
+        return response()->json($clients);
     }
 
     /**

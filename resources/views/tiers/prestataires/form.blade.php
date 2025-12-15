@@ -38,16 +38,30 @@
                     @enderror
                 </div>
 
-                <!-- Spécialité -->
+                <!-- Activité -->
                 <div>
-                    <label for="specialite" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        Spécialité
+                    <label for="activite" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Activité
                     </label>
-                    <input type="text" id="specialite" name="specialite" 
-                        value="{{ old('specialite', $prestataire->specialite ?? '') }}"
+                    <input type="text" id="activite" name="activite" 
+                        value="{{ old('activite', $prestataire->activite ?? '') }}"
                         placeholder="Ex: Comptabilité, Juridique, IT, etc."
                         class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent">
-                    @error('specialite')
+                    @error('activite')
+                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <!-- Prestation -->
+                <div>
+                    <label for="prestation" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Prestation
+                    </label>
+                    <input type="text" id="prestation" name="prestation" 
+                        value="{{ old('prestation', $prestataire->prestation ?? '') }}"
+                        placeholder="Ex: Audit, Conseil, etc."
+                        class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                    @error('prestation')
                         <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                     @enderror
                 </div>
