@@ -1,12 +1,10 @@
-@extends('layouts.app')
+<?php $__env->startSection('title', 'Nouveau service - Abedrhman'); ?>
 
-@section('title', 'Nouveau service - Abedrhman')
-
-@section('content')
+<?php $__env->startSection('content'); ?>
 <div class="space-y-6 sm:space-y-8">
     <!-- Breadcrumb -->
     <div class="flex items-center gap-2 text-sm">
-        <a href="{{ route('services.index') }}" class="text-gray-500 dark:text-gray-400 hover:text-teal-600 dark:hover:text-teal-400 transition-colors">Services</a>
+        <a href="<?php echo e(route('services.index')); ?>" class="text-gray-500 dark:text-gray-400 hover:text-teal-600 dark:hover:text-teal-400 transition-colors">Services</a>
         <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
         </svg>
@@ -21,8 +19,8 @@
 
     <!-- Form -->
     <div class="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow border border-gray-100 dark:border-gray-700 p-6 sm:p-8">
-        <form action="{{ route('services.store') }}" method="POST" class="space-y-6">
-            @csrf
+        <form action="<?php echo e(route('services.store')); ?>" method="POST" class="space-y-6">
+            <?php echo csrf_field(); ?>
             
             <!-- Client Selection Section -->
             <div class="space-y-4">
@@ -39,30 +37,38 @@
                         class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors"
                         onchange="showClientInfo(this.value)">
                         <option value="">Sélectionner un client</option>
-                        @foreach($clients as $client)
-                        <option value="{{ $client->id }}" 
-                            data-nom="{{ $client->type === 'particulier' ? ($client->nom . ' ' . $client->prenom) : $client->nom_raison_sociale }}"
-                            data-raison-sociale="{{ $client->type !== 'particulier' ? $client->nom_raison_sociale : '' }}"
-                            data-forme-juridique="{{ $client->forme_juridique ?? 'N/A' }}"
-                            data-activite="{{ $client->activite ?? 'N/A' }}"
-                            data-numero-piece="{{ $client->numero_piece ?? 'N/A' }}"
-                            data-siege-social="{{ $client->siege_social ?? 'N/A' }}"
-                            data-ville="{{ $client->ville ?? 'N/A' }}"
-                            data-type="{{ $client->type }}"
-                            data-dirigeants="{{ $client->dirigeants->map(function($d) { return ['nom' => $d->nom ?? '', 'prenom' => $d->prenom ?? '', 'fonction' => $d->fonction ?? '', 'tel' => ($d->tel1_resp ?? $d->tel2_resp ?? '')]; })->toJson() }}"
-                            {{ old('client_id') == $client->id ? 'selected' : '' }}>
-                            @if($client->type === 'particulier')
-                                {{ $client->nom }} {{ $client->prenom }}
-                            @else
-                                {{ $client->nom_raison_sociale }}@if($client->sigle) ({{ $client->sigle }})@endif
-                            @endif
-                            @if($client->num_client) - {{ $client->num_client }}@endif
+                        <?php $__currentLoopData = $clients; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $client): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <option value="<?php echo e($client->id); ?>" 
+                            data-nom="<?php echo e($client->type === 'particulier' ? ($client->nom . ' ' . $client->prenom) : $client->nom_raison_sociale); ?>"
+                            data-raison-sociale="<?php echo e($client->type !== 'particulier' ? $client->nom_raison_sociale : ''); ?>"
+                            data-forme-juridique="<?php echo e($client->forme_juridique ?? 'N/A'); ?>"
+                            data-activite="<?php echo e($client->activite ?? 'N/A'); ?>"
+                            data-numero-piece="<?php echo e($client->numero_piece ?? 'N/A'); ?>"
+                            data-siege-social="<?php echo e($client->siege_social ?? 'N/A'); ?>"
+                            data-ville="<?php echo e($client->ville ?? 'N/A'); ?>"
+                            data-type="<?php echo e($client->type); ?>"
+                            data-dirigeants="<?php echo e($client->dirigeants->map(function($d) { return ['nom' => $d->nom ?? '', 'prenom' => $d->prenom ?? '', 'fonction' => $d->fonction ?? '', 'tel' => ($d->tel1_resp ?? $d->tel2_resp ?? '')]; })->toJson()); ?>"
+                            <?php echo e(old('client_id') == $client->id ? 'selected' : ''); ?>>
+                            <?php if($client->type === 'particulier'): ?>
+                                <?php echo e($client->nom); ?> <?php echo e($client->prenom); ?>
+
+                            <?php else: ?>
+                                <?php echo e($client->nom_raison_sociale); ?><?php if($client->sigle): ?> (<?php echo e($client->sigle); ?>)<?php endif; ?>
+                            <?php endif; ?>
+                            <?php if($client->num_client): ?> - <?php echo e($client->num_client); ?><?php endif; ?>
                         </option>
-                        @endforeach
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </select>
-                    @error('client_id')
-                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                    @enderror
+                    <?php $__errorArgs = ['client_id'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                    <p class="mt-1 text-sm text-red-600 dark:text-red-400"><?php echo e($message); ?></p>
+                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                 </div>
 
                 <!-- Client Info Block -->
@@ -131,70 +137,80 @@
                     <!-- Type Service -->
                     <div>
                         <label for="type_service_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Type de service *</label>
-                        @if(isset($selectedTypeServiceId) && $selectedTypeServiceId)
-                            {{-- Type de service is pre-selected and read-only --}}
-                            @php $selectedType = $typesServices->firstWhere('id', $selectedTypeServiceId); @endphp
-                            <input type="hidden" name="type_service_id" value="{{ $selectedTypeServiceId }}">
+                        <?php if(isset($selectedTypeServiceId) && $selectedTypeServiceId): ?>
+                            
+                            <?php $selectedType = $typesServices->firstWhere('id', $selectedTypeServiceId); ?>
+                            <input type="hidden" name="type_service_id" value="<?php echo e($selectedTypeServiceId); ?>">
                             <div class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-600 text-gray-700 dark:text-gray-200 cursor-not-allowed">
                                 <span class="flex items-center gap-2">
                                     <svg class="w-4 h-4 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                                     </svg>
-                                    {{ $selectedType->nom ?? 'Type sélectionné' }}
-                                    @if($selectedType && $selectedType->prix) - {{ $selectedType->formatted_prix }}@endif
+                                    <?php echo e($selectedType->nom ?? 'Type sélectionné'); ?>
+
+                                    <?php if($selectedType && $selectedType->prix): ?> - <?php echo e($selectedType->formatted_prix); ?><?php endif; ?>
                                 </span>
                             </div>
                             <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Le type de service est pré-sélectionné et ne peut pas être modifié.</p>
-                        @else
-                            {{-- Normal select dropdown --}}
+                        <?php else: ?>
+                            
                             <select name="type_service_id" id="type_service_id" required
                                 class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors">
                                 <option value="">Sélectionner un type</option>
-                                @foreach($typesServices as $type)
-                                <option value="{{ $type->id }}" 
-                                    data-prix="{{ $type->prix ?? 0 }}"
-                                    {{ (old('type_service_id') == $type->id) ? 'selected' : '' }}>
-                                    {{ $type->nom }}
-                                    @if($type->prix) - {{ $type->formatted_prix }}@endif
+                                <?php $__currentLoopData = $typesServices; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $type): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <option value="<?php echo e($type->id); ?>" 
+                                    data-prix="<?php echo e($type->prix ?? 0); ?>"
+                                    <?php echo e((old('type_service_id') == $type->id) ? 'selected' : ''); ?>>
+                                    <?php echo e($type->nom); ?>
+
+                                    <?php if($type->prix): ?> - <?php echo e($type->formatted_prix); ?><?php endif; ?>
                                 </option>
-                                @endforeach
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </select>
-                        @endif
-                        @error('type_service_id')
-                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                        @enderror
+                        <?php endif; ?>
+                        <?php $__errorArgs = ['type_service_id'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                        <p class="mt-1 text-sm text-red-600 dark:text-red-400"><?php echo e($message); ?></p>
+                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                     </div>
 
                     <!-- Prix -->
                     <div>
                         <label for="prix" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Prix (DH) *</label>
-                        @if(isset($offersWithPrices) && count($offersWithPrices) > 0)
-                            {{-- Show dropdown with offers/tarification prices --}}
+                        <?php if(isset($offersWithPrices) && count($offersWithPrices) > 0): ?>
+                            
                             <div class="space-y-2">
                                 <select id="offre_tarification_select" 
                                     class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors"
                                     onchange="updatePriceFromOffer(this)">
                                     <option value="">-- Sélectionner une offre/tarification --</option>
-                                    @php $defaultPriceSet = false; @endphp
-                                    @foreach($offersWithPrices as $offre)
-                                        @if(count($offre['prices']) > 0)
-                                            @foreach($offre['prices'] as $price)
-                                                @php
+                                    <?php $defaultPriceSet = false; ?>
+                                    <?php $__currentLoopData = $offersWithPrices; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $offre): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <?php if(count($offre['prices']) > 0): ?>
+                                            <?php $__currentLoopData = $offre['prices']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $price): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                <?php
                                                     $isStandard = strtolower($price['type_name']) === 'standard';
                                                     $isFirst = !$defaultPriceSet && $isStandard;
                                                     if($isFirst) $defaultPriceSet = true;
-                                                @endphp
-                                                <option value="{{ $price['prix'] }}" {{ $isFirst ? 'selected' : '' }}
-                                                    data-offre="{{ $offre['nom'] }}"
-                                                    data-type="{{ $price['type_name'] }}">
-                                                    {{ $offre['nom'] }} - {{ $price['type_name'] }}: {{ number_format($price['prix'], 2, ',', ' ') }} DH
-                                                    @if($offre['duree_mois']) ({{ $offre['duree_mois'] }} mois)@endif
+                                                ?>
+                                                <option value="<?php echo e($price['prix']); ?>" <?php echo e($isFirst ? 'selected' : ''); ?>
+
+                                                    data-offre="<?php echo e($offre['nom']); ?>"
+                                                    data-type="<?php echo e($price['type_name']); ?>">
+                                                    <?php echo e($offre['nom']); ?> - <?php echo e($price['type_name']); ?>: <?php echo e(number_format($price['prix'], 2, ',', ' ')); ?> DH
+                                                    <?php if($offre['duree_mois']): ?> (<?php echo e($offre['duree_mois']); ?> mois)<?php endif; ?>
                                                 </option>
-                                            @endforeach
-                                        @endif
-                                    @endforeach
-                                    {{-- If no standard price was found, select the first one --}}
-                                    @if(!$defaultPriceSet && count($offersWithPrices) > 0 && count($offersWithPrices[0]['prices'] ?? []) > 0)
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                        <?php endif; ?>
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                    
+                                    <?php if(!$defaultPriceSet && count($offersWithPrices) > 0 && count($offersWithPrices[0]['prices'] ?? []) > 0): ?>
                                         <script>
                                             document.addEventListener('DOMContentLoaded', function() {
                                                 var select = document.getElementById('offre_tarification_select');
@@ -204,7 +220,7 @@
                                                 }
                                             });
                                         </script>
-                                    @endif
+                                    <?php endif; ?>
                                 </select>
                                 <p class="text-xs text-gray-500 dark:text-gray-400">
                                     <svg class="inline w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -213,15 +229,22 @@
                                     Prix basé sur la tarification configurée. Vous pouvez le modifier ci-dessous.
                                 </p>
                             </div>
-                        @endif
+                        <?php endif; ?>
                         <input type="number" name="prix" id="prix" 
-                            value="{{ old('prix', isset($offersWithPrices) && count($offersWithPrices) > 0 ? collect($offersWithPrices)->pluck('prices')->flatten(1)->firstWhere('type_name', 'Standard')['prix'] ?? (collect($offersWithPrices)->pluck('prices')->flatten(1)->first()['prix'] ?? 0) : 0) }}" 
+                            value="<?php echo e(old('prix', isset($offersWithPrices) && count($offersWithPrices) > 0 ? collect($offersWithPrices)->pluck('prices')->flatten(1)->firstWhere('type_name', 'Standard')['prix'] ?? (collect($offersWithPrices)->pluck('prices')->flatten(1)->first()['prix'] ?? 0) : 0)); ?>" 
                             required min="0" step="0.01"
-                            class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors {{ isset($offersWithPrices) && count($offersWithPrices) > 0 ? 'mt-2' : '' }}"
+                            class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors <?php echo e(isset($offersWithPrices) && count($offersWithPrices) > 0 ? 'mt-2' : ''); ?>"
                             placeholder="0.00">
-                        @error('prix')
-                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                        @enderror
+                        <?php $__errorArgs = ['prix'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                        <p class="mt-1 text-sm text-red-600 dark:text-red-400"><?php echo e($message); ?></p>
+                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                     </div>
                 </div>
 
@@ -230,10 +253,17 @@
                     <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description</label>
                     <textarea name="description" id="description" rows="3"
                         class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors resize-none"
-                        placeholder="Description du service...">{{ old('description') }}</textarea>
-                    @error('description')
-                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                    @enderror
+                        placeholder="Description du service..."><?php echo e(old('description')); ?></textarea>
+                    <?php $__errorArgs = ['description'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                    <p class="mt-1 text-sm text-red-600 dark:text-red-400"><?php echo e($message); ?></p>
+                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                 </div>
 
                 <!-- Active -->
@@ -256,23 +286,23 @@
                     <span class="text-sm font-normal text-gray-500 dark:text-gray-400">- Sélectionnez les sous-services à inclure</span>
                 </h3>
 
-                @if($sousServices->count() > 0)
+                <?php if($sousServices->count() > 0): ?>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                    @foreach($sousServices as $sousService)
+                    <?php $__currentLoopData = $sousServices; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $sousService): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <label class="relative flex items-start p-4 rounded-lg border border-gray-200 dark:border-gray-600 hover:border-indigo-300 dark:hover:border-indigo-600 cursor-pointer transition-colors sous-service-item">
-                        <input type="checkbox" name="sous_services[]" value="{{ $sousService->id }}"
+                        <input type="checkbox" name="sous_services[]" value="<?php echo e($sousService->id); ?>"
                             class="w-4 h-4 mt-0.5 text-indigo-600 bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded focus:ring-indigo-500 focus:ring-2"
-                            data-prix="{{ $sousService->prix }}"
+                            data-prix="<?php echo e($sousService->prix); ?>"
                             onchange="updateTotalPreview()">
                         <div class="ml-3 flex-1">
-                            <span class="text-sm font-medium text-gray-900 dark:text-white">{{ $sousService->nom }}</span>
-                            <span class="block text-sm text-indigo-600 dark:text-indigo-400 font-semibold">{{ $sousService->formatted_prix }}</span>
-                            @if($sousService->description)
-                            <span class="block text-xs text-gray-500 dark:text-gray-400 mt-1">{{ $sousService->description }}</span>
-                            @endif
+                            <span class="text-sm font-medium text-gray-900 dark:text-white"><?php echo e($sousService->nom); ?></span>
+                            <span class="block text-sm text-indigo-600 dark:text-indigo-400 font-semibold"><?php echo e($sousService->formatted_prix); ?></span>
+                            <?php if($sousService->description): ?>
+                            <span class="block text-xs text-gray-500 dark:text-gray-400 mt-1"><?php echo e($sousService->description); ?></span>
+                            <?php endif; ?>
                         </div>
                     </label>
-                    @endforeach
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </div>
 
                 <!-- Total Preview -->
@@ -290,17 +320,17 @@
                         </div>
                     </div>
                 </div>
-                @else
+                <?php else: ?>
                 <div class="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-4 text-center">
                     <p class="text-sm text-gray-500 dark:text-gray-400">Aucun sous-service disponible. Vous pouvez en ajouter depuis les paramètres.</p>
-                    <a href="{{ route('parametres.sous-services') }}" class="inline-flex items-center mt-2 text-sm text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300">
+                    <a href="<?php echo e(route('parametres.sous-services')); ?>" class="inline-flex items-center mt-2 text-sm text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300">
                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                         </svg>
                         Créer des sous-services
                     </a>
                 </div>
-                @endif
+                <?php endif; ?>
             </div>
 
             <!-- Info Note -->
@@ -318,7 +348,7 @@
 
             <!-- Actions -->
             <div class="flex items-center justify-end gap-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-                <a href="{{ route('services.index') }}" class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                <a href="<?php echo e(route('services.index')); ?>" class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
                     Annuler
                 </a>
                 <button type="submit" class="px-6 py-2 bg-teal-600 hover:bg-teal-700 text-white font-medium rounded-lg transition-colors flex items-center gap-2">
@@ -476,4 +506,6 @@ document.addEventListener('DOMContentLoaded', function() {
     updateTotalPreview();
 });
 </script>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\Espacegamers\Documents\abedrhman\resources\views/sections/services-create.blade.php ENDPATH**/ ?>

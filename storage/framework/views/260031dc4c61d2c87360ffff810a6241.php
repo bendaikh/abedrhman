@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="<?php echo e(str_replace('_', '-', app()->getLocale())); ?>">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
+    <title><?php echo $__env->yieldContent('title', 'Abedrhman - Administration'); ?></title>
+    <script>
+        // Initialize theme before page load to prevent flash
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const isDark = savedTheme ? savedTheme === 'dark' : prefersDark;
+            if (isDark) {
+                document.documentElement.classList.add('dark');
+            }
+        })();
+    </script>
+    <?php echo app('Illuminate\Foundation\Vite')(['resources/css/app.css', 'resources/js/app.js']); ?>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 min-h-screen">
+    <!-- Hidden logout form template for Vue to use -->
+    <template id="logout-form-template" style="display: none;">
+        <form method="POST" action="<?php echo e(route('logout')); ?>" class="ml-4">
+            <?php echo csrf_field(); ?>
+            <button 
+                type="submit" 
+                class="flex items-center px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
+            >
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+                Déconnexion
+            </button>
+        </form>
+    </template>
+
+    <div 
+        id="app" 
+        data-page-title="<?php echo e($page_title ?? 'Tableau de bord'); ?>"
+        data-user="<?php echo e(json_encode(auth()->user())); ?>"
+    >
+        <!-- Content will be rendered here by Vue -->
+        <?php echo $__env->yieldContent('content'); ?>
+    </div>
+</body>
+</html>
+<?php /**PATH C:\Users\Espacegamers\Documents\abedrhman\resources\views/layouts/app.blade.php ENDPATH**/ ?>

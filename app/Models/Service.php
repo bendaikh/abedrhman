@@ -13,6 +13,7 @@ class Service extends Model
         'client_id',
         'type_service_id',
         'description',
+        'date_service',
         'prix',
         'is_active',
         'status',
@@ -21,6 +22,7 @@ class Service extends Model
     protected $casts = [
         'is_active' => 'boolean',
         'prix' => 'decimal:2',
+        'date_service' => 'date',
     ];
 
     /**

@@ -153,16 +153,16 @@
                     class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
             </div>
 
-            <!-- Tél1 résp -->
+            <!-- Tél1 -->
             <div>
-                <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tél1 résp</label>
+                <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tél1</label>
                 <input type="tel" name="tel1_resp" value="{{ old('tel1_resp', $dirigeant->tel1_resp ?? '') }}" 
                     class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
             </div>
 
-            <!-- Tél2 résp -->
+            <!-- Tél2 -->
             <div>
-                <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tél2 résp</label>
+                <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tél2</label>
                 <input type="tel" name="tel2_resp" value="{{ old('tel2_resp', $dirigeant->tel2_resp ?? '') }}" 
                     class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
             </div>

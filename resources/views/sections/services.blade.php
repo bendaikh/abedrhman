@@ -122,6 +122,7 @@
                     <tr>
                         <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Client</th>
                         <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Type</th>
+                        <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Date du service</th>
                         <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Prix de base</th>
                         <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Montant Total</th>
                         <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Paiements</th>
@@ -161,6 +162,15 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                 </svg>
                             </a>
+                        </td>
+                        <td class="px-4 py-4 whitespace-nowrap">
+                            <span class="text-sm text-gray-600 dark:text-gray-400">
+                                @if($service->date_service)
+                                    {{ $service->date_service->format('d/m/Y') }}
+                                @else
+                                    <span class="text-gray-400 dark:text-gray-500">N/A</span>
+                                @endif
+                            </span>
                         </td>
                         <td class="px-4 py-4 whitespace-nowrap">
                             <span class="text-sm text-gray-600 dark:text-gray-400">{{ $service->formatted_prix }}</span>

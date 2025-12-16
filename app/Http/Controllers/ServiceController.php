@@ -33,7 +33,7 @@ class ServiceController extends Controller
     public function create(Request $request)
     {
         $typesServices = TypeService::with(['offres.tarifications.typeTarification'])->active()->ordered()->get();
-        $clients = Client::orderBy('nom_raison_sociale')->orderBy('nom')->get();
+        $clients = Client::with('dirigeants')->orderBy('nom_raison_sociale')->orderBy('nom')->get();
         $sousServices = SousService::active()->ordered()->get();
         $selectedTypeServiceId = $request->get('type_service_id');
         
@@ -80,6 +80,7 @@ class ServiceController extends Controller
             'client_id' => 'required|exists:clients,id',
             'type_service_id' => 'required|exists:types_services,id',
             'description' => 'nullable|string|max:1000',
+            'date_service' => 'nullable|date',
             'prix' => 'required|numeric|min:0',
             'sous_services' => 'nullable|array',
             'sous_services.*' => 'exists:sous_services,id',
@@ -135,6 +136,7 @@ class ServiceController extends Controller
             'client_id' => 'required|exists:clients,id',
             'type_service_id' => 'required|exists:types_services,id',
             'description' => 'nullable|string|max:1000',
+            'date_service' => 'nullable|date',
             'prix' => 'required|numeric|min:0',
             'status' => 'required|in:initialiser,en_cours,termine,annule',
         ]);
